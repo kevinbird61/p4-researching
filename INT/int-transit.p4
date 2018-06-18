@@ -759,4 +759,9 @@ EgressPipeline(
 ) ep;
 
 // define the PSA Switch 
-PSA_SWITCH(ip,ep) main;
+PSA_Switch(
+    ip, 
+    PacketReplicationEngine(), 
+    ep, 
+    BufferingQueueingEngine()
+)main;
