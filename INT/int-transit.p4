@@ -311,8 +311,12 @@ control EgressDeparserImpl(
         /* FIXME: Encounter problem: 
             "int-transit.p4(310): error: : not a compile-time constant when binding to checksum_state"
             "void set_state(bit<16> checksum_state);"
+           Solution: 
+            - need to update the psa.p4 (found in the latest version)
+            - [Origin] void set_state(bit<16> checksum_state) -> need to add direction on it:
+            - [Fixed] void set_state(in bit<16> checksum_state)
         */
-        // ck.set_state(meta.fwd_metadata.checksum_state);
+        ck.set_state(meta.fwd_metadata.checksum_state);
 
         // Add back relevant header fields, including new INT metadata
         if(hdr.ipv4.isValid()){
@@ -759,9 +763,4 @@ EgressPipeline(
 ) ep;
 
 // define the PSA Switch 
-PSA_Switch(
-    ip, 
-    PacketReplicationEngine(), 
-    ep, 
-    BufferingQueueingEngine()
-)main;
+PSA_Switch(ip, PacketReplicationEngine(), ep, BufferingQueueingEngine()) main;
