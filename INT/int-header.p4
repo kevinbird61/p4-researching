@@ -63,6 +63,10 @@ header int_level1_port_ids_t {
     bit<16> egress_port_id;
 }
 
+header int_hop_latency_t {
+    bit<32> hop_latency;
+}
+
 header int_q_occupancy_t {
     bit<8>  q_id;
     bit<24> q_occupancy;

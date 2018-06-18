@@ -20,11 +20,12 @@ struct headers {
     tcp_t                       tcp;
     udp_t                       udp;
     /* INT header (shim + header) */
-    int_shim_t                  int_shim;
+    int_tcpudp_shim_t                  int_shim;
     int_header_t                int_header;
     /* INT metadata */
     int_switch_id_t             int_switch_id;
     int_level1_port_ids_t       int_level1_port_ids;
+    int_hop_latency_t           int_hop_latency;
     int_q_occupancy_t           int_q_occupancy;
     int_ingress_tstamp_t        int_ingress_tstamp;
     int_egress_tstamp_t         int_egress_tstamp;
@@ -142,7 +143,7 @@ parser IngressParserImpl(
                 hdr.tcp.flags,
                 hdr.tcp.window,
                 hdr.tcp.checksum,
-                hdr.tcp.urgentPrt
+                hdr.tcp.urgentPtr
             });
         meta.fwd_metadata.checksum_state = ck.get_state();
         // end
@@ -221,7 +222,7 @@ parser EgressParserImpl(
         transition select(hdr.ipv4.protocol){
             6: parse_tcp;
             17: parse_udp;
-            default: accpet;
+            default: accept;
         }
     }
 
@@ -306,7 +307,12 @@ control EgressDeparserImpl(
 
         // TCP/UDP header incremental checksum update.
         // Restore the checksum state partially calculated in the parser
-        ck.set_state(meta.fwd_metadata.checksum_state);
+
+        /* FIXME: Encounter problem: 
+            "int-transit.p4(310): error: : not a compile-time constant when binding to checksum_state"
+            "void set_state(bit<16> checksum_state);"
+        */
+        // ck.set_state(meta.fwd_metadata.checksum_state);
 
         // Add back relevant header fields, including new INT metadata
         if(hdr.ipv4.isValid()){
@@ -408,7 +414,7 @@ control EgressDeparserImpl(
             // we should never change it (by spec).
             // If the calculated checksum is 0, send all 1 bits instead.
             if(hdr.udp.checksum != 0){
-                hdr.udp.chechsum = ck.get();
+                hdr.udp.checksum = ck.get();
                 if(hdr.udp.checksum == 0){
                     hdr.udp.checksum = 0xffff;
                 }
@@ -448,7 +454,7 @@ control Int_metadata_insert(
     */
     action int_set_header_0(){
         hdr.int_switch_id.setValid();
-        hdr.int_switch_id.switch_id = int_metdata.switch_id;
+        hdr.int_switch_id.switch_id = int_metadata.switch_id;
     }
 
     action int_set_header_1(){
@@ -524,7 +530,7 @@ control Int_metadata_insert(
     }
 
     action int_set_header_0003_i11(){
-        int_set_header_3()
+        int_set_header_3();
         int_set_header_2();
         int_set_header_0();
     }
@@ -743,14 +749,14 @@ IngressPipeline(
     IngressParserImpl(),
     ingress(),
     IngressDeparserImpl()
-)) ip;
+) ip;
 
 // define Egress Pipeline
 EgressPipeline(
     EgressParserImpl(),
     egress(),
     EgressDeparserImpl()
-)) ep;
+) ep;
 
 // define the PSA Switch 
-PSA_SWITCH( ip, ep ) main;
+PSA_SWITCH(ip,ep) main;
