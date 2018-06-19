@@ -21,7 +21,7 @@ struct headers {
     tcp_t                       tcp;
     udp_t                       udp;
     /* INT header (shim + header) */
-    int_tcpudp_shim_t                  int_shim;
+    int_tcpudp_shim_t           int_shim;
     int_header_t                int_header;
     /* INT metadata */
     int_switch_id_t             int_switch_id;
@@ -218,6 +218,13 @@ control Int_ingress(
     inout standard_metadata_t standard_metadata
 ){
     action bridged_ingress_istd(){
+        /**
+            Monitoring - Ingress Information 
+
+            We need to store the information (get information from behavior model - e.g. standard_metadata)
+            * ingress port identifier
+            * ingress timestamp
+        */
         // FIXME: not sure its correct or not - need testcase
         meta.bridged_istd.ingress_port = standard_metadata.ingress_port;
         meta.bridged_istd.ingress_timestamp = standard_metadata.ingress_global_timestamp;
@@ -251,6 +258,17 @@ control Int_metadata_insert(
         2: hop latency
         3: queue information
     */
+    /**
+        Monitoring - Egress Information 
+
+        We need to store the information (get information from behavior model - e.g. standard_metadata)
+        * egress port identifier
+        * egress timestamp
+        * hop latency
+        * egress port tx link util
+        * queue occupancy
+    */
+
     action int_set_header_0(){
         hdr.int_switch_id.setValid();
         hdr.int_switch_id.switch_id = int_metadata.switch_id;
@@ -362,6 +380,7 @@ control Int_metadata_insert(
     }
 
     /* Table to process instruction bits 0-3 */
+    
     table int_inst_0003 {
         key = {
             hdr.int_header.instruction_mask_0003: exact;
@@ -490,6 +509,17 @@ control Int_egress(
     Int_outer_encap() int_outer_encap;
 
     apply{
+        /*
+            Check the int_shim_header: 
+            * int_type - 
+                * hop-by-hop
+                * destination
+        */
+        /*
+            hop-by-hop transit -> need to set int_type?
+        }*/
+
+        // After shim header, then switch to int header
         if(hdr.int_header.isValid()){
             if(hdr.int_header.remaining_hop_cnt == 0 || 
                 hdr.int_header.e == 1){

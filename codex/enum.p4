@@ -17,3 +17,7 @@ const bit<8>    PROTO_IPV6=41;
 
 // INT 
 const bit<6>    DSCP_INT=0x17;
+
+// INT Header type - destination and hop-by-hop
+const bit<8>    INT_TYPE_DST=0x1;
+const bit<8>    INT_TYPE_HOP=0x2;

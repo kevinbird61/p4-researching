@@ -4,6 +4,8 @@
 
 // INT shim header for TCP/UDP 
 /*
+    * int_type - "hop-by-hop" or "destination"
+
     rsvd = reserved 
 */
 header int_tcpudp_shim_t{
@@ -19,7 +21,62 @@ header int_tcpudp_shim_t{
     16 instruction bits are defined in four 4b fields to allow concurrent
     lookups of the bits without listing 2^16 combinations.
 
+    * ver: INT metadata header version, with current value = 1 
+    * rep: Replication requested. If non-zero, it means device will replicate this INT packet
+        * 0: no replication requested
+        * 1: Port level (L2-level) replication 
+        * 2: Next-hop level (L3-level) replication
+        * 3: L2 + L3 level replication 
+    * c: copy label, let sink can distinguish which one is original
+        * 0: default 
+        * 1: means this packet is an copy one (replicated packet)
+    * e: Max Hop count "exceeded"
+        * 0: default
+        * 1: when "remaining hop count = 0", then this field will set 1
+    * m: MTU "exceeded"
+        when appended metadata exceed MTU of current link, set it
+    * hop_metadata_len: 
+        Per-hop metadata length, the length of metadata in “4-byte” words to be inserted at each INT hop
+    * remaining_hop_cnt: 
+        The remaining amount of hop we can append.
+
+    * 0003: 
+        * switch id
+        * level1 ingress/egress port id
+        * hop latency
+        * queue id + queue occupancy
+    * 0407:
+        * ingress timestamp
+        * egress timestamp
+        * level2 ingress/egress port id
+        * egress port tx util
+    * 08~14:
+        (reserved bits)
+    * 15:
+        * checksum complement
+
     rsvd = reserved 
+
+    =============================================
+    INT Source: 
+        - need to set those field to 0:
+            * ver
+            * rep
+            * c
+            * m
+        - set the maximum
+            * hop_metadata_len
+            * remaining hop count
+        - init
+            * instruction bitmap
+    
+    INT Transit Hop:
+        - need to update:
+            * c
+            * e
+            * m
+            * remaining hop count
+    =============================================
 */
 header int_header_t {
     bit<4>  ver;
@@ -40,6 +97,7 @@ header int_header_t {
 
 // INT meta-value headers
 /* 
+    Instruction Bitmap - instruction_mask_0003 ~ instruction_mask_1215 ( total 16-bit )
     different header for each value type,
     which will specify by instruction bitmap
     * bit 0 (MSB): Switch ID
