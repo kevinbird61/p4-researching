@@ -2,6 +2,7 @@
     P4.org - INT spec v1.0 
     Use case: INT over TCP/UDP, deploy on INT Transit hop 
     version: P4_16
+    backend: psa
 */
 
 // Essential library
@@ -683,9 +684,7 @@ control Int_egress(
             if(hdr.int_header.remaining_hop_cnt == 0 || hdr.int_header.e == 1){
                 int_hop_cnt_exceeded();
             } else if((hdr.int_header.instruction_mask_0811 ++ 
-                hdr.int_header.instruction_mask_1215)
-                & 8w0xFE == 0
-                ){
+                hdr.int_header.instruction_mask_1215) & 8w0xFE == 0){
                     /*
                         v1.0 spec allows "2" options for handling unsupported
                         INT instructions. This example code skips the entire hop
