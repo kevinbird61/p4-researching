@@ -12,7 +12,7 @@
 // Headers 
 #include "int-header.p4"
 #include "standard.p4"
-#include "../CODEX/enum.p4"
+#include "../codex/enum.p4"
 
 // Structs
 struct headers {
@@ -39,6 +39,8 @@ struct empty_metadata_t {
 }
 
 /* Port id and timestamp types - defined in psa.p4 (Portable Switch Arch.) */
+typedef bit<9> PortId_t;
+typedef bit<48> Timestamp_t;
 struct bridged_ingress_input_metadata_t {
     PortId_t    ingress_port;
     Timestamp_t ingress_timestamp;
@@ -150,7 +152,6 @@ parser IngressParser(
         // meta.fwd_metadata.checksum_state = ck.get_state();
 
         // end
-        transition accept;
         transition select(hdr.ipv4.dscp){
             /* &&& is a mask operator in P4_16 */
             DSCP_INT &&& DSCP_INT: parse_int_shim;
@@ -192,7 +193,7 @@ parser IngressParser(
     @param inout H hdr
     @param inout M meta
 */
-control VerifyChecksum(
+control INT_VerifyChecksum(
     inout headers hdr,
     inout metadata meta
 ){
@@ -242,7 +243,7 @@ control Int_metadata_insert(
     inout headers hdr,
     in int_metadata_t int_metadata,
     in bridged_ingress_input_metadata_t bridged_istd,
-    in standard_metadata istd 
+    in standard_metadata_t istd 
 ){
     /* this reference implementation covers only INT instructions 0-3 
         0: switch id
@@ -266,7 +267,7 @@ control Int_metadata_insert(
         // hdr.int_hop_latency.hop_latency = (bit<32>) (istd.egress_timestamp - bridged_istd.ingress_timestamp);
         // Modified - using standard_metadata 
         // Notice - egress_global_timestamp/ingress_global_timestamp: bit<48>
-        hdr.int_hop_latency.hop_latency = (bit<32>) (istd.egress_global_timestamp - bridged_istd.ingress_global_timestamp);
+        hdr.int_hop_latency.hop_latency = (bit<32>) (istd.egress_global_timestamp - bridged_istd.ingress_timestamp);
     }
 
     action int_set_header_3(){
@@ -431,7 +432,7 @@ control Int_outer_encap(
             Add - UDP length update if you support UDP 
         */
 
-        if(hdr.int_shim_isValid()){
+        if(hdr.int_shim.isValid()){
             int_update_shim();
         }
     }
@@ -540,7 +541,7 @@ control Int_egress(
     @param inout H hdr
     @param inout M meta
 */
-control ComputeChecksum(
+control INT_ComputeChecksum(
     inout headers hdr,
     inout metadata meta
 ){
@@ -558,7 +559,7 @@ control ComputeChecksum(
 */
 
 control EgressDeparser(
-    packet_out b,
+    packet_out packet,
     in headers hdr
 ){
     // Checksum16() ck;
@@ -568,7 +569,6 @@ control EgressDeparser(
             // TODO: 
             // checksum 
         }
-    }
 
     // TODO: 
     // ck.set_state(meta.fwd_metadata.checksum_state);
@@ -641,14 +641,15 @@ control EgressDeparser(
     packet.emit(hdr.int_egress_tstamp);
     packet.emit(hdr.int_level2_port_ids);
     packet.emit(hdr.int_egress_port_tx_util);
+    }
 }
 
 // Form our switch architecture
 V1Switch(
 IngressParser(),
-VerifyChecksum(),
+INT_VerifyChecksum(),
 Int_ingress(),
 Int_egress(),
-ComputeChecksum(),
+INT_ComputeChecksum(),
 EgressDeparser()
 ) main;

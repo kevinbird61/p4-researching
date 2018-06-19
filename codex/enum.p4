@@ -14,3 +14,6 @@ const bit<8>    PROTO_IPV4=4;
 const bit<8>    PROTO_TCP=6;
 const bit<8>    PROTO_UDP=17;
 const bit<8>    PROTO_IPV6=41;
+
+// INT 
+const bit<6>    DSCP_INT=0x17;
