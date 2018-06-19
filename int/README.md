@@ -24,7 +24,7 @@ INT/int-transit.p4(319): error: : not a compile-time constant when binding to ch
 
 When you using p4c to compile your p4 program, and appear the error message like this. 
 
-## A: It means your compiler version and your compile command not fit.
+### A: It means your compiler version and your compile command not fit.
 
 Take an example: 
 * Before modification:
@@ -41,3 +41,4 @@ p4c-bm2-ss --std p4-16 \
   --p4runtime-file int.p4info \
   --p4runtime-format text transit-v1model.p4
 ```
+---
