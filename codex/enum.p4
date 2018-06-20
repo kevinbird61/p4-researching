@@ -4,8 +4,11 @@
 
 // etherType
 const bit<16>   TYPE_IPV4=0x0800;
+const bit<16>   TYPE_ARP=0x0806;
+const bit<16>   TYPE_VLAN=0x8100; // VLAN-tagged frame
 const bit<16>   TYPE_IPV6=0x86DD;
-const bit<16>   TYPE_MPLS=0x8847;
+const bit<16>   TYPE_MPLS_uni=0x8847; // MPLS unicast
+const bit<16>   TYPE_MPLS_mul=0x8848; // MPLS multicast
 
 // IP protocol number 
 // More reference: https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers

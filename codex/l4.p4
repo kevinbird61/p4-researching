@@ -23,3 +23,11 @@ header udp_t {
     bit<16> length_;
     bit<16> checksum;
 }
+
+// VXLAN support 
+header vxlan_t {
+    bit<8>  vxflags;
+    bit<24> rsvd1;      // reserved
+    bit<24> vnid;       // identifier
+    bit<8>  rsvd2;      // reserved
+}
