@@ -78,7 +78,7 @@ class SwitchConnection(object):
         request.action = p4runtime_pb2.SetForwardingPipelineConfigRequest.VERIFY_AND_COMMIT
         if dry_run:
             print "P4Runtime SetForwardingPipelineConfig: ", request
-        else 
+        else:
             self.client_stub.SetForwardingPipelineConfig(request)
 
     # Write TableEntry - using p4runtime API to write rules
@@ -97,7 +97,7 @@ class SwitchConnection(object):
             self.client_stub.Write(request)
     
     # Read TableEntry - using p4runtime API to read rules
-    def ReadTableEntries(self, table_entry, dry_run=False):
+    def ReadTableEntries(self, table_id=None, dry_run=False):
         request = p4runtime_pb2.ReadRequest()
         request.device_id = self.device_id 
         entity = request.entities.add()
