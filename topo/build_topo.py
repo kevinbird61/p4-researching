@@ -41,7 +41,7 @@ def BuildTopo():
     # enter into mininet cli
     CLI(net)
     print "Close the CLI."
-    net.stop();
+    net.stop()
 
 # self-defined command list
 def mycmd(self,line):
