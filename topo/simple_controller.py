@@ -1,12 +1,8 @@
 # primitive
-import argparse
-import json 
-import os 
-import sys
+import argparse,json,os,sys
 
 # P4 wrapper
-import bmv2
-import helper 
+import bmv2, helper 
 
 def error(msg):
     print >> sys.stderr, ' - ERROR! ' + msg 
