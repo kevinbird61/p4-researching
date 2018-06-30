@@ -1,2 +1,3 @@
 *.json
 *.p4info
+*.pyc
