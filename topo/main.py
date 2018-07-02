@@ -381,10 +381,22 @@ class ExerciseRunner:
         # Enter Mininet CLI
         CLI(self.net)
 
-def get_args():
+if __name__ == '__main__':
+    # from mininet.log import setLogLevel
+    # setLogLevel("info")
+
+    # Default logs/pcaps
     cwd = os.getcwd()
     default_logs = os.path.join(cwd, 'logs')
     default_pcaps = os.path.join(cwd, 'pcaps')
+
+    """ Define the parser of arguments, 
+
+        essential parts (come from outside) : 
+        --topo ./topology.json , need to assign a json file format, which represent the network topology.
+        --switch_json <compiled_p4_output.json> , need to assign a json file, which compile from a P4 Program.
+        --behavioral-exe <ss> , need to specify a simulator (software switch: ``)
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-q', '--quiet', help='Suppress log messages.',
                         action='store_true', required=False, default=False)
@@ -395,13 +407,9 @@ def get_args():
     parser.add_argument('-j', '--switch_json', type=str, required=False)
     parser.add_argument('-b', '--behavioral-exe', help='Path to behavioral executable',
                                 type=str, required=False, default='simple_switch')
-    return parser.parse_args()
-
-if __name__ == '__main__':
-    # from mininet.log import setLogLevel
-    # setLogLevel("info")
-
-    args = get_args()
+    
+    # Get 
+    args = parser.parse_args()
     exercise = ExerciseRunner(args.topo, args.log_dir, args.pcap_dir,
                               args.switch_json, args.behavioral_exe, args.quiet)
 
