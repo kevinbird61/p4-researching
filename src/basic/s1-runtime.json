@@ -1,0 +1,46 @@
+{
+    "target": "bmv2",
+    "p4info": "l3_forward.p4info",
+    "bmv2_json": "l3_forward.json",
+    "table_entries": [
+        {
+            "table": "Basic_ingress.ipv4_lpm",
+            "default_action": true,
+            "action_name": "Basic_ingress.drop",
+            "action_params": { }
+        },
+        {
+        "table": "Basic_ingress.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.1.1", 32]
+        },
+        "action_name": "Basic_ingress.ipv4_forward",
+        "action_params": {
+            "dstAddr": "00:00:00:00:01:01",
+            "port": 1
+        }
+        },
+        {
+        "table": "Basic_ingress.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
+        },
+        "action_name": "Basic_ingress.ipv4_forward",
+        "action_params": {
+            "dstAddr": "00:00:00:02:02:00",
+            "port": 2
+        }
+        },
+        {
+        "table": "Basic_ingress.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.3.3", 32]
+        },
+        "action_name": "Basic_ingress.ipv4_forward",
+        "action_params": {
+            "dstAddr": "00:00:00:03:03:00",
+            "port": 3
+        }
+        }
+    ]
+}
