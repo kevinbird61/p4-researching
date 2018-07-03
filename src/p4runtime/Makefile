@@ -6,3 +6,6 @@ p4runtime: advance_tunnel.p4
 		-o advance_tunnel.json \
 		--p4runtime-file advance_tunnel.p4info \
 		--p4runtime-format text advance_tunnel.p4
+
+controller: p4_controller.py
+	sudo python p4_controller.py

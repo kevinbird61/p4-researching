@@ -104,7 +104,7 @@ control Tunnel_ingress(
         hdr.tunnel.dst_id = dst_id;
         hdr.tunnel.proto_id = hdr.ethernet.etherType;
         hdr.ethernet.etherType = TYPE_TUNNEL;
-        egressTunnelCounter.count((bit<32>) hdr.tunnel.dst_id);
+        ingressTunnelCounter.count((bit<32>) hdr.tunnel.dst_id);
     }
 
     action tunnel_forward(egressSpec_t port){

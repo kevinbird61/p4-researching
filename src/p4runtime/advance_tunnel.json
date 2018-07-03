@@ -604,7 +604,7 @@
           "parameters" : [
             {
               "type" : "counter_array",
-              "value" : "Tunnel_ingress.egressTunnelCounter"
+              "value" : "Tunnel_ingress.ingressTunnelCounter"
             },
             {
               "type" : "field",
@@ -615,7 +615,7 @@
             "filename" : "advance_tunnel.p4",
             "line" : 107,
             "column" : 8,
-            "source_fragment" : "egressTunnelCounter.count((bit<32>) hdr.tunnel.dst_id)"
+            "source_fragment" : "ingressTunnelCounter.count((bit<32>) hdr.tunnel.dst_id)"
           }
         }
       ]

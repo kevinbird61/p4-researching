@@ -167,11 +167,18 @@ def main(p4info_file_path, bmv2_file_path):
             address='127.0.0.1:50052',
             device_id=1,
             proto_dump_file='logs/s2-p4runtime-requests.txt')
+        # for s3
+        s3 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
+            name="s3",
+            address='127.0.0.1:50053',
+            device_id=2,
+            proto_dump_file='logs/s3-p4runtime-requests.txt')
 
         # 傳送 master arbitration update message 來建立，使得這個 controller 成為
         # master (required by P4Runtime before performing any other write operation)
         s1.MasterArbitrationUpdate()
         s2.MasterArbitrationUpdate()
+        s3.MasterArbitrationUpdate()
 
         # 安裝目標 P4 程式到 switch 上
         s1.SetForwardingPipelineConfig(p4info=p4info_helper.p4info,
@@ -181,6 +188,10 @@ def main(p4info_file_path, bmv2_file_path):
         s2.SetForwardingPipelineConfig(p4info=p4info_helper.p4info,
                                         bmv2_json_file_path=bmv2_file_path)
         print "Installed P4 Program using SetForardingPipelineConfig on s2"
+
+        s3.SetForwardingPipelineConfig(p4info=p4info_helper.p4info,
+                                        bmv2_json_file_path=bmv2_file_path)
+        print "Installed P4 Program using SetForardingPipelineConfig on s3"
 
         # Write the rules that tunnel traffic from h1 to h2
         writeTunnelRules(p4info_helper, ingress_sw=s1, egress_sw=s2, tunnel_id=100,
@@ -193,6 +204,7 @@ def main(p4info_file_path, bmv2_file_path):
         # 完成寫入後，我們來讀取 s1,s2 的 table entries
         readTableRules(p4info_helper, s1)
         readTableRules(p4info_helper, s2)
+        readTableRules(p4info_helper, s3)
 
         # 並於每 2 秒內打印 tunnel counters
         while True:
@@ -203,6 +215,7 @@ def main(p4info_file_path, bmv2_file_path):
             printCounter(p4info_helper, s2, "Tunnel_ingress.egressTunnelCounter", 100)
             printCounter(p4info_helper, s2, "Tunnel_ingress.ingressTunnelCounter", 200)
             printCounter(p4info_helper, s1, "Tunnel_ingress.egressTunnelCounter", 200)
+
     except KeyboardInterrupt:
         # using ctrl + c to exit
         print "Shutting down."
