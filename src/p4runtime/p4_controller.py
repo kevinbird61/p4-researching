@@ -7,8 +7,8 @@ from time import sleep
 sys.path.append(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
         '../../utils/'))
-# And then we import 
-import p4runtime_lib.bmv2 
+# And then we import
+import p4runtime_lib.bmv2
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
 import p4runtime_lib.helper
 
@@ -26,7 +26,7 @@ def writeTunnelRules(
         1. An tunnel ingress rules on the ingress switch in the ipv4_lpm table,
             that encapsulates traffic into a tunnel with the specified ID
 
-        2. A transit rule on the ingress switch that forwards traffic based on 
+        2. A transit rule on the ingress switch that forwards traffic based on
             the specified ID
 
         3. An tunnel egress rule on the egress switch that decapsulates traffic
@@ -68,7 +68,7 @@ def writeTunnelRules(
         })
     # write into ingress of target sw
     ingress_sw.WriteTableEntry(table_entry)
-    print "Installed transit tunnel rule on %s" % ingress_sw.name 
+    print "Installed transit tunnel rule on %s" % ingress_sw.name
 
     # 3. Tunnel Egress rule
     # 在該範例演示當中，所有的 host 都會位於 port 1 上
@@ -76,7 +76,7 @@ def writeTunnelRules(
     table_entry = p4info_helper.buildTableEntry(
         table_name="Tunnel_ingress.tunnel_exact",
         match_fields={
-            "hdr.tunnel.dst_id": tunnel_id 
+            "hdr.tunnel.dst_id": tunnel_id
         },
         action_name="Tunnel_ingress.tunnel_egress",
         action_params={
@@ -96,24 +96,24 @@ def readTableRules(p4info_helper, sw):
             p4info_helper:  the P4Info helper
             sw:             the switch connection
     """
-    print '\n----- Reading table rules for %s ------' % sw.name 
+    print '\n----- Reading table rules for %s ------' % sw.name
     for response in sw.ReadTableEntries():
         for entity in response.entities:
             entry = entity.table_entry
-            # TOOD: 
+            # TOOD:
             # use the p4info_helper to translate the IDs in the entry to names
             table_name = p4info_helper.get_tables_name(entry.table_id)
             print '%s: ' % table_name,
             for m in entry.match:
                 print p4info_helper.get_match_field_name(table_name, m.field_id)
                 print '%r' % (p4info_helper.get_match_field_value(m),),
-            action = entry.action.action 
+            action = entry.action.action
             action_name = p4info_helper.get_actions_name(action.action_id)
             print '->', action_name,
             for p in action.params:
                 print p4info_helper.get_action_param_name(action_name, p.param_id),
-                print '%r' % p.value 
-            print 
+                print '%r' % p.value
+            print
 
 def printCounter(p4info_helper, sw, counter_name, index):
     """
@@ -135,7 +135,7 @@ def printCounter(p4info_helper, sw, counter_name, index):
                 counter_name, index,
                 counter.data.packet_count, counter.data.byte_count
             )
-    
+
 def printGrpcError(e):
     print "gRPC Error: ", e.details(),
     status_code = e.code()
@@ -149,7 +149,7 @@ def main(p4info_file_path, bmv2_file_path):
     # - then need to read from the file compile from P4 Program, which call .p4info
     p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)
 
-    try: 
+    try:
         """
             建立與範例當中使用到的兩個 switch - s1, s2
             使用的是 P4Runtime gRPC 的連線。
@@ -168,7 +168,7 @@ def main(p4info_file_path, bmv2_file_path):
             device_id=1,
             proto_dump_file='logs/s2-p4runtime-requests.txt')
 
-        # 傳送 master arbitration update message 來建立，使得這個 controller 成為 
+        # 傳送 master arbitration update message 來建立，使得這個 controller 成為
         # master (required by P4Runtime before performing any other write operation)
         s1.MasterArbitrationUpdate()
         s2.MasterArbitrationUpdate()
@@ -185,7 +185,7 @@ def main(p4info_file_path, bmv2_file_path):
         # Write the rules that tunnel traffic from h1 to h2
         writeTunnelRules(p4info_helper, ingress_sw=s1, egress_sw=s2, tunnel_id=100,
                          dst_eth_addr="00:00:00:00:02:02", dst_ip_addr="10.0.2.2")
-        
+
         # Write the rules that tunnel traffic from h2 to h1
         writeTunnelRules(p4info_helper, ingress_sw=s2, egress_sw=s1, tunnel_id=200,
                          dst_eth_addr="00:00:00:00:01:01", dst_ip_addr="10.0.1.1")
@@ -208,7 +208,7 @@ def main(p4info_file_path, bmv2_file_path):
         print "Shutting down."
     except grpc.RpcError as e:
         printGrpcError(e)
-    
+
     # Then close all the connections
     ShutdownAllSwitchConnections()
 
@@ -225,21 +225,21 @@ if __name__ == '__main__':
     # Specified result which compile from P4 program
     parser.add_argument('--p4info', help='p4info proto in text format from p4c',
             type=str, action="store", required=False,
-            default="advance_tunnel.p4info")
+            default="./advance_tunnel.p4info")
     parser.add_argument('--bmv2-json', help='BMv2 JSON file from p4c',
             type=str, action="store", required=False,
-            default="advance_tunnel.json")
-    args = parser.parse_args() 
+            default="./advance_tunnel.json")
+    args = parser.parse_args()
 
     if not os.path.exists(args.p4info):
         parser.print_help()
-        print "\np4info file not found: %s\nPlease compile the target P4 program first." % args.p4info 
+        print "\np4info file not found: %s\nPlease compile the target P4 program first." % args.p4info
         parser.exit(1)
     if not os.path.exists(args.bmv2_json):
         parser.print_help()
         print "\nBMv2 JSON file not found: %s\nPlease compile the target P4 program first." % args.bmv2_json
         parser.exit(1)
-    
+
     # Pass argument into main function
     main(args.p4info, args.bmv2_json)
-    
+

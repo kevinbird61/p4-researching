@@ -103,8 +103,7 @@ control Tunnel_ingress(
         hdr.tunnel.setValid();
         hdr.tunnel.dst_id = dst_id;
         hdr.tunnel.proto_id = hdr.ethernet.etherType;
-        hdr.ethernet.etherType = hdr.tunnel.proto_id;
-        hdr.tunnel.setInvalid();
+        hdr.ethernet.etherType = TYPE_TUNNEL;
         egressTunnelCounter.count((bit<32>) hdr.tunnel.dst_id);
     }
 
