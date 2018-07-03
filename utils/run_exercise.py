@@ -22,14 +22,13 @@
 import os, sys, json, subprocess, re, argparse
 from time import sleep
 
-from p4_mininet import P4Switch, P4Host
+from p4_mininet import P4Switch, P4Host, P4RuntimeSwitch
 
 from mininet.net import Mininet
 from mininet.topo import Topo
 from mininet.link import TCLink
 from mininet.cli import CLI
 
-from p4runtime_switch import P4RuntimeSwitch
 import p4runtime_lib.simple_controller
 
 def configureP4Switch(**switch_args):
