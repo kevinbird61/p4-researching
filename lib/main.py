@@ -261,6 +261,7 @@ class ExerciseRunner:
             host=P4Host,
             switch=switchClass,
             controller=None)
+        self.logger("Building mininet topology. [Finished]")
 
     def program_switch_p4runtime(self, sw_name, sw_dict):
         """ This method will use P4Runtime to program the switch using the
@@ -318,6 +319,7 @@ class ExerciseRunner:
                 - A mininet instance is stored as self.net and self.net.start() has
                 been called.
         """
+        self.logger("Programming Hosts.")
         # Get each P4Host instance, and set the default env
         for host_name in self.topo.hosts():
             h = self.net.get(host_name)
@@ -337,6 +339,7 @@ class ExerciseRunner:
             h.cmd('ethtool --offload %s rx off tx off' % h_iface.name)
             h.cmd('ip route add %s dev %s' % (sw_ip, h_iface.name))
             h.setDefaultRoute("via %s" % sw_ip)
+        self.logger("Programming Hosts. [Finished]")
 
     def do_net_cli(self):
         """ Starts up the mininet CLI and prints some helpful output.

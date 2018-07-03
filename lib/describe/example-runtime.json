@@ -1,0 +1,15 @@
+{
+    "target": "<target>",
+    "p4info": "<target's p4info, compile from P4>",
+    "bmv2_json": "<target's result, compile from P4>",
+    "table_entries": [
+        {
+        "table": "<name of control block>.<table name>",
+        "default_action": "true/false, decide use default acton or not",
+        "action_name": "<name of control block>.<action name>",
+        "action_params": { 
+            "<param, which represent key>" : "<value of param>"
+        }
+        }
+    ]
+}

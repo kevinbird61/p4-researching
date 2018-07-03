@@ -3,7 +3,7 @@
 > Using the utility concept from `p4lang/tutorials`
 
 ## Hierarchy
-* topo/
+* lib/
     * p4runtime_lib/
         * p4_mininet.py (`P4Host`,`P4Switch`,`P4RuntimeSwitch`)
         * netstat.py
@@ -11,7 +11,8 @@
     * helper.py
     * bmv2.py
     * convert.py
-    * build_topo.py (main program)
+    * simple_controller.py
+    * main.py (example)
 
 ## Functional
 
@@ -26,3 +27,24 @@
 * `convert.py`
     * used by `helper.py`
     * Transform the data format (From programmer, `Human-readable string` <=> `P4Info string`)
+
+# Process
+
+這部份分析 main.py (由 p4lang/tutorials 內提供) 如何建立一個 P4 的實驗環境。
+1. 指定必要參數
+    1. topology 的 json 程式
+    2. 編譯 P4 後產生的程式
+    3. 指定 software switch 的運行目標，example: `simple_switch_grpc`
+2. 執行 `ExerciseRunner` 的 class 初始化
+    1. 這部份主要是做整個系統初始化用、包括讀 topology 檔、建 hosts, links 等等
+3. 執行 `ExerciseRunner` 內的 function - `run_exercise()`
+    1. `create_network()` 
+        1. 設置 Mininet Object，創建屬性 `.net` 以及 `.topo`，並且 `.topo` 透過 `ExerciseTopo` 的 class 來做創建
+    2. 呼叫 `.net.start()`
+        1. 啟動方才建立的 Mininet Object 之中 `.net`
+    3. `program_hosts()`
+        1. 為 hosts 做初始化
+    4. `program_switches()`
+        1. 設置每一個 switch
+    5. `do_net_cli()`
+        1. 完成 config, 打印 log 訊息後進入 mininet CLI 模式，開始進行操作

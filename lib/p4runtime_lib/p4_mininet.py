@@ -261,7 +261,7 @@ class P4RuntimeSwitch(P4Switch):
             sleep(0.5)
     
     def start(self, controllers):
-        info("Starting P4 switch {}.\n".format(self.name))
+        info("Starting P4 Runtime switch {}.\n".format(self.name))
 
         args = [self.sw_path]
         for port, intf in self.intfs.items():
@@ -293,13 +293,14 @@ class P4RuntimeSwitch(P4Switch):
         
         cmd = ' '.join(args)
         info(cmd+"\n")
+        print cmd+"\n"
 
         pid = None 
         with tempfile.NamedTemporaryFile() as f:
             self.cmd(cmd + ' >' + self.log_file + ' 2>&1 & echo $! >> ' + f.name)
             pid = int(f.read())
-        debug("P4 switch {} PID is {}.\n".format(self.name, pid))
+        debug("P4 Runtime switch {} PID is {}.\n".format(self.name, pid))
         if not self.check_switch_started(pid):
-            error("P4 switch {} didn't start correctly.\n".format(self.name))
+            error("P4 Runtime switch {} didn't start correctly.\n".format(self.name))
             exit(1)
-        info("P4 switch {} has been started.\n".format(self.name))
+        info("P4 Runtime switch {} has been started.\n".format(self.name))
