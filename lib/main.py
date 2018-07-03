@@ -73,6 +73,7 @@ class ExerciseTopo(Topo):
 
         # Create switch
         for sw in switches:
+            print sw
             self.addSwitch(sw, log_file="%s/%s.log" %(log_dir, sw))
 
         # Create host links
@@ -93,6 +94,7 @@ class ExerciseTopo(Topo):
 
         # Create switch links
         for link in switch_links:
+            print link['node1']+"<->"+link['node2']
             self.addLink(link['node1'],link['node2'],
                         delay=link['latency'], bw=link['bandwidth'])
             self.addSwitchPort(link['node1'],link['node2'])

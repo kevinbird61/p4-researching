@@ -3,8 +3,8 @@ import re
 import google.protobuf.text_format
 
 # import p4.v1,p4.config.v1 library
-from p4 import p4runtime_pb2
-from p4.config import p4info_pb2
+from p4.v1 import p4runtime_pb2
+from p4.config.v1 import p4info_pb2
 
 # using convert.py
 from convert import encode
