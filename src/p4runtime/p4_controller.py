@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 import argparse, grpc, os, sys
 from time import sleep
 
@@ -230,7 +231,7 @@ if __name__ == '__main__':
             default="advance_tunnel.json")
     args = parser.parse_args() 
 
-    if not os.path.exists(args.p4info)
+    if not os.path.exists(args.p4info):
         parser.print_help()
         print "\np4info file not found: %s\nPlease compile the target P4 program first." % args.p4info 
         parser.exit(1)
