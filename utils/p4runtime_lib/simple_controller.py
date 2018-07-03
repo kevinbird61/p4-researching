@@ -1,19 +1,39 @@
-# primitive
-import argparse,json,os,sys
+#!/usr/bin/env python2
+#
+# Copyright 2017-present Open Networking Foundation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+import argparse
+import json
+import os
+import sys
 
-# P4 wrapper
-import bmv2, helper 
+import bmv2
+import helper
+
 
 def error(msg):
-    print >> sys.stderr, ' - ERROR! ' + msg 
+    print >> sys.stderr, ' - ERROR! ' + msg
 
-def info (msg):
-    print >> sys.stdout, ' - ' + msg 
+def info(msg):
+    print >> sys.stdout, ' - ' + msg
+
 
 class ConfException(Exception):
     pass
 
-# Main Entry of simple controller 
+
 def main():
     parser = argparse.ArgumentParser(description='P4Runtime Simple Controller')
 
@@ -42,6 +62,7 @@ def main():
                        workdir=workdir,
                        proto_dump_fpath=args.proto_dump_file)
 
+
 def check_switch_conf(sw_conf, workdir):
     required_keys = ["p4info"]
     files_to_check = ["p4info"]
@@ -66,14 +87,8 @@ def check_switch_conf(sw_conf, workdir):
         if not os.path.exists(real_path):
             raise ConfException("file does not exist %s" % real_path)
 
-# Program switch 
-def program_switch(
-    addr,
-    device_id,
-    sw_conf_file,
-    workdir,
-    proto_dump_fpath):
 
+def program_switch(addr, device_id, sw_conf_file, workdir, proto_dump_fpath):
     sw_conf = json_load_byteified(sw_conf_file)
     try:
         check_switch_conf(sw_conf=sw_conf, workdir=workdir)
@@ -115,6 +130,7 @@ def program_switch(
     finally:
         sw.shutdown()
 
+
 def insertTableEntry(sw, flow, p4info_helper):
     table_name = flow['table']
     match_fields = flow.get('match') # None if not found
@@ -133,26 +149,13 @@ def insertTableEntry(sw, flow, p4info_helper):
 
     sw.WriteTableEntry(table_entry)
 
-def tableEntryToString(flow):
-    if 'match' in flow:
-        match_str = ['%s=%s' % (match_name, str(flow['match'][match_name])) for match_name in
-                     flow['match']]
-        match_str = ', '.join(match_str)
-    elif 'default_action' in flow and flow['default_action']:
-        match_str = '(default action)'
-    else:
-        match_str = '(any)'
-    params = ['%s=%s' % (param_name, str(flow['action_params'][param_name])) for param_name in
-              flow['action_params']]
-    params = ', '.join(params)
-    return "%s: %s => %s(%s)" % (
-        flow['table'], match_str, flow['action_name'], params)
 
 # object hook for josn library, use str instead of unicode object
 # https://stackoverflow.com/questions/956867/how-to-get-string-objects-instead-of-unicode-from-json
 def json_load_byteified(file_handle):
     return _byteify(json.load(file_handle, object_hook=_byteify),
                     ignore_dicts=True)
+
 
 def _byteify(data, ignore_dicts=False):
     # if this is a unicode string, return its string representation
@@ -170,6 +173,23 @@ def _byteify(data, ignore_dicts=False):
         }
     # if it's anything else, return it in its original form
     return data
+
+
+def tableEntryToString(flow):
+    if 'match' in flow:
+        match_str = ['%s=%s' % (match_name, str(flow['match'][match_name])) for match_name in
+                     flow['match']]
+        match_str = ', '.join(match_str)
+    elif 'default_action' in flow and flow['default_action']:
+        match_str = '(default action)'
+    else:
+        match_str = '(any)'
+    params = ['%s=%s' % (param_name, str(flow['action_params'][param_name])) for param_name in
+              flow['action_params']]
+    params = ', '.join(params)
+    return "%s: %s => %s(%s)" % (
+        flow['table'], match_str, flow['action_name'], params)
+
 
 if __name__ == '__main__':
     main()

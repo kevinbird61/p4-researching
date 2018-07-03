@@ -1,61 +1,59 @@
+# Copyright 2017-present Open Networking Foundation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 import re
 
 import google.protobuf.text_format
+from p4 import p4runtime_pb2
+from p4.config import p4info_pb2
 
-# import p4.v1,p4.config.v1 library
-from p4.v1 import p4runtime_pb2
-from p4.config.v1 import p4info_pb2
-
-# using convert.py
 from convert import encode
 
-"""
-    Helper class:
-
-    - Aim to parse/translate <target>.p4info 
-    - Provide method to build p4 tableEntry
-    
-    Protobuf specification:
-    - (p4.config.v1) p4info.proto: https://github.com/p4lang/PI/blob/master/proto/p4/config/v1/p4info.proto
-    - (p4.v1) p4runtime.proto: https://github.com/p4lang/PI/blob/master/proto/p4/v1/p4runtime.proto
-
-    @func get()
-"""
 class P4InfoHelper(object):
     def __init__(self, p4_info_filepath):
-        # Create p4info object
         p4info = p4info_pb2.P4Info()
-        # Load the p4info file into a skeleton p4info object
+        # Load the p4info file into a skeleton P4Info object
         with open(p4_info_filepath) as p4info_f:
             google.protobuf.text_format.Merge(p4info_f.read(), p4info)
-        self.p4info = p4info 
+        self.p4info = p4info
 
-    def get(self,entity_type,name=None,id=None):
+    def get(self, entity_type, name=None, id=None):
         if name is not None and id is not None:
             raise AssertionError("name or id must be None")
-        
+
         for o in getattr(self.p4info, entity_type):
             pre = o.preamble
-            if name: 
+            if name:
                 if (pre.name == name or pre.alias == name):
                     return o
             else:
                 if pre.id == id:
-                    return o 
+                    return o
 
         if name:
             raise AttributeError("Could not find %r of type %s" % (name, entity_type))
         else:
             raise AttributeError("Could not find id %r of type %s" % (id, entity_type))
 
-    def get_id(self,entity_type,name):
-        return self.get(entity_type,name=name).preamble.id 
-    
-    def get_name(self,entity_type,id):
-        return self.get(entity_type,id=id).preamble.name 
-    
-    def get_alias(self,entity_type,id):
-        return self.get(entity_type,id=id).preamble.alias 
+    def get_id(self, entity_type, name):
+        return self.get(entity_type, name=name).preamble.id
+
+    def get_name(self, entity_type, id):
+        return self.get(entity_type, id=id).preamble.name
+
+    def get_alias(self, entity_type, id):
+        return self.get(entity_type, id=id).preamble.alias
 
     def __getattr__(self, attr):
         # Synthesize convenience functions for name to id lookups for top-level entities
@@ -73,11 +71,10 @@ class P4InfoHelper(object):
             return lambda id: self.get_name(primitive, id)
 
         raise AttributeError("%r object has no attribute %r" % (self.__class__, attr))
-    
-    def get_match_field(self,table_name,name=None,id=None):
-        # FIXME: self.p4info.tables -> 
+
+    def get_match_field(self, table_name, name=None, id=None):
         for t in self.p4info.tables:
-            pre = t.preamble 
+            pre = t.preamble
             if pre.name == table_name:
                 for mf in t.match_fields:
                     if name is not None:
@@ -85,7 +82,7 @@ class P4InfoHelper(object):
                             return mf
                     elif id is not None:
                         if mf.id == id:
-                            return mf 
+                            return mf
         raise AttributeError("%r has no attribute %r" % (table_name, name if name is not None else id))
 
     def get_match_field_id(self, table_name, match_field_name):
@@ -95,7 +92,6 @@ class P4InfoHelper(object):
         return self.get_match_field(table_name, id=match_field_id).name
 
     def get_match_field_pb(self, table_name, match_field_name, value):
-        # FIXME: Check the deps of p4runtim
         p4info_match = self.get_match_field(table_name, match_field_name)
         bitwidth = p4info_match.bitwidth
         p4runtime_match = p4runtime_pb2.FieldMatch()
@@ -122,7 +118,7 @@ class P4InfoHelper(object):
         else:
             raise Exception("Unsupported match type with type %r" % match_type)
         return p4runtime_match
-    
+
     def get_match_field_value(self, match_field):
         match_type = match_field.WhichOneof("field_match_type")
         if match_type == 'valid':
@@ -139,7 +135,6 @@ class P4InfoHelper(object):
             raise Exception("Unsupported match type with type %r" % match_type)
 
     def get_action_param(self, action_name, name=None, id=None):
-        # FIXME: check the p4info support - self.p4info."actions"
         for a in self.p4info.actions:
             pre = a.preamble
             if pre.name == action_name:
@@ -171,8 +166,7 @@ class P4InfoHelper(object):
                         default_action=False,
                         action_name=None,
                         action_params=None,
-                        priority=None):     
-        # Check out the p4runtime_pb2.TableEntry() have support "match"(table_entry."match"), "action"(table_entry."action") or not
+                        priority=None):
         table_entry = p4runtime_pb2.TableEntry()
         table_entry.table_id = self.get_tables_id(table_name)
 
