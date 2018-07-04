@@ -83,10 +83,10 @@ control Basic_ingress(
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
-    action simple_count(bit<16> sw_id){
+    /*action simple_count(bit<16> sw_id){
         // Increment, and then set switch ID
         ingressTunnelCounter.count((bit<32>) sw_id);
-    }
+    }*/
 
     table ipv4_lpm {
         key = {
@@ -94,7 +94,7 @@ control Basic_ingress(
         }
         actions = {
             ipv4_forward;
-            simple_count;
+            // simple_count;
             drop;
             NoAction;
         }

@@ -12,80 +12,46 @@ import p4runtime_lib.bmv2
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
 import p4runtime_lib.helper
 
-SWITCH_TO_HOST_PORT = 1
-SWITCH_TO_SWITCH_PORT = 2
-
-def writeTunnelRules(
-    p4info_helper,
-    ingress_sw,egress_sw,
-    tunnel_id,
-    dst_eth_addr, dst_ip_addr):
+def setDefaultDrop(p4info_helper,ingress_sw):
     """
-        Install 3 rules:
+        設定 drop 
+    """
+    table_entry = p4info_helper.buildTableEntry(
+        table_name="Basic_ingress.ipv4_lpm",
+        default_action=True,
+        action_name="Basic_ingress.drop",
+        action_params={})
+    ingress_sw.WriteTableEntry(table_entry)
+    print "Installed Default Drop Rule on %s" % ingress_sw.name
 
-        1. An tunnel ingress rules on the ingress switch in the ipv4_lpm table,
-            that encapsulates traffic into a tunnel with the specified ID
+def writeForwardRules(p4info_helper,ingress_sw,
+    dst_eth_addr,port,dst_ip_addr):
+    """
+        Install rules:
+        
+        做到原本 sx-runtime.json 的工作
 
-        2. A transit rule on the ingress switch that forwards traffic based on
-            the specified ID
-
-        3. An tunnel egress rule on the egress switch that decapsulates traffic
-            with the specified ID and sends it to the host
-
-        Args:
             p4info_helper:  the P4Info helper
             ingress_sw:     the ingress switch connection
-            egress_sw:      the egress switch connection
-            tunnel_id:      the specified tunnel ID
             dst_eth_addr:   the destination IP to match in the ingress rule
+            port:           port of switch 
             dst_ip_addr:    the destination Ethernet address to write in the egress rule
     """
 
-    # 1. Tunnel Ingress rule
+    # 1. Ingress rule
     table_entry = p4info_helper.buildTableEntry(
-        table_name="Tunnel_ingress.ipv4_lpm",
+        table_name="Basic_ingress.ipv4_lpm",
         match_fields={
             "hdr.ipv4.dstAddr": (dst_ip_addr,32)
         },
-        action_name="Tunnel_ingress.tunnel_ingress",
+        action_name="Basic_ingress.ipv4_forward",
         action_params={
-            "dst_id": tunnel_id
+            "dstAddr": dst_eth_addr,
+            "port": port
         })
     # write into ingress of target sw
     ingress_sw.WriteTableEntry(table_entry)
     print "Installed ingress tunnel rule on %s" % ingress_sw.name
-
-    # 2. Tunnel Transit Rule
-    # build the transit rule, and then install on the ingress sw
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="Tunnel_ingress.tunnel_exact",
-        match_fields={
-            "hdr.tunnel.dst_id": tunnel_id
-        },
-        action_name="Tunnel_ingress.tunnel_forward",
-        action_params={
-            "port": SWITCH_TO_SWITCH_PORT
-        })
-    # write into ingress of target sw
-    ingress_sw.WriteTableEntry(table_entry)
-    print "Installed transit tunnel rule on %s" % ingress_sw.name
-
-    # 3. Tunnel Egress rule
-    # 在該範例演示當中，所有的 host 都會位於 port 1 上
-    # （一般來說，我們需要去追蹤哪些 port 被 host 所連接！）
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="Tunnel_ingress.tunnel_exact",
-        match_fields={
-            "hdr.tunnel.dst_id": tunnel_id
-        },
-        action_name="Tunnel_ingress.tunnel_egress",
-        action_params={
-            "dstAddr": dst_eth_addr,
-            "port": SWITCH_TO_HOST_PORT
-        })
-    # write into egress of target sw
-    egress_sw.WriteTableEntry(table_entry)
-    print "Installed egress tunnel rule on %s" % egress_sw.name
 
 
 def readTableRules(p4info_helper, sw):
@@ -193,28 +159,38 @@ def main(p4info_file_path, bmv2_file_path):
                                         bmv2_json_file_path=bmv2_file_path)
         print "Installed P4 Program using SetForardingPipelineConfig on s3"
 
-        # Write the rules that tunnel traffic from h1 to h2
-        writeTunnelRules(p4info_helper, ingress_sw=s1, egress_sw=s2, tunnel_id=100,
-                         dst_eth_addr="00:00:00:00:02:02", dst_ip_addr="10.0.2.2")
-
-        # Write the rules that tunnel traffic from h2 to h1
-        writeTunnelRules(p4info_helper, ingress_sw=s2, egress_sw=s1, tunnel_id=200,
-                         dst_eth_addr="00:00:00:00:01:01", dst_ip_addr="10.0.1.1")
+        # 設定 default action
+        setDefaultDrop(p4info_helper,ingress_sw=s1)
+        setDefaultDrop(p4info_helper,ingress_sw=s2)
+        setDefaultDrop(p4info_helper,ingress_sw=s3)
+        
+        # 設定 forward rules
+        # - s1
+        writeForwardRules(p4info_helper,ingress_sw=s1,
+                        dst_eth_addr="00:00:00:00:01:01",port=1,dst_ip_addr="10.0.1.1")
+        writeForwardRules(p4info_helper,ingress_sw=s1,
+                        dst_eth_addr="00:00:00:02:02:00",port=2,dst_ip_addr="10.0.2.2")
+        writeForwardRules(p4info_helper,ingress_sw=s1,
+                        dst_eth_addr="00:00:00:03:03:00",port=3,dst_ip_addr="10.0.3.3")
+        # - s2
+        writeForwardRules(p4info_helper,ingress_sw=s2,
+                        dst_eth_addr="00:00:00:01:02:00",port=2,dst_ip_addr="10.0.1.1")
+        writeForwardRules(p4info_helper,ingress_sw=s2,
+                        dst_eth_addr="00:00:00:00:02:02",port=1,dst_ip_addr="10.0.2.2")
+        writeForwardRules(p4info_helper,ingress_sw=s2,
+                        dst_eth_addr="00:00:00:03:03:00",port=3,dst_ip_addr="10.0.3.3")
+        # - s1
+        writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:00:01:03:00",port=2,dst_ip_addr="10.0.1.1")
+        writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:00:02:03:00",port=3,dst_ip_addr="10.0.2.2")
+        writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:00:00:03:03",port=1,dst_ip_addr="10.0.3.3")
 
         # 完成寫入後，我們來讀取 s1,s2 的 table entries
         readTableRules(p4info_helper, s1)
         readTableRules(p4info_helper, s2)
         readTableRules(p4info_helper, s3)
-
-        # 並於每 2 秒內打印 tunnel counters
-        while True:
-            sleep(2)
-            print '\n============ Reading tunnel counters =============='
-            # 最後一個參數為 tunnel ID ! (e.g. Index)
-            printCounter(p4info_helper, s1, "Tunnel_ingress.ingressTunnelCounter", 100)
-            printCounter(p4info_helper, s2, "Tunnel_ingress.egressTunnelCounter", 100)
-            printCounter(p4info_helper, s2, "Tunnel_ingress.ingressTunnelCounter", 200)
-            printCounter(p4info_helper, s1, "Tunnel_ingress.egressTunnelCounter", 200)
 
     except KeyboardInterrupt:
         # using ctrl + c to exit
@@ -238,10 +214,10 @@ if __name__ == '__main__':
     # Specified result which compile from P4 program
     parser.add_argument('--p4info', help='p4info proto in text format from p4c',
             type=str, action="store", required=False,
-            default="./advance_tunnel.p4info")
+            default="./simple.p4info")
     parser.add_argument('--bmv2-json', help='BMv2 JSON file from p4c',
             type=str, action="store", required=False,
-            default="./advance_tunnel.json")
+            default="./simple.json")
     args = parser.parse_args()
 
     if not os.path.exists(args.p4info):

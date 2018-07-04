@@ -8,9 +8,7 @@
     {
       "name" : "scalars_0",
       "id" : 0,
-      "fields" : [
-        ["tmp", 32, false]
-      ]
+      "fields" : []
     },
     {
       "name" : "ethernet_t",
@@ -405,63 +403,6 @@
           }
         }
       ]
-    },
-    {
-      "name" : "Basic_ingress.simple_count",
-      "id" : 3,
-      "runtime_data" : [
-        {
-          "name" : "sw_id",
-          "bitwidth" : 16
-        }
-      ],
-      "primitives" : [
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["scalars", "tmp"]
-            },
-            {
-              "type" : "expression",
-              "value" : {
-                "type" : "expression",
-                "value" : {
-                  "op" : "&",
-                  "left" : {
-                    "type" : "local",
-                    "value" : 0
-                  },
-                  "right" : {
-                    "type" : "hexstr",
-                    "value" : "0xffffffff"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "op" : "count",
-          "parameters" : [
-            {
-              "type" : "counter_array",
-              "value" : "Basic_ingress.ingressTunnelCounter"
-            },
-            {
-              "type" : "field",
-              "value" : ["scalars", "tmp"]
-            }
-          ],
-          "source_info" : {
-            "filename" : "simple.p4",
-            "line" : 88,
-            "column" : 8,
-            "source_fragment" : "ingressTunnelCounter.count((bit<32>) sw_id)"
-          }
-        }
-      ]
     }
   ],
   "pipelines" : [
@@ -499,12 +440,11 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [2, 3, 1, 0],
-          "actions" : ["Basic_ingress.ipv4_forward", "Basic_ingress.simple_count", "Basic_ingress.drop", "NoAction"],
+          "action_ids" : [2, 1, 0],
+          "actions" : ["Basic_ingress.ipv4_forward", "Basic_ingress.drop", "NoAction"],
           "base_default_next" : null,
           "next_tables" : {
             "Basic_ingress.ipv4_forward" : null,
-            "Basic_ingress.simple_count" : null,
             "Basic_ingress.drop" : null,
             "NoAction" : null
           },
