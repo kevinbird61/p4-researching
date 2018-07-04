@@ -121,11 +121,30 @@ class SwitchConnection(object):
         if index is not None:
             counter_entry.index.index = index
         if dry_run:
-            print "P4Runtime Read:", request
+            print "P4Runtime Read Counters:", request
         else:
             for response in self.client_stub.Read(request):
                 yield response
 
+    # New, in order to readMeter
+    def ReadMeters(self, meter_id=None, index=None, dry_run=False):
+        request = p4runtime_pb2.ReadRequest()
+        request.device_id = self.device_id
+        entity = request.entities.add()
+        # meter
+        meter_entry = entity.meter_entry
+        if meter_id is not None:
+            # assign user-defined id
+            counter_entry.counter_id = counter_id
+        else:
+            counter_entry.counter_id = 0
+        if index is not None:
+            counter_entry.index.index = index
+        if dry_run:
+            print "P4Runtime Read Meters: ", request
+        else:
+            for response in self.client_stub.Read(request):
+                yield response
 
 class GrpcRequestLogger(grpc.UnaryUnaryClientInterceptor,
                         grpc.UnaryStreamClientInterceptor):
