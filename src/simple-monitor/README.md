@@ -18,4 +18,13 @@
         * 寫入簡單規則: 取代 `basic/` 內原本給 switch 讀取的 sx-runtime.json，改由 controller 做派送。
         * 使用簡單的 counter 操作，了解 counter 當中 counter name 與 index 間關係、以及 counter 的簡單使用方法。
 
+---
 
+## Run 
+
+* Step 1: `./build.sh` 啟動 mininet 環境
+   * 載入編寫的 p4 program (.json) 以及依據拓樸 (topology.json) 來建制 mininet 
+* Step 2: `make controller` 來啟動 controller
+   * 開啟 controller 後，會幫每台 switch 載入 forwarding rules 
+   * 這麼一來連線功能就完成了
+   
