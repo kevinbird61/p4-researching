@@ -81,12 +81,9 @@ control Basic_ingress(
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        // counter - using port as id
+        ingressTunnelCounter.count((bit<32>)port);
     }
-
-    /*action simple_count(bit<16> sw_id){
-        // Increment, and then set switch ID
-        ingressTunnelCounter.count((bit<32>) sw_id);
-    }*/
 
     table ipv4_lpm {
         key = {
@@ -94,7 +91,6 @@ control Basic_ingress(
         }
         actions = {
             ipv4_forward;
-            // simple_count;
             drop;
             NoAction;
         }

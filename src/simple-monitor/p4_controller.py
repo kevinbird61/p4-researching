@@ -30,7 +30,6 @@ def writeForwardRules(p4info_helper,ingress_sw,
         Install rules:
         
         做到原本 sx-runtime.json 的工作
-
             p4info_helper:  the P4Info helper
             ingress_sw:     the ingress switch connection
             dst_eth_addr:   the destination IP to match in the ingress rule
@@ -57,7 +56,6 @@ def writeForwardRules(p4info_helper,ingress_sw,
 def readTableRules(p4info_helper, sw):
     """
         Reads the table entries from all tables on the switch.
-
         Args:
             p4info_helper:  the P4Info helper
             sw:             the switch connection
@@ -86,7 +84,6 @@ def printCounter(p4info_helper, sw, counter_name, index):
         讀取指定的 counter 於指定 switch 上的 index
         於這支範例程式中，index 是利用 tunnel ID 來標記
         若 index 為 0，當將會 return 所有該 counter 的 values
-
         Args:
             p4info_helper:  the P4Info Helper
             sw:             the switch connection
@@ -96,11 +93,7 @@ def printCounter(p4info_helper, sw, counter_name, index):
     for response in sw.ReadCounters(p4info_helper.get_counters_id(counter_name), index):
         for entity in response.entities:
             counter = entity.counter_entry
-            print "%s %s %d: %d packets (%d bytes)" % (
-                sw.name,
-                counter_name, index,
-                counter.data.packet_count, counter.data.byte_count
-            )
+            print "[SW: %s][Cnt: %s][Port: %d]: %d packets (%d bytes)" % (sw.name,counter_name, index,counter.data.packet_count, counter.data.byte_count)
 
 def printGrpcError(e):
     print "gRPC Error: ", e.details(),
@@ -120,9 +113,8 @@ def main(p4info_file_path, bmv2_file_path):
             建立與範例當中使用到的兩個 switch - s1, s2
             使用的是 P4Runtime gRPC 的連線。
             並且 dump 所有的 P4Runtime 訊息，並送到 switch 上以 txt 格式做儲存
-
             - 以這邊 P4 的封裝來說， port no 起始從 50051 開始
-        """
+         """
         s1 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
             name='s1',
             address='127.0.0.1:50051',
@@ -192,6 +184,27 @@ def main(p4info_file_path, bmv2_file_path):
         readTableRules(p4info_helper, s2)
         readTableRules(p4info_helper, s3)
 
+        # 並於每 2 秒內打印 tunnel counters
+        while True:
+            sleep(2)
+            print '\n============ Reading tunnel counters =============='
+            # 最後一個參數為 tunnel ID ! (e.g. Index)
+            # 這個範例中用 egress port number 作為 index
+            # 監控該 device 上所有對外出口累積的使用量
+            # s1
+            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 1)
+            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 2)
+            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 3)
+            # s2
+            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 1)
+            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 2)
+            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 3)
+            # s3
+            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 1)
+            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 2)
+            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 3)
+
+
     except KeyboardInterrupt:
         # using ctrl + c to exit
         print "Shutting down."
@@ -204,11 +217,10 @@ def main(p4info_file_path, bmv2_file_path):
 
 if __name__ == '__main__':
     """ Simple P4 Controller
-
         Args:
-            p4info:     指定 P4 Program 編譯產生的 p4info ( PI 制定之格式、給予 controller 讀取 )
+            p4info:     指定 P4 Program 編譯產生的 p4info (PI 制定之格式、給予 controller 讀取)
             bmv2-json:  指定 P4 Program 編譯產生的 json 格式，依據 backend 不同，而有不同的檔案格式
-    """
+     """
 
     parser = argparse.ArgumentParser(description='P4Runtime Controller')
     # Specified result which compile from P4 program
@@ -231,4 +243,3 @@ if __name__ == '__main__':
 
     # Pass argument into main function
     main(args.p4info, args.bmv2_json)
-

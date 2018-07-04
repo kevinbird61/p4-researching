@@ -7,4 +7,5 @@ simple: simple.p4
 		--p4runtime-file simple.p4info \
 		--p4runtime-format text simple.p4
 
-
+controller: p4_controller.py
+	sudo python p4_controller.py
