@@ -88,6 +88,16 @@ def deleteForwardRules(p4info_helper, ingress_sw,
     ingress_sw.DeleteTableEntry(table_entry)
     print "Deleted ingress forward rule on %s" % ingress_sw.name
 
+def clearAllRules(p4info_helper, sw):
+    print '\n----- Clear all table rules for %s -----' % sw.name
+    # fetch all response
+    for response in sw.ReadTableEntries():
+        for entity in response.entities:
+            entry = entity.table_entry
+            # delete this entry
+            sw.DeleteTableEntry(entry)
+            print "Delete ingress forward rule on %s" % sw.name
+
 def readTableRules(p4info_helper, sw):
     """
         Reads the table entries from all tables on the switch.
@@ -129,7 +139,7 @@ def printCounter(p4info_helper, sw, counter_name, index):
         for entity in response.entities:
             counter = entity.counter_entry
             print "[SW: %s][Cnt: %s][Port: %d]: %d packets (%d bytes)" % (sw.name,counter_name, index,counter.data.packet_count, counter.data.byte_count)
-            return counter.data.packet_count 
+            return counter.data.packet_count
 
 def printGrpcError(e):
     print "gRPC Error: ", e.details(),
@@ -289,6 +299,14 @@ def main(p4info_file_path, bmv2_file_path):
                         dst_eth_addr="00:00:00:05:04:00",port=2,dst_ip_addr="10.0.5.4")
                 writeForwardRules(p4info_helper,ingress_sw=s3,
                         dst_eth_addr="00:00:05:04:00:00",port=1,dst_ip_addr="10.0.1.1")
+                # debug - test delete
+                """
+                clearAllRules(p4info_helper,s1)
+                clearAllRules(p4info_helper,s2)
+                clearAllRules(p4info_helper,s3)
+                clearAllRules(p4info_helper,s4)
+                clearAllRules(p4info_helper,s5)
+                """
                 flag=1
             # s3
             pkt_s3 = printCounter(p4info_helper, s3, "Basic_ingress.PktCounter", 0)
