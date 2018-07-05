@@ -10,6 +10,9 @@
 #include "../codex/enum.p4"
 
 const bit<32> MAX_COUNTER_SIZE = 1<<16;
+const bit<32> PKT_INDEX=0;
+const bit<32> TCP_INDEX=1;
+const bit<32> UDP_INDEX=1;
 
 // define our headers
 struct headers {
@@ -86,8 +89,9 @@ control Basic_ingress(
     inout standard_metadata_t standard_metadata
 ){
     // using counter as monitoring
-    counter(MAX_COUNTER_SIZE, CounterType.packets_and_bytes) TCPcounter;
-    counter(MAX_COUNTER_SIZE, CounterType.packets_and_bytes) UDPcounter;
+    counter(MAX_COUNTER_SIZE, CounterType.packets_and_bytes) PktCounter; // count all packets
+    counter(MAX_COUNTER_SIZE, CounterType.packets_and_bytes) TCPcounter; // count only tcp 
+    counter(MAX_COUNTER_SIZE, CounterType.packets_and_bytes) UDPcounter; // count only udp
     
     action drop() {
         mark_to_drop();
@@ -99,6 +103,8 @@ control Basic_ingress(
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        // count , using PKT_INDEX as index
+        PktCounter.count(PKT_INDEX);
     }
 
     table ipv4_lpm {
@@ -119,11 +125,11 @@ control Basic_ingress(
             ipv4_lpm.apply();
             if(hdr.udp.isValid()){
                 // using 0 as index
-                UDPcounter.count(0);
+                UDPcounter.count(UDP_INDEX);
             }
             if(hdr.tcp.isValid()){
                 // using 0 as index
-                TCPcounter.count(0);
+                TCPcounter.count(TCP_INDEX);
             }
         }
     }

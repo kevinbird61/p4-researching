@@ -285,7 +285,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 177,
+        "line" : 183,
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
@@ -295,11 +295,23 @@
   "meter_arrays" : [],
   "counter_arrays" : [
     {
-      "name" : "Basic_ingress.TCPcounter",
+      "name" : "Basic_ingress.PktCounter",
       "id" : 0,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 89,
+        "line" : 92,
+        "column" : 61,
+        "source_fragment" : "PktCounter"
+      },
+      "size" : 65536,
+      "is_direct" : false
+    },
+    {
+      "name" : "Basic_ingress.TCPcounter",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "advance.p4",
+        "line" : 93,
         "column" : 61,
         "source_fragment" : "TCPcounter"
       },
@@ -308,10 +320,10 @@
     },
     {
       "name" : "Basic_ingress.UDPcounter",
-      "id" : 1,
+      "id" : 2,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 90,
+        "line" : 94,
         "column" : 61,
         "source_fragment" : "UDPcounter"
       },
@@ -326,7 +338,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 153,
+        "line" : 159,
         "column" : 8,
         "source_fragment" : "update_checksum( ..."
       },
@@ -397,7 +409,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 93,
+            "line" : 97,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -432,7 +444,7 @@
           ],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 98,
+            "line" : 102,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -451,7 +463,7 @@
           ],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 99,
+            "line" : 103,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -470,7 +482,7 @@
           ],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 100,
+            "line" : 104,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -512,9 +524,28 @@
           ],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 101,
+            "line" : 105,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
+          }
+        },
+        {
+          "op" : "count",
+          "parameters" : [
+            {
+              "type" : "counter_array",
+              "value" : "Basic_ingress.PktCounter"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "advance.p4",
+            "line" : 107,
+            "column" : 8,
+            "source_fragment" : "PktCounter.count(PKT_INDEX)"
           }
         }
       ]
@@ -533,14 +564,14 @@
             },
             {
               "type" : "hexstr",
-              "value" : "0x00000000"
+              "value" : "0x00000001"
             }
           ],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 122,
+            "line" : 128,
             "column" : 16,
-            "source_fragment" : "UDPcounter.count(0)"
+            "source_fragment" : "UDPcounter.count(UDP_INDEX)"
           }
         }
       ]
@@ -559,14 +590,14 @@
             },
             {
               "type" : "hexstr",
-              "value" : "0x00000000"
+              "value" : "0x00000001"
             }
           ],
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 126,
+            "line" : 132,
             "column" : 16,
-            "source_fragment" : "TCPcounter.count(0)"
+            "source_fragment" : "TCPcounter.count(TCP_INDEX)"
           }
         }
       ]
@@ -578,7 +609,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 83,
+        "line" : 86,
         "column" : 8,
         "source_fragment" : "Basic_ingress"
       },
@@ -589,7 +620,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 104,
+            "line" : 110,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -676,7 +707,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 118,
+            "line" : 124,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -699,7 +730,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 120,
+            "line" : 126,
             "column" : 15,
             "source_fragment" : "hdr.udp.isValid()"
           },
@@ -722,7 +753,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "advance.p4",
-            "line" : 124,
+            "line" : 130,
             "column" : 15,
             "source_fragment" : "hdr.tcp.isValid()"
           },
@@ -747,7 +778,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 135,
+        "line" : 141,
         "column" : 8,
         "source_fragment" : "Basic_egress"
       },

@@ -50,8 +50,43 @@ def writeForwardRules(p4info_helper,ingress_sw,
         })
     # write into ingress of target sw
     ingress_sw.WriteTableEntry(table_entry)
-    print "Installed ingress tunnel rule on %s" % ingress_sw.name
+    print "Installed ingress forward rule on %s" % ingress_sw.name
 
+def modifyForwardRules(p4info_helper, ingress_sw,
+    dst_eth_addr, port, dst_ip_addr):
+    """
+        Modify Rules
+    """
+    table_entry = p4info_helper.buildTableEntry(
+        table_name="Basic_ingress.ipv4_lpm",
+        match_fields={
+            "hdr.ipv4.dstAddr": (dst_ip_addr, 32)
+        },
+        action_name="Basic_ingress.ipv4_forward",
+        action_params={
+            "dstAddr": dst_eth_addr,
+            "port": port
+        })
+    ingress_sw.ModifyTableEntry(table_entry)
+    print "Modified ingress forward rule on %s" % ingress_sw.name
+
+def deleteForwardRules(p4info_helper, ingress_sw,
+    dst_eth_addr, port, dst_ip_addr):
+    """
+        Delete Rules
+    """
+    table_entry = p4info_helper.buildTableEntry(
+        table_name="Basic_ingress.ipv4_lpm",
+        match_fields={
+            "hdr.ipv4.dstAddr": (dst_ip_addr, 32)
+        },
+        action_name="Basic_ingress.ipv4_forward",
+        action_params={
+            "dstAddr": dst_eth_addr,
+            "port": port
+        })
+    ingress_sw.DeleteTableEntry(table_entry)
+    print "Deleted ingress forward rule on %s" % ingress_sw.name
 
 def readTableRules(p4info_helper, sw):
     """
@@ -94,6 +129,7 @@ def printCounter(p4info_helper, sw, counter_name, index):
         for entity in response.entities:
             counter = entity.counter_entry
             print "[SW: %s][Cnt: %s][Port: %d]: %d packets (%d bytes)" % (sw.name,counter_name, index,counter.data.packet_count, counter.data.byte_count)
+            return counter.data.packet_count 
 
 def printGrpcError(e):
     print "gRPC Error: ", e.details(),
@@ -231,27 +267,36 @@ def main(p4info_file_path, bmv2_file_path):
         readTableRules(p4info_helper, s5)
 
         # 並於每 2 秒內打印 tunnel counters
-        """
+        flag = 0
         while True:
             sleep(2)
-            print '\n============ Reading tunnel counters =============='
+            print '\n============ Reading Packet counters on each switch =============='
             # 最後一個參數為 tunnel ID ! (e.g. Index)
             # 這個範例中用 egress port number 作為 index
             # 監控該 device 上所有對外出口累積的使用量
-
             # s1
-            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 1)
-            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 2)
-            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 3)
+            printCounter(p4info_helper, s1, "Basic_ingress.PktCounter", 0)
             # s2
-            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 1)
-            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 2)
-            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 3)
+            pkt_s2 = printCounter(p4info_helper, s2, "Basic_ingress.PktCounter", 0)
+            if pkt_s2 > 50 and flag == 0 :
+                # then we can modify forwarding rule
+                modifyForwardRules(p4info_helper,ingress_sw=s1,
+                        dst_eth_addr="00:00:00:05:04:00",port=5,dst_ip_addr="10.0.5.4")
+                modifyForwardRules(p4info_helper,ingress_sw=s5,
+                        dst_eth_addr="00:00:05:04:00:00",port=5,dst_ip_addr="10.0.1.1")
+                # write new rules
+                writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:00:05:04:00",port=2,dst_ip_addr="10.0.5.4")
+                writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:05:04:00:00",port=1,dst_ip_addr="10.0.1.1")
+                flag=1
             # s3
-            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 1)
-            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 2)
-            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 3)
-        """
+            pkt_s3 = printCounter(p4info_helper, s3, "Basic_ingress.PktCounter", 0)
+            # s4
+            pkt_s4 = printCounter(p4info_helper, s4, "Basic_ingress.PktCounter", 0)
+            # s5
+            printCounter(p4info_helper, s5, "Basic_ingress.PktCounter", 0)
+
 
     except KeyboardInterrupt:
         # using ctrl + c to exit

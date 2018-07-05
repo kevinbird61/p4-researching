@@ -4,6 +4,8 @@
 
 ## Scenario
 
+![](res/advance_topo.png)
+
 * Topology
     * 透過 `topology.json` 來定義網路拓樸的模樣
     * 採用較大型的網路架構
@@ -26,3 +28,13 @@
    * 開啟 controller 後，會幫每台 switch 載入 forwarding rules 
    * 這麼一來連線功能就完成了
    
+## 說明
+
+* 一開始運行的 flow rule 是：
+    * `h1` -> `s1` -> `s2` -> `s5` -> `h4,h5,h6`
+    * `h2` -> `s1` -> `s3` -> `s5` -> `h4,h5,h6`
+    * `h3` -> `s1` -> `s4` -> `s5` -> `h4,h5,h6`
+
+* 透過 P4 Counter 的支援，我們在 `advance.p4` 當中設置了一個 Counter，並以 0 做為該 counter 的 index，用來標記通過該 device 上的所有封包計數（型態為 `packets_and_bytes`）
+* 此時我們可以增加修改原本 forwarding rules 的條件：
+    * 在這邊我設定： `當 s2 上面的 counter > 50 時，我們修改 s1,s3 與 s5 的規則`，讓原本 `h1,h4 之間的流量`從 s1 <-> s2 <-> s5 改成 s1 <-> s3 <-> s5，並可以透過運行中的 controller 來察看各個 switch 上面封包數量的變化，藉此得知 modify 的功能有出現
