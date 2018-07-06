@@ -27,6 +27,12 @@
 * Step 2: `make controller` 來啟動 controller
    * 開啟 controller 後，會幫每台 switch 載入 forwarding rules 
    * 這麼一來連線功能就完成了
+* Step 3: 再看到 `./build.sh` 所建立的 mininet CLI
+   * 當中可以透過 xterm h<x> 的方式開啟任意的 host 來做 tcp/udp 測試
+   * 可以透過 `../../utils/pktgen/` 內提供的簡易程式來做到 tcp/udp 封包測試
+        * 傳送端: `python ../../utils/pktgen/sender.py --ip <target_host_ip> --msg <"Something u want to say">`
+        * 接收端: `python ../../utils/pktgen/receiver.py`
+
    
 ## 說明
 

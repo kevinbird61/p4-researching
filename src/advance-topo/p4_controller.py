@@ -149,7 +149,47 @@ def printGrpcError(e):
     traceback = sys.exc_info()[2]
     print "[%s:%s]" % (traceback.tb_frame.f_code.co_filename, traceback.tb_lineno)
 
-def main(p4info_file_path, bmv2_file_path):
+def debug(p4info_helper,s1,s2,s3,s4,s5):
+    # 並於每 2 秒內打印 tunnel counters
+        flag = 0
+        while True:
+            sleep(2)
+            print '\n============ Reading Packet counters on each switch =============='
+            # 最後一個參數為 tunnel ID ! (e.g. Index)
+            # 這個範例中用 egress port number 作為 index
+            # 監控該 device 上所有對外出口累積的使用量
+            # s1
+            printCounter(p4info_helper, s1, "Basic_ingress.PktCounter", 0)
+            # s2
+            pkt_s2 = printCounter(p4info_helper, s2, "Basic_ingress.PktCounter", 0)
+            if pkt_s2 > 50 and flag == 0 :
+                # then we can modify forwarding rule
+                modifyForwardRules(p4info_helper,ingress_sw=s1,
+                        dst_eth_addr="00:00:00:05:04:00",port=5,dst_ip_addr="10.0.5.4")
+                modifyForwardRules(p4info_helper,ingress_sw=s5,
+                        dst_eth_addr="00:00:05:04:00:00",port=5,dst_ip_addr="10.0.1.1")
+                # write new rules
+                writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:00:05:04:00",port=2,dst_ip_addr="10.0.5.4")
+                writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:05:04:00:00",port=1,dst_ip_addr="10.0.1.1")
+                # debug - test delete
+                """
+                    clearAllRules(p4info_helper,s1)
+                    clearAllRules(p4info_helper,s2)
+                    clearAllRules(p4info_helper,s3)
+                    clearAllRules(p4info_helper,s4)
+                    clearAllRules(p4info_helper,s5)
+                """
+                flag=1
+            # s3
+            pkt_s3 = printCounter(p4info_helper, s3, "Basic_ingress.PktCounter", 0)
+            # s4
+            pkt_s4 = printCounter(p4info_helper, s4, "Basic_ingress.PktCounter", 0)
+            # s5
+            printCounter(p4info_helper, s5, "Basic_ingress.PktCounter", 0)
+
+def main(p4info_file_path, bmv2_file_path, mode):
     # Instantiate a P4Runtime helper from the p4info file
     # - then need to read from the file compile from P4 Program, which call .p4info
     p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)
@@ -276,45 +316,8 @@ def main(p4info_file_path, bmv2_file_path):
         readTableRules(p4info_helper, s4)
         readTableRules(p4info_helper, s5)
 
-        # 並於每 2 秒內打印 tunnel counters
-        flag = 0
-        while True:
-            sleep(2)
-            print '\n============ Reading Packet counters on each switch =============='
-            # 最後一個參數為 tunnel ID ! (e.g. Index)
-            # 這個範例中用 egress port number 作為 index
-            # 監控該 device 上所有對外出口累積的使用量
-            # s1
-            printCounter(p4info_helper, s1, "Basic_ingress.PktCounter", 0)
-            # s2
-            pkt_s2 = printCounter(p4info_helper, s2, "Basic_ingress.PktCounter", 0)
-            if pkt_s2 > 50 and flag == 0 :
-                # then we can modify forwarding rule
-                modifyForwardRules(p4info_helper,ingress_sw=s1,
-                        dst_eth_addr="00:00:00:05:04:00",port=5,dst_ip_addr="10.0.5.4")
-                modifyForwardRules(p4info_helper,ingress_sw=s5,
-                        dst_eth_addr="00:00:05:04:00:00",port=5,dst_ip_addr="10.0.1.1")
-                # write new rules
-                writeForwardRules(p4info_helper,ingress_sw=s3,
-                        dst_eth_addr="00:00:00:05:04:00",port=2,dst_ip_addr="10.0.5.4")
-                writeForwardRules(p4info_helper,ingress_sw=s3,
-                        dst_eth_addr="00:00:05:04:00:00",port=1,dst_ip_addr="10.0.1.1")
-                # debug - test delete
-                """
-                clearAllRules(p4info_helper,s1)
-                clearAllRules(p4info_helper,s2)
-                clearAllRules(p4info_helper,s3)
-                clearAllRules(p4info_helper,s4)
-                clearAllRules(p4info_helper,s5)
-                """
-                flag=1
-            # s3
-            pkt_s3 = printCounter(p4info_helper, s3, "Basic_ingress.PktCounter", 0)
-            # s4
-            pkt_s4 = printCounter(p4info_helper, s4, "Basic_ingress.PktCounter", 0)
-            # s5
-            printCounter(p4info_helper, s5, "Basic_ingress.PktCounter", 0)
-
+        if mode is "advance":
+            debug(p4info_helper,s1,s2,s3,s4,s5)
 
     except KeyboardInterrupt:
         # using ctrl + c to exit
@@ -341,6 +344,9 @@ if __name__ == '__main__':
     parser.add_argument('--bmv2-json', help='BMv2 JSON file from p4c',
             type=str, action="store", required=False,
             default="./advance.json")
+    parser.add_argument('--mode', help='Specify the mode of controller.',
+            type=str, action="store", required=False,
+            default="advance")
     args = parser.parse_args()
 
     if not os.path.exists(args.p4info):
@@ -353,4 +359,4 @@ if __name__ == '__main__':
         parser.exit(1)
 
     # Pass argument into main function
-    main(args.p4info, args.bmv2_json)
+    main(args.p4info, args.bmv2_json, args.mode)
