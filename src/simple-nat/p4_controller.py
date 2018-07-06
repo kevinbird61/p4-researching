@@ -14,7 +14,7 @@ import p4runtime_lib.helper
 
 def setDefaultDrop(p4info_helper,ingress_sw):
     """
-        設定 drop 
+        設定 drop
     """
     table_entry = p4info_helper.buildTableEntry(
         table_name="Basic_ingress.ipv4_lpm",
@@ -28,12 +28,12 @@ def writeForwardRules(p4info_helper,ingress_sw,
     dst_eth_addr,port,dst_ip_addr):
     """
         Install rules:
-        
+
         做到原本 sx-runtime.json 的工作
             p4info_helper:  the P4Info helper
             ingress_sw:     the ingress switch connection
             dst_eth_addr:   the destination IP to match in the ingress rule
-            port:           port of switch 
+            port:           port of switch
             dst_ip_addr:    the destination Ethernet address to write in the egress rule
     """
 
@@ -52,16 +52,16 @@ def writeForwardRules(p4info_helper,ingress_sw,
     ingress_sw.WriteTableEntry(table_entry)
     print "Installed ingress tunnel rule on %s" % ingress_sw.name
 
-def writeNATRules(p4info_helper,ingress_sw,
+def writeNATForwardRules(p4info_helper,ingress_sw,
     dst_eth_addr,port,dst_ip_addr,new_ip_addr):
     """
         Install rules:
-        
+
         做到原本 sx-runtime.json 的工作
             p4info_helper:  the P4Info helper
             ingress_sw:     the ingress switch connection
             dst_eth_addr:   the destination IP to match in the ingress rule
-            port:           port of switch 
+            port:           port of switch
             dst_ip_addr:    the destination Ethernet address to write in the egress rule
     """
 
@@ -71,7 +71,7 @@ def writeNATRules(p4info_helper,ingress_sw,
         match_fields={
             "hdr.ipv4.dstAddr": (dst_ip_addr,32)
         },
-        action_name="Basic_ingress.nat",
+        action_name="Basic_ingress.nat_forward",
         action_params={
             "dstAddr": dst_eth_addr,
             "new_ip_addr": new_ip_addr,
@@ -79,7 +79,25 @@ def writeNATRules(p4info_helper,ingress_sw,
         })
     # write into ingress of target sw
     ingress_sw.WriteTableEntry(table_entry)
-    print "Installed ingress tunnel rule on %s" % ingress_sw.name
+    print "Installed NAT forward rule on %s" % ingress_sw.name
+
+
+def writeNATReverseRules(p4info_helper,ingress_sw,
+    dst_eth_addr,port,dst_ip_addr,ori_ip_addr):
+
+    table_entry = p4info_helper.buildTableEntry(
+        table_name="Basic_ingress.ipv4_lpm",
+        match_fields={
+            "hdr.ipv4.dstAddr": (dst_ip_addr,32)
+        },
+        action_name="Basic_ingress.nat_reverse",
+        action_params={
+            "dstAddr": dst_eth_addr,
+            "ori_ip_addr": ori_ip_addr,
+            "port": port
+        })
+    ingress_sw.WriteTableEntry(table_entry)
+    print "Installed NAT reverse rule on %s" % ingress_sw.name
 
 
 def readTableRules(p4info_helper, sw):
@@ -159,10 +177,10 @@ def main(p4info_file_path, bmv2_file_path):
 
         # 設定 forward rules / NAT rules
         # - s1 (NAT)
-        writeNATRules(p4info_helper,ingress_sw=s1,
+        writeNATForwardRules(p4info_helper,ingress_sw=s1,
                     dst_eth_addr="00:00:00:00:02:02",port=2,dst_ip_addr="10.0.2.2",new_ip_addr="10.1.1.1")
-        writeNATRules(p4info_helper,ingress_sw=s1,
-                    dst_eth_addr="00:00:00:00:01:01",port=1,dst_ip_addr="10.1.1.1",new_ip_addr="10.0.1.1")
+        writeNATReverseRules(p4info_helper,ingress_sw=s1,
+                    dst_eth_addr="00:00:00:00:01:01",port=1,dst_ip_addr="10.1.1.1",ori_ip_addr="10.0.1.1")
 
         # - s2 (Normal switch)
         writeForwardRules(p4info_helper,ingress_sw=s2,

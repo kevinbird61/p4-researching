@@ -21,7 +21,9 @@ My Researching work on P4.
     * From [advance usage(larger topo, modify/delete table entries support) of controller](src/advance-topo).
 * Learning how to use [In-band Network Telemetry (`WIP`)](src/int)
     * Using `psa.p4`(Can't compiled)/`v1model.p4`(Compiled, but not tested) architecture to construct transit/sink target device.
-* Learning how to implement NAT (`WIP`)
+* Learning how to implement NAT 
+    * Simple NAT forward/reverse [example](src/simple-nat)
+    * More complicated (`WIP`)
 
 # Author
 

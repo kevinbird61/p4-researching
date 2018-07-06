@@ -182,7 +182,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "nat.p4",
-        "line" : 159,
+        "line" : 169,
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
@@ -198,7 +198,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "nat.p4",
-        "line" : 135,
+        "line" : 145,
         "column" : 8,
         "source_fragment" : "update_checksum( ..."
       },
@@ -392,7 +392,7 @@
       ]
     },
     {
-      "name" : "Basic_ingress.nat",
+      "name" : "Basic_ingress.nat_forward",
       "id" : 3,
       "runtime_data" : [
         {
@@ -528,6 +528,144 @@
           }
         }
       ]
+    },
+    {
+      "name" : "Basic_ingress.nat_reverse",
+      "id" : 4,
+      "runtime_data" : [
+        {
+          "name" : "dstAddr",
+          "bitwidth" : 48
+        },
+        {
+          "name" : "ori_ip_addr",
+          "bitwidth" : 32
+        },
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 2
+            }
+          ],
+          "source_info" : {
+            "filename" : "nat.p4",
+            "line" : 92,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "nat.p4",
+            "line" : 93,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "nat.p4",
+            "line" : 94,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "nat.p4",
+            "line" : 95,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "nat.p4",
+            "line" : 97,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.dstAddr = ori_ip_addr"
+          }
+        }
+      ]
     }
   ],
   "pipelines" : [
@@ -547,7 +685,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "nat.p4",
-            "line" : 91,
+            "line" : 100,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -565,12 +703,13 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [2, 3, 1, 0],
-          "actions" : ["Basic_ingress.ipv4_forward", "Basic_ingress.nat", "Basic_ingress.drop", "NoAction"],
+          "action_ids" : [2, 3, 4, 1, 0],
+          "actions" : ["Basic_ingress.ipv4_forward", "Basic_ingress.nat_forward", "Basic_ingress.nat_reverse", "Basic_ingress.drop", "NoAction"],
           "base_default_next" : null,
           "next_tables" : {
             "Basic_ingress.ipv4_forward" : null,
-            "Basic_ingress.nat" : null,
+            "Basic_ingress.nat_forward" : null,
+            "Basic_ingress.nat_reverse" : null,
             "Basic_ingress.drop" : null,
             "NoAction" : null
           },
@@ -589,7 +728,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "nat.p4",
-            "line" : 107,
+            "line" : 117,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -614,7 +753,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "nat.p4",
-        "line" : 117,
+        "line" : 127,
         "column" : 8,
         "source_fragment" : "Basic_egress"
       },
