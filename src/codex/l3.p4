@@ -2,6 +2,32 @@
     Layer 3 protocol (including Layer 2.5 )
 */
 
+// ICMP - timestamp request/response
+header icmp_ts_t {
+    bit<8> type;
+    bit<8> code;
+    bit<16> hdrChecksum;
+    bit<16> identifier;
+    bit<16> seqNum;
+    bit<32> originTs;       // originate timestamp
+    bit<32> recvTs;         // receive timestamp
+    bit<32> tranTs;         // transmit timestamp
+}
+
+// ICMP 
+header icmp_t {
+    bit<8> type;
+    bit<8> code;
+    bit<16> hdrChecksum;
+    bit<16> empty;
+    bit<16> nextHopMtu;
+    // FIXME:
+    // Need to include "IP Header"
+    // And First 8 bytes of Original Datagram's Data
+    // ipv4_t ipv4;
+    // bit<64> originData; 
+}
+
 // MPLS
 header mpls_t {
     bit<20> label;
