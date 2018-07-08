@@ -22,7 +22,7 @@
 import os, sys, json, subprocess, re, argparse
 from time import sleep
 
-from p4_mininet import P4Switch, P4Host, P4RuntimeSwitch
+from p4_mininet import P4Switch, P4Host, P4HostV6, P4RuntimeSwitch
 
 from mininet.net import Mininet
 from mininet.topo import Topo
@@ -68,7 +68,7 @@ class ExerciseTopo(Topo):
         A custom class is used because the exercises make a few topology
         assumptions, mostly about the IP and MAC addresses.
     """
-    def __init__(self, hosts, switches, links, log_dir, **opts):
+    def __init__(self, hosts, switches, links, log_dir, host_mode, **opts):
         Topo.__init__(self, **opts)
         host_links = []
         switch_links = []
@@ -88,20 +88,38 @@ class ExerciseTopo(Topo):
         for sw in switches:
             self.addSwitch(sw, log_file="%s/%s.log" %(log_dir, sw))
 
-        for link in host_links:
-            host_name = link['node1']
-            host_sw   = link['node2']
-            host_num = int(host_name[1:])
-            sw_num   = int(host_sw[1:])
-            host_ip = "10.0.%d.%d" % (sw_num, host_num)
-            host_mac = '00:00:00:00:%02x:%02x' % (sw_num, host_num)
-            # Each host IP should be /24, so all exercise traffic will use the
-            # default gateway (the switch) without sending ARP requests.
-            self.addHost(host_name, ip=host_ip+'/24', mac=host_mac)
-            self.addLink(host_name, host_sw,
-                         delay=link['latency'], bw=link['bandwidth'],
-                         addr1=host_mac, addr2=host_mac)
-            self.addSwitchPort(host_sw, host_name)
+        if host_mode is 4:
+            for link in host_links:
+                host_name = link['node1']
+                host_sw   = link['node2']
+                host_num = int(host_name[1:])
+                sw_num   = int(host_sw[1:])
+                host_ip = "10.0.%d.%d" % (sw_num, host_num)
+                host_mac = '00:00:00:00:%02x:%02x' % (sw_num, host_num)
+                # Each host IP should be /24, so all exercise traffic will use the
+                # default gateway (the switch) without sending ARP requests.
+                self.addHost(host_name, ip=host_ip+'/24', mac=host_mac)
+                self.addLink(host_name, host_sw,
+                            delay=link['latency'], bw=link['bandwidth'],
+                            addr1=host_mac, addr2=host_mac)
+                self.addSwitchPort(host_sw, host_name)
+        if host_mode is 6:
+            for link in host_links:
+                host_name = link['node1']
+                host_sw   = link['node2']
+                host_num = int(host_name[1:])
+                sw_num   = int(host_sw[1:])
+                host_ip = "10.0.%d.%d" % (sw_num, host_num)
+                host_ipv6 = '1000::%d:%d' % (sw_num, host_num)
+                host_mac = '00:00:00:00:%02x:%02x' % (sw_num, host_num)
+                # Each host IP should be /24, so all exercise traffic will use the
+                # default gateway (the switch) without sending ARP requests.
+                self.addHost(host_name, ip=host_ip+'/24', v6Addr=host_ipv6+'/64', mac=host_mac)
+                self.addLink(host_name, host_sw,
+                            delay=link['latency'], bw=link['bandwidth'],
+                            addr1=host_mac, addr2=host_mac)
+                self.addSwitchPort(host_sw, host_name)
+        
 
         for link in switch_links:
             self.addLink(link['node1'], link['node2'],
@@ -143,6 +161,7 @@ class ExerciseRunner:
             topo : Topo object   // The mininet topology instance
             net : Mininet object // The mininet instance
 
+            host_mode: integer  // IPv4/IPv6 specification
     """
     def logger(self, *items):
         if not self.quiet:
@@ -157,7 +176,7 @@ class ExerciseRunner:
 
 
     def __init__(self, topo_file, log_dir, pcap_dir,
-                       switch_json, bmv2_exe='simple_switch', quiet=False):
+                       switch_json, bmv2_exe='simple_switch', quiet=False, host_mode=4):
         """ Initializes some attributes and reads the topology json. Does not
             actually run the exercise. Use run_exercise() for that.
 
@@ -189,7 +208,8 @@ class ExerciseRunner:
         self.pcap_dir = pcap_dir
         self.switch_json = switch_json
         self.bmv2_exe = bmv2_exe
-
+        # IPv4/6
+        self.host_mode = host_mode
 
     def run_exercise(self):
         """ Sets up the mininet instance, programs the switches,
@@ -250,7 +270,7 @@ class ExerciseRunner:
         """
         self.logger("Building mininet topology.")
 
-        self.topo = ExerciseTopo(self.hosts, self.switches.keys(), self.links, self.log_dir)
+        self.topo = ExerciseTopo(self.hosts, self.switches.keys(), self.links, self.log_dir,self.host_mode)
 
         switchClass = configureP4Switch(
                 sw_path=self.bmv2_exe,
@@ -258,11 +278,18 @@ class ExerciseRunner:
                 log_console=True,
                 pcap_dump=self.pcap_dir)
 
-        self.net = Mininet(topo = self.topo,
-                      link = TCLink,
-                      host = P4Host,
-                      switch = switchClass,
-                      controller = None)
+        if self.host_mode is 4:
+            self.net = Mininet(topo = self.topo,
+                        link = TCLink,
+                        host = P4Host,
+                        switch = switchClass,
+                        controller = None)
+        if self.host_mode is 6:
+            self.net = Mininet(topo = self.topo,
+                        link = TCLink,
+                        host = P4HostV6,
+                        switch = switchClass,
+                        controller = None)
 
     def program_switch_p4runtime(self, sw_name, sw_dict):
         """ This method will use P4Runtime to program the switch using the
@@ -393,6 +420,8 @@ def get_args():
     parser.add_argument('-j', '--switch_json', type=str, required=False)
     parser.add_argument('-b', '--behavioral-exe', help='Path to behavioral executable',
                                 type=str, required=False, default='simple_switch')
+    parser.add_argument('-m', '--host_mode', help='Mode of Host, IPv4(4) or IPv6(6).',
+                                type=int, required=False, default=4)
     return parser.parse_args()
 
 
@@ -402,7 +431,7 @@ if __name__ == '__main__':
 
     args = get_args()
     exercise = ExerciseRunner(args.topo, args.log_dir, args.pcap_dir,
-                              args.switch_json, args.behavioral_exe, args.quiet)
+                              args.switch_json, args.behavioral_exe, args.quiet,args.host_mode)
 
     exercise.run_exercise()
 

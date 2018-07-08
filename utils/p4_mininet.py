@@ -53,6 +53,29 @@ class P4Host(Host):
         )
         print "**********"
 
+class P4HostV6(Host):
+    def config(self, **params):
+        r = super(Host, self).config(**params)
+
+        self.defaultIntf().rename("eth0")
+
+        for off in ["rx", "tx", "sg"]:
+            cmd = "/sbin/ethtool --offload eth0 %s off" % off
+            self.cmd(cmd)
+        
+        # Do not disable IPV6
+
+        return r
+    def describe(self):
+        print "**********"
+        print self.name
+        print "default interface: %s\t%s\t%s" %(
+            self.defaultIntf().name,
+            self.defaultIntf().IP(),
+            self.defaultIntf().MAC()
+        )
+        print "**********"
+
 class P4Switch(Switch):
     """P4 virtual switch"""
     device_id = 0

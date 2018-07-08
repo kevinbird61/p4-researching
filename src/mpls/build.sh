@@ -10,4 +10,5 @@ make
 sudo python ../../utils/run_exercise.py \
     --topo topology.json \
     --switch_json target.json \
-    --behavioral-exe simple_switch_grpc
+    --behavioral-exe simple_switch_grpc \
+    --host_mode 6
