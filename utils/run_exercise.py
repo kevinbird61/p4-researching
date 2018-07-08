@@ -353,7 +353,8 @@ class ExerciseRunner:
             # phony IP to lie to the host about
             host_id = int(host_name[1:])
             sw_ip = '10.0.%d.254' % host_id
-
+            if self.host_mode is 6:
+                sw_v6_ip = '1000::%d:1' % host_id
             # Ensure each host's interface name is unique, or else
             # mininet cannot shutdown gracefully
             h.defaultIntf().rename('%s-eth0' % host_name)
@@ -361,7 +362,11 @@ class ExerciseRunner:
             h.cmd('arp -i %s -s %s %s' % (h_iface.name, sw_ip, sw_iface.mac))
             h.cmd('ethtool --offload %s rx off tx off' % h_iface.name)
             h.cmd('ip route add %s dev %s' % (sw_ip, h_iface.name))
+            if self.host_mode is 6:
+                h.cmd('ip -6 route add %s dev %s' % (sw_v6_ip, h_iface.name))
             h.setDefaultRoute("via %s" % sw_ip)
+            #if self.host_mode is 6:
+            #    h.setDefaultRoute("via %s" % sw_v6_ip)
 
 
     def do_net_cli(self):

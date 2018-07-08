@@ -3,7 +3,7 @@ import argparse, sys, socket, random, struct
 
 from scapy.all import sendp, send, get_if_list, get_if_list, get_if_hwaddr, hexdump
 from scapy.all import Packet
-from scapy.all import Ether, IP, UDP, TCP 
+from scapy.all import Ether, IP, IPv6, UDP, TCP 
 
 def get_if():
     iface=None 
@@ -19,8 +19,9 @@ def get_if():
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-v', type=int, help="Specify using (4)IPv4/(6)IPv6.")
     parser.add_argument('--ip', type=str, help="The destination IP address.")
-    parser.add_argument('--msg', type=str, help="The message which will send to dst.")
+    parser.add_argument('--msg', type=str, help="The message which will send to dst.",default="Hello World")
 
     args = parser.parse_args()
 
@@ -28,14 +29,22 @@ def main():
     iface = get_if()
 
     # start to pack
-    print "sending on interface {} to IP addr {}".format(iface, str(addr))
-    pkt = Ether(src=get_if_hwaddr(iface), dst='ff:ff:ff:ff:ff:ff')
-    pkt = pkt / IP(dst=addr) / TCP(dport=1234, sport=random.randint(49152,65535)) / args.msg
-
-    pkt.show2()
-
-    # send 
-    sendp(pkt, iface=iface, verbose=False)
+    if args.v is 4:
+        print "sending on interface {} to IP addr {}".format(iface, str(addr))
+        pkt = Ether(src=get_if_hwaddr(iface), dst='ff:ff:ff:ff:ff:ff')
+        pkt = pkt / IP(dst=addr) / TCP(dport=1234, sport=random.randint(49152,65535)) / args.msg
+        # show
+        pkt.show2()
+        # send 
+        sendp(pkt, iface=iface, verbose=False)
+    elif args.v is 6:
+        print "sending on interface {} to IPv6 addr {}".format(iface, str(addr))
+        pkt = Ether(src=get_if_hwaddr(iface), dst='ff:ff:ff:ff:ff:ff')
+        pkt = pkt / IPv6(dst=addr) / TCP(dport=1234, sport=random.randint(49152,65535)) / args.msg
+        # show
+        pkt.show2()
+        # send 
+        sendp(pkt, iface=iface, verbose=False)
 
 if __name__ == '__main__':
     main()

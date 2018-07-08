@@ -35,14 +35,24 @@ def decodeMac(encoded_mac_addr):
     return ':'.join(s.encode('hex') for s in encoded_mac_addr)
 
 ip_pattern = re.compile('^(\d{1,3}\.){3}(\d{1,3})$')
+ipv6_pattern = re.compile('^(\w{0,4}){0,5}(\w{0,4})$')
 def matchesIPv4(ip_addr_string):
     return ip_pattern.match(ip_addr_string) is not None
+# enable ipv6
+def matchesIPv6(ip_addr_string):
+    return ipv6_pattern.match(ip_addr_string) is not None
 
 def encodeIPv4(ip_addr_string):
     return socket.inet_aton(ip_addr_string)
 
+def encodeIPv6(ip_addr_string):
+    return socket.inet_pton(socket.AF_INET6,ip_addr_string)
+
 def decodeIPv4(encoded_ip_addr):
     return socket.inet_ntoa(encoded_ip_addr)
+
+def decodeIPv6(encoded_ip_addr):
+    return socket.inet_ntop(encoded_ip_addr)
 
 def bitwidthToBytes(bitwidth):
     return int(math.ceil(bitwidth / 8.0))
@@ -68,9 +78,13 @@ def encode(x, bitwidth):
             encoded_bytes = encodeMac(x)
         elif matchesIPv4(x):
             encoded_bytes = encodeIPv4(x)
+        elif matchesIPv6(x):
+            encoded_bytes = encodeIPv6(x)
         else:
             # Assume that the string is already encoded
-            encoded_bytes = x
+            # encoded_bytes = x
+            # using encode IPV6 
+            encoded_bytes = encodeIPv6(x)
     elif type(x) == int:
         encoded_bytes = encodeNum(x, bitwidth)
     else:
