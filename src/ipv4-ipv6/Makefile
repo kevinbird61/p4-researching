@@ -14,7 +14,7 @@ controller: p4_controller.py
 		--bmv2-json target.json
 
 send: ../../utils/pktgen/sender.py
-	python ../../utils/pktgen/sender.py -v 6 --ip fe80::200:ff:fe00:202 --msg "HI"
+	python ../../utils/pktgen/sender.py -v "6" --ip fe80::200:ff:fe00:202 --msg "HI"
 
 receive: ../../utils/pktgen/receiver.py
 	python ../../utils/pktgen/receiver.py

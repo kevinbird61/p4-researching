@@ -2,6 +2,18 @@
     Layer 3 protocol (including Layer 2.5 )
 */
 
+// ARP IP protocol 
+header arp_t {
+    bit<8>  htype;      // HW type
+    bit<8>  ptype;      // Protocol type
+    bit<4>  hlen;       // HW addr len
+    bit<4>  oper;       // Proto addr len
+    bit<48> srcMacAddr; // source mac addr
+    bit<32> srcIPAddr;  // source IP addr
+    bit<48> dstMacAddr; // destination mac addr
+    bit<32> dstIPAddr;  // destination IP addr
+}
+
 // ICMP - timestamp request/response
 header icmp_ts_t {
     bit<8> type;
