@@ -10,7 +10,7 @@ function build {
     echo "Image name: $1"
     echo "External port: $2"
     # build the image from Dockerfile
-    docker build -t $1 .
+    docker build -f Dockerfile.v0 -t $1 .
     # build the container from this image
     docker run -d -p $2:22 --privileged --name $1"_c" $1 > /dev/null
     # find which port mapping to 22
