@@ -15,5 +15,7 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
+# clone p4 official tutorials
 RUN git clone https://github.com/p4lang/tutorials /root/p4-tutorials
-RUN git clone https://github.com/kevinbird61/p4-researching.git /root/p4-researching
+# clone my tutorials
+RUN git clone https://github.com/kevinbird61/p4-researching.git -b tutorials /root/p4-researching
