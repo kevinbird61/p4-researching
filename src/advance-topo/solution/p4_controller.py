@@ -162,12 +162,26 @@ def debug(p4info_helper,s1,s2,s3,s4,s5):
             printCounter(p4info_helper, s1, "Basic_ingress.PktCounter", 0)
             # s2
             pkt_s2 = printCounter(p4info_helper, s2, "Basic_ingress.PktCounter", 0)
-
-            """
-                TODO:
-                    Modified the current forwarding rules when pkt_s2 reach the limit.
-            """
-
+            if pkt_s2 > 50 and flag == 0 :
+                # then we can modify forwarding rule
+                modifyForwardRules(p4info_helper,ingress_sw=s1,
+                        dst_eth_addr="00:00:00:05:04:00",port=5,dst_ip_addr="10.0.5.4")
+                modifyForwardRules(p4info_helper,ingress_sw=s5,
+                        dst_eth_addr="00:00:05:04:00:00",port=5,dst_ip_addr="10.0.1.1")
+                # write new rules
+                writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:00:05:04:00",port=2,dst_ip_addr="10.0.5.4")
+                writeForwardRules(p4info_helper,ingress_sw=s3,
+                        dst_eth_addr="00:00:05:04:00:00",port=1,dst_ip_addr="10.0.1.1")
+                # debug - test delete
+                """
+                    clearAllRules(p4info_helper,s1)
+                    clearAllRules(p4info_helper,s2)
+                    clearAllRules(p4info_helper,s3)
+                    clearAllRules(p4info_helper,s4)
+                    clearAllRules(p4info_helper,s5)
+                """
+                flag=1
             # s3
             pkt_s3 = printCounter(p4info_helper, s3, "Basic_ingress.PktCounter", 0)
             # s4
