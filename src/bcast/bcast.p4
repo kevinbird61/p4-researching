@@ -3,6 +3,7 @@
 
 #include "../codex/l2.p4"
 #include "../codex/l3.p4"
+#include "../codex/enum.p4"
 
 // for broadcast 
 struct ingress_metadata_t {
@@ -36,7 +37,7 @@ parser Bcast_parser(
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType){
             TYPE_IPV4: parse_ipv4;
-            transition accept;
+            default: accept;
         }
     }
 
