@@ -77,12 +77,9 @@ control Basic_ingress(
 
     // ipv4 forward table
     action ipv4_forward(bit<48> dstAddr, bit<9> port){
-        standard_metadata.egress_spec = port;
-        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
-        hdr.ethernet.dstAddr = dstAddr;
-        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
-        // counter - using port as id
-        ingressTunnelCounter.count((bit<32>)port);
+        // TODO:
+        // And ipv4 forwarding mechanism
+        // counter increasement - using function .count() 
     }
 
     table ipv4_lpm {
@@ -103,6 +100,7 @@ control Basic_ingress(
             ipv4_lpm.apply();
         }
     }
+
 }
 
 /*

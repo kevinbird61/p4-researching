@@ -33,15 +33,17 @@ parser Basic_parser(
 
     state parse_ethernet {
         packet.extract(hdr.ethernet);
-        // TODO: 
-        // Add transition select to assign hdr.ethernet.etherType
-        // using l2.p4 & enum.p4 as hint
+        transition select(hdr.ethernet.etherType){
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
     }
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
         transition accept;
-    }   
+    }
+
 }
 
 /*
@@ -77,12 +79,32 @@ control Basic_ingress(
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
+    action nat_forward(bit<48> dstAddr, bit<32> new_ip_addr, bit<9> port){
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        // map the new ip addr into source addr
+        hdr.ipv4.srcAddr = new_ip_addr;
+    }
+
+    action nat_reverse(bit<48> dstAddr, bit<32> ori_ip_addr, bit<9> port){
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        // reverse
+        hdr.ipv4.dstAddr = ori_ip_addr;
+    }
+
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
         }
         actions = {
             ipv4_forward;
+            nat_forward;
+            nat_reverse;
             drop;
             NoAction;
         }
@@ -90,8 +112,10 @@ control Basic_ingress(
         default_action = NoAction();
     }
 
+
     apply {
         if(hdr.ipv4.isValid()){
+            // ethernet addr mapping
             ipv4_lpm.apply();
         }
     }
@@ -106,7 +130,7 @@ control Basic_egress(
     inout standard_metadata_t standard_metadata
 ){
     apply {
-        // Empty
+
     }
 }
 
@@ -147,9 +171,8 @@ control Basic_deparser(
     in headers hdr
 ){
     apply {
-        // TODO:
-        // Specify output packet
-        // Hint: using packet.emit to assign header 
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.ipv4);
     }
 }
 

@@ -8,6 +8,8 @@
 // enum
 #include "../codex/enum.p4"
 
+const bit<32> MAX_COUNTER_SIZE = 1<<16;
+
 // define our headers
 struct headers {
     ethernet_t  ethernet;
@@ -33,9 +35,10 @@ parser Basic_parser(
 
     state parse_ethernet {
         packet.extract(hdr.ethernet);
-        // TODO: 
-        // Add transition select to assign hdr.ethernet.etherType
-        // using l2.p4 & enum.p4 as hint
+        transition select(hdr.ethernet.etherType){
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
     }
 
     state parse_ipv4 {
@@ -65,6 +68,9 @@ control Basic_ingress(
     inout metadata_t metadata,
     inout standard_metadata_t standard_metadata
 ){
+    // using counter as monitoring
+    counter(MAX_COUNTER_SIZE, CounterType.packets_and_bytes) ingressTunnelCounter;
+    
     action drop() {
         mark_to_drop();
     }
@@ -75,6 +81,8 @@ control Basic_ingress(
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        // counter - using port as id
+        ingressTunnelCounter.count((bit<32>)port);
     }
 
     table ipv4_lpm {
@@ -106,7 +114,7 @@ control Basic_egress(
     inout standard_metadata_t standard_metadata
 ){
     apply {
-        // Empty
+
     }
 }
 
@@ -147,9 +155,8 @@ control Basic_deparser(
     in headers hdr
 ){
     apply {
-        // TODO:
-        // Specify output packet
-        // Hint: using packet.emit to assign header 
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.ipv4);
     }
 }
 

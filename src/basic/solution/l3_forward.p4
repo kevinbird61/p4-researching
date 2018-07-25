@@ -33,9 +33,10 @@ parser Basic_parser(
 
     state parse_ethernet {
         packet.extract(hdr.ethernet);
-        // TODO: 
-        // Add transition select to assign hdr.ethernet.etherType
-        // using l2.p4 & enum.p4 as hint
+        transition select(hdr.ethernet.etherType){
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
     }
 
     state parse_ipv4 {
@@ -106,7 +107,7 @@ control Basic_egress(
     inout standard_metadata_t standard_metadata
 ){
     apply {
-        // Empty
+
     }
 }
 
@@ -147,9 +148,8 @@ control Basic_deparser(
     in headers hdr
 ){
     apply {
-        // TODO:
-        // Specify output packet
-        // Hint: using packet.emit to assign header 
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.ipv4);
     }
 }
 

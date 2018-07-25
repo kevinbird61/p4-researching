@@ -79,23 +79,11 @@ control Basic_ingress(
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
-    action nat_forward(bit<48> dstAddr, bit<32> new_ip_addr, bit<9> port){
-        standard_metadata.egress_spec = port;
-        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
-        hdr.ethernet.dstAddr = dstAddr;
-        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
-        // map the new ip addr into source addr
-        hdr.ipv4.srcAddr = new_ip_addr;
-    }
+    // TOOD:
+    // action nat_forward(...)
 
-    action nat_reverse(bit<48> dstAddr, bit<32> ori_ip_addr, bit<9> port){
-        standard_metadata.egress_spec = port;
-        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
-        hdr.ethernet.dstAddr = dstAddr;
-        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
-        // reverse
-        hdr.ipv4.dstAddr = ori_ip_addr;
-    }
+    // TODO:
+    // action nat_reverse(...)
 
     table ipv4_lpm {
         key = {
@@ -103,8 +91,9 @@ control Basic_ingress(
         }
         actions = {
             ipv4_forward;
-            nat_forward;
-            nat_reverse;
+            // TODO:
+            // - action nat_forward
+            // - action nat_reverse
             drop;
             NoAction;
         }

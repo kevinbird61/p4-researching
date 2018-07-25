@@ -131,40 +131,6 @@
           ],
           "transitions" : [
             {
-              "type" : "hexstr",
-              "value" : "0x0800",
-              "mask" : null,
-              "next_state" : "parse_ipv4"
-            },
-            {
-              "value" : "default",
-              "mask" : null,
-              "next_state" : null
-            }
-          ],
-          "transition_key" : [
-            {
-              "type" : "field",
-              "value" : ["ethernet", "etherType"]
-            }
-          ]
-        },
-        {
-          "name" : "parse_ipv4",
-          "id" : 1,
-          "parser_ops" : [
-            {
-              "parameters" : [
-                {
-                  "type" : "regular",
-                  "value" : "ipv4"
-                }
-              ],
-              "op" : "extract"
-            }
-          ],
-          "transitions" : [
-            {
               "value" : "default",
               "mask" : null,
               "next_state" : null
@@ -182,11 +148,11 @@
       "id" : 0,
       "source_info" : {
         "filename" : "l3_forward.p4",
-        "line" : 146,
+        "line" : 145,
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
-      "order" : ["ethernet", "ipv4"]
+      "order" : []
     }
   ],
   "meter_arrays" : [],
@@ -198,7 +164,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "l3_forward.p4",
-        "line" : 122,
+        "line" : 121,
         "column" : 8,
         "source_fragment" : "update_checksum( ..."
       },
@@ -269,7 +235,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 70,
+            "line" : 69,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -304,7 +270,7 @@
           ],
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 75,
+            "line" : 74,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -323,7 +289,7 @@
           ],
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 76,
+            "line" : 75,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -342,7 +308,7 @@
           ],
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 77,
+            "line" : 76,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -384,7 +350,7 @@
           ],
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 78,
+            "line" : 77,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
@@ -398,7 +364,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "l3_forward.p4",
-        "line" : 64,
+        "line" : 63,
         "column" : 8,
         "source_fragment" : "Basic_ingress"
       },
@@ -409,7 +375,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 81,
+            "line" : 80,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -450,7 +416,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "l3_forward.p4",
-            "line" : 95,
+            "line" : 94,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -475,7 +441,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "l3_forward.p4",
-        "line" : 104,
+        "line" : 103,
         "column" : 8,
         "source_fragment" : "Basic_egress"
       },

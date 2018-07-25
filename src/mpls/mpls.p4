@@ -35,16 +35,15 @@ parser Basic_parser(
     state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType){
-            TYPE_MPLS_uni: parse_mpls;
+            // TODO:
+            // Need to add MPLS state
             TYPE_IPV4: parse_ipv4;
             default: accept;
         }
     }
-
-    state parse_mpls {
-        packet.extract(hdr.mpls);
-        transition accept;
-    }
+    
+    // TODO:
+    // state parse_mpls
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
@@ -118,7 +117,8 @@ control Basic_ingress(
         }
         actions = {
             ipv4_forward;
-            mpls_ingress;
+            // TODO:
+            // action: MPLS ingress 
             drop;
             NoAction;
         }
@@ -131,8 +131,9 @@ control Basic_ingress(
             hdr.mpls.label: exact;
         }
         actions = {
-            mpls_core;
-            mpls_egress;
+            // TODO:
+            // - action MPLS core
+            // - action MPLS egress
             drop;
             NoAction;
         }

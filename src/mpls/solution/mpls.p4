@@ -11,6 +11,7 @@
 // define our headers
 struct headers {
     ethernet_t  ethernet;
+    mpls_t      mpls;
     ipv4_t      ipv4;
 }
 
@@ -33,15 +34,22 @@ parser Basic_parser(
 
     state parse_ethernet {
         packet.extract(hdr.ethernet);
-        // TODO: 
-        // Add transition select to assign hdr.ethernet.etherType
-        // using l2.p4 & enum.p4 as hint
+        transition select(hdr.ethernet.etherType){
+            TYPE_MPLS_uni: parse_mpls;
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
+    }
+
+    state parse_mpls {
+        packet.extract(hdr.mpls);
+        transition accept;
     }
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
         transition accept;
-    }   
+    }
 }
 
 /*
@@ -77,12 +85,54 @@ control Basic_ingress(
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
+    action mpls_ingress(bit<9> port, bit<20> new_label){
+        standard_metadata.egress_spec = port;
+        // set EtherType
+        hdr.ethernet.etherType = TYPE_MPLS_uni;
+        // new mpls
+        hdr.mpls.setValid();
+        hdr.mpls.label = new_label;
+    }
+
+    // mpls forward
+    action mpls_core(bit<9> port, bit<20> new_label){
+        standard_metadata.egress_spec = port;
+        // change new label
+        hdr.mpls.setValid();
+        hdr.mpls.label = new_label;
+    }
+
+    action mpls_egress(bit<48> dstAddr, bit<9> port){
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.etherType = TYPE_IPV4;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        // remove MPLS Layer
+        hdr.mpls.setInvalid();
+    }
+
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
         }
         actions = {
             ipv4_forward;
+            mpls_ingress;
+            drop;
+            NoAction;
+        }
+        size = 1024;
+        default_action = NoAction();
+    }
+
+    table mpls_exact {
+        key = {
+            hdr.mpls.label: exact;
+        }
+        actions = {
+            mpls_core;
+            mpls_egress;
             drop;
             NoAction;
         }
@@ -91,6 +141,10 @@ control Basic_ingress(
     }
 
     apply {
+        if(hdr.mpls.isValid()){
+            mpls_exact.apply();
+        }
+        
         if(hdr.ipv4.isValid()){
             ipv4_lpm.apply();
         }
@@ -106,7 +160,7 @@ control Basic_egress(
     inout standard_metadata_t standard_metadata
 ){
     apply {
-        // Empty
+
     }
 }
 
@@ -146,11 +200,12 @@ control Basic_deparser(
     packet_out packet,
     in headers hdr
 ){
-    apply {
-        // TODO:
-        // Specify output packet
-        // Hint: using packet.emit to assign header 
+    apply {        
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.mpls);
+        packet.emit(hdr.ipv4);
     }
+
 }
 
 V1Switch(
