@@ -35,7 +35,7 @@
         > 注意！
         > simple_switch_grpc 是 thrift + grpc(P4Runtime) 並用！
         > 所以在這邊可以用 `simple_switch_CLI` 來對現有已啟動 switch 連線!
-    * 這邊的操作可以參考目錄下的 `cli.txt`
+    * 這邊的操作可以參考目錄下的 `cli.txt`, 呼叫: `simple_switch_CLI < cli.txt` 即可完成 
 
 ![](res/bcast_1.png)
 

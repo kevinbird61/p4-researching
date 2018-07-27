@@ -1,9 +1,9 @@
 mc_mgrp_create 1
 
-mc_node_create 1 1 // return 0 as handler id
-mc_node_create 2 2 // return 1 as handler id
-mc_node_create 3 3 // return 2 as handler id
-mc_node_create 4 4 // return 3 as handler id
+mc_node_create 1 1
+mc_node_create 2 2
+mc_node_create 3 3
+mc_node_create 4 4
 
 mc_node_associate 1 0
 mc_node_associate 1 1
