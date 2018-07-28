@@ -39,6 +39,11 @@ function cleanall {
     docker rm $(docker ps -a -q)
 }
 
+function delall {
+    # delete all docker images (with --force)
+    docker rmi -f $(docker images -q)
+}
+
 # main
 # '$#' refer to the number of parameters (receive at runtime)
 # '$1' denote the first command line argument passed
