@@ -190,6 +190,8 @@ class P4RuntimeSwitch(P4Switch):
     "BMv2 switch with gRPC support"
     next_grpc_port = 50051
     next_thrift_port = 9090
+    # default packet-in / packet-out port usage
+    next_cpu_port = 60000
 
     def __init__(self, name, sw_path = None, json_path = None,
                  grpc_port = None,
@@ -249,6 +251,9 @@ class P4RuntimeSwitch(P4Switch):
             self.device_id = P4Switch.device_id
             P4Switch.device_id += 1
         self.nanomsg = "ipc:///tmp/bm-{}-log.ipc".format(self.device_id)
+        # setting cpu port
+        self.cpu_port = P4RuntimeSwitch.next_cpu_port
+        P4RuntimeSwitch.next_cpu_port += 1
 
 
     def check_switch_started(self, pid):
@@ -283,6 +288,8 @@ class P4RuntimeSwitch(P4Switch):
             args.append('--thrift-port ' + str(self.thrift_port))
         if self.grpc_port:
             args.append("-- --grpc-server-addr 0.0.0.0:" + str(self.grpc_port))
+        if self.cpu_port:
+            args.append("-- --cpu-port " + str(self.cpu_port))
         cmd = ' '.join(args)
         info(cmd + "\n")
 
@@ -292,6 +299,7 @@ class P4RuntimeSwitch(P4Switch):
             self.cmd(cmd + ' >' + self.log_file + ' 2>&1 & echo $! >> ' + f.name)
             pid = int(f.read())
         debug("P4 switch {} PID is {}.\n".format(self.name, pid))
+        debug("CPU port is {}.\n".format(self.cpu_port))
         if not self.check_switch_started(pid):
             error("P4 switch {} did not start correctly.\n".format(self.name))
             exit(1)

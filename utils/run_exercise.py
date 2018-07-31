@@ -44,6 +44,9 @@ def configureP4Switch(**switch_args):
                 P4RuntimeSwitch.__init__(self, *opts, **kwargs)
 
             def describe(self):
+                print '====================================='
+                print 'Switch Device ID: %s' % str(self.device_id)
+                print 'Switch CPU port: %s' % str(self.cpu_port)
                 print "%s -> gRPC port: %d" % (self.name, self.grpc_port)
 
         return ConfiguredP4RuntimeSwitch
@@ -439,4 +442,5 @@ if __name__ == '__main__':
                               args.switch_json, args.behavioral_exe, args.quiet,args.host_mode)
 
     exercise.run_exercise()
+
 
