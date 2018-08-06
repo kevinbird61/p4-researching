@@ -41,8 +41,11 @@ class SwitchConnection(object):
         if proto_dump_file is not None:
             interceptor = GrpcRequestLogger(proto_dump_file)
             self.channel = grpc.intercept_channel(self.channel, interceptor)
+        # create P4RuntimeStub instance
         self.client_stub = p4runtime_pb2.P4RuntimeStub(self.channel)
+        # create requests queue
         self.requests_stream = IterableQueue()
+        # get response via requests queue
         self.stream_msg_resp = self.client_stub.StreamChannel(iter(self.requests_stream))
         self.proto_dump_file = proto_dump_file
         connections.append(self)
@@ -54,6 +57,32 @@ class SwitchConnection(object):
     def shutdown(self):
         self.requests_stream.close()
         self.stream_msg_resp.cancel()
+
+    def packet_out_msg(self,pl,meta):
+        return p4runtime_pb2.PacketOut(payload=pl,metadata=meta)
+
+    def PacketOut(self,pl_arr,meta_arr):
+        request = p4runtime_pb2.StreamMessageRequest()
+        
+        # Create request list via self.packet_out_msg
+        # print (debug)
+
+        # using self.requests_stream.put() to append request
+
+        # Get response from self.stream_msg_resp 
+        # print out packet_out ()
+        
+        for response in self.stream_msg_resp:
+            if response.WhichOneof("update") is "packet":
+                print("=============================================================")
+                print("Received packet-in payload %s" % (response.packet.payload))
+                print("Received packet-in metadata: ")
+                for metadata in response.packet.metadata: 
+                    # uint32
+                    print("\tmetadata id: %s" %s (metadata.metadata_id))
+                    # bytes
+                    print("\tmetadata value: %s" %s (metadata.value))
+                print("=============================================================")
 
     def MasterArbitrationUpdate(self, dry_run=False, **kwargs):
         request = p4runtime_pb2.StreamMessageRequest()
