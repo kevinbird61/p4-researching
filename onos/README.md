@@ -114,6 +114,8 @@ Pipeliner 主要是需要處理三種不同的 **FlowObjective**:
     * 用來描述 Egress table 裏面需要放置什麼樣的東西，每一個 NextObjective 都會有一個獨立的 Id
     * `ForwardingObjective` 可以透過此 Id 來決定該封包要給哪一個 Egress 規則處理
 
+我們可以參考 onos 上頭 [DefaultPipeconf.java]](https://github.com/opennetworkinglab/onos/blob/master/core/api/src/main/java/org/onosproject/net/pi/model/DefaultPiPipeconf.java) 這支程式內所做的範例，作為一個 `single-table` 的 pipeliner 展示
+
 ### 最後一步: 打包編譯成 oar
 
 上述步驟完成後，即可於這個透過 `onos-create-app` 建立的專案根目錄底下直接執行 ***`mvn clean install`*** 指令，執行完後會產生一些編譯好的檔案（附圖為原本文章）：
