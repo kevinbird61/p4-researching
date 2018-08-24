@@ -12,8 +12,11 @@ My Researching work on P4.
     * [Installation script - P4](https://github.com/toolbuddy/ssfw#p4-environment-setup)
     * [Installation script - ONOS](https://github.com/toolbuddy/ssfw#onos-installation)
 
+---
+
 # About this repository
 
+## P4 (with `Mininet`)
 * Learning how to write a P4 program by [basic example](src/basic).
 * Learning how to make a P4Runtime controller(I called it simple-monitor) by [simple example](src/simple-monitor).
 * Learning how to use a P4Runtime controller:
@@ -29,9 +32,19 @@ My Researching work on P4.
 * Learning how to implement broadcast 
     * bcast [example](src/bcast)
 
+> You can found some tutorials in [`branch:tutorials`](https://github.com/kevinbird61/p4-researching/tree/tutorials)
+
+## P4 with ONOS
+
+Learning how to build an ONOS application which support P4.
+
+---
+
 # Author
 
 National Cheng Kung University, 瞿旭民 (Kevin Cyu), kevinbird61@gmail.com
+
+---
 
 # Reference
 
