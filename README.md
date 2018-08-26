@@ -11,6 +11,9 @@ My Researching work on P4.
 * Build sucessfully with `Ubuntu 16.04`:
     * [Installation script - P4](https://github.com/toolbuddy/ssfw#p4-environment-setup)
     * [Installation script - ONOS](https://github.com/toolbuddy/ssfw#onos-installation)
+* Also you can build your own test environment in docker
+    * [Installation for Docker](https://github.com/toolbuddy/ssfw#docker-installation)
+    * [Build your own P4 testbed](docker/)
 
 ---
 
