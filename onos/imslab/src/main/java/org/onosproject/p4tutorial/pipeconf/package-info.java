@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-present Open Networking Foundation
+ * Copyright 2017-present Open Networking Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imslab;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
- * Set of tests of the ONOS application component.
+ * P4 tutorial pipeconf classes.
  */
-public class AppComponentTest {
-
-    private AppComponent component;
-
-    @Before
-    public void setUp() {
-        component = new AppComponent();
-        component.activate();
-
-    }
-
-    @After
-    public void tearDown() {
-        component.deactivate();
-    }
-
-    @Test
-    public void basics() {
-
-    }
-
-}
+package org.onosproject.p4tutorial.imslab;

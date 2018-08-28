@@ -1,5 +1,20 @@
 # 展示使用 ONOS 上開發 P4 程式
 
+<!-- TOC -->
+
+- [展示使用 ONOS 上開發 P4 程式](#展示使用-onos-上開發-p4-程式)
+    - [Build a Template ONOS-APP](#build-a-template-onos-app)
+    - [Next Step](#next-step)
+        - [編輯 POM 檔案](#編輯-pom-檔案)
+        - [編寫 PipeconfLoader](#編寫-pipeconfloader)
+        - [編寫 Interpreter](#編寫-interpreter)
+        - [編寫 Pipeliner](#編寫-pipeliner)
+        - [最後一步: 打包編譯成 oar](#最後一步-打包編譯成-oar)
+        - [Installing ONOS app via `onos-app` shell tool](#installing-onos-app-via-onos-app-shell-tool)
+        - [Another method to install - build with ONOS BUCK compile](#another-method-to-install---build-with-onos-buck-compile)
+
+<!-- /TOC -->
+
 ## Build a Template ONOS-APP
 
 > ONOS 提供的一種方式，快速建立 ONOS app Service 的模板
@@ -162,3 +177,53 @@ options: [-P port] [-u user] [-p password] [-v]
         ;;
     ...
     ```
+
+### Another method to install - build with ONOS BUCK compile
+
+除了透過安裝的方式之外，新的 ONOS APP 也可以透過修改 BUCK 檔案來做加入
+
+以 onos 版本 `1.14.0-SNAPSHOT` 為例，需要修改的檔案有：
+* `modules.defs`
+    > Notice: 在 1.14 版本開始，會轉移使用 Bazel 做編譯
+    > 
+    * 以我的改動為例，我把新的模組加入在 onos/apps/p4tutorials 底下，則會需要把這份檔案當中找到對應的模組 (`apps`) 下加入這筆 imslab 的 entry: ![](https://i.imgur.com/GE5ymbM.png) 
+* `onos/apps/p4-tutorials/imslab/BUCK`
+    * `imslab` 是我建立的目錄
+    * BUCK 是 bazel 穩定前的穩定版本（目前的實驗環境還是用 BUCK）
+    * 而內容我是直接複製 pipeconf 的內容，所以這個 BUCK file 只要修改幾個地方就好，成為：
+    ```BUCK=
+    COMPILE_DEPS = [
+        '//lib:CORE_DEPS',
+        '//lib:minimal-json',
+        '//protocols/p4runtime/model:onos-protocols-p4runtime-model',
+        '//drivers/default:onos-drivers-default',
+        '//protocols/p4runtime/api:onos-protocols-p4runtime-api',
+    ]
+
+    osgi_jar (
+        deps = COMPILE_DEPS,
+    )
+
+    BUNDLES = [
+        '//apps/p4-tutorial/imslab:onos-apps-p4-tutorial-imslab',
+    ]
+
+    onos_app (
+        app_name = 'org.onosproject.p4tutorial.imslab',
+        title = 'P4 Tutorial Pipeconf - IMSLAB clone',
+        category = 'Pipeconf',
+        url = 'http://onosproject.org',
+        description = 'Provides pipeconf for the ONOS-P4 Tutorial',
+        included_bundles = BUNDLES,
+        required_apps = [
+            'org.onosproject.drivers.p4runtime',
+        ]
+    )
+
+    ```
+
+以上加完便是完成新的相依性，之後透過重新編譯 onos - `$ONOS_ROOT/tools/build/onos-buck build onos --show-output` 後即可看到新的 app 出現
+
+這麼一來便完成了新的 app 模組的加入，可以在 onos 的運行 `$ONOS_ROOT/tools/build/onos-buck run onos-local -- clean debug` 後看到這個新的模組！
+
+![](https://i.imgur.com/kws3But.png)
