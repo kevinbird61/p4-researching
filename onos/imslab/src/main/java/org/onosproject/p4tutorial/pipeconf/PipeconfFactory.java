@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onosproject.p4tutorial.pipeconf;
+package org.onosproject.p4tutorial.imslab;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -44,7 +44,7 @@ import static org.onosproject.net.pi.model.PiPipeconf.ExtensionType.P4_INFO_TEXT
 @Component(immediate = true)
 public final class PipeconfFactory {
 
-    public static final PiPipeconfId PIPECONF_ID = new PiPipeconfId("p4-tutorial-pipeconf");
+    public static final PiPipeconfId PIPECONF_ID = new PiPipeconfId("p4-tutorial-imslab");
     private static final URL P4INFO_URL = PipeconfFactory.class.getResource("/mytunnel.p4info");
     private static final URL BMV2_JSON_URL = PipeconfFactory.class.getResource("/mytunnel.json");
 

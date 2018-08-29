@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onosproject.p4tutorial.pipeconf;
+package org.onosproject.p4tutorial.imslab;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
