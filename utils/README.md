@@ -1,24 +1,26 @@
-# Mininet Network Topology
+# Utiltiy of p4-reasearching project
 
-> Using the utility concept from `p4lang/tutorials`
+> Using the utility concept & some source code from [`p4lang/tutorials`](https://github.com/p4lang/tutorials). All right preserved by p4lang organization.
 
 ## Hierarchy
-* lib/
-    * p4runtime_lib/
-        * p4_mininet.py (`P4Host`,`P4Switch`,`P4RuntimeSwitch`)
-        * netstat.py
-    * switch.py
-    * helper.py
-    * bmv2.py
-    * convert.py
-    * simple_controller.py
-    * main.py (example)
+* p4runtime_lib/
+   * switch.py
+   * helper.py
+   * bmv2.py
+   * convert.py
+   * simple_controller.py
+* p4_mininet.py (`P4Host`,`P4Switch`,`P4RuntimeSwitch(Merge from p4runtime_switch.py)`)
+* netstat.py
+* run_exercise.py (Run and construct network topology from specified json file.)
+
+---
 
 ## Functional
-
 * `switch.py`
     * switch connection, using gRPC to connect with P4Switch target device
     * Provide `Read/Write` TableEntry
+    * **Modified:**
+      * Add function `ModifyTableEntry`, `DeleteTableEntry`.
 * `helper.py`
     * `Build` TableEntry
     * Parse P4Info (using `convert.py`)
@@ -27,10 +29,10 @@
 * `convert.py`
     * used by `helper.py`
     * Transform the data format (From programmer, `Human-readable string` <=> `P4Info string`)
+---
+## Process
 
-# Process
-
-這部份分析 main.py (由 p4lang/tutorials 內提供) 如何建立一個 P4 的實驗環境。
+這部份分析 run_exercise.py (由 p4lang/tutorials 內提供) 如何建立一個 P4 的實驗環境。
 1. 指定必要參數
     1. topology 的 json 程式
     2. 編譯 P4 後產生的程式
@@ -48,3 +50,4 @@
         1. 設置每一個 switch
     5. `do_net_cli()`
         1. 完成 config, 打印 log 訊息後進入 mininet CLI 模式，開始進行操作
+        
