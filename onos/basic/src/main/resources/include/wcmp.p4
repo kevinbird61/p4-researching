@@ -3,6 +3,7 @@
 
 #include "headers.p4"
 #include "defines.p4"
+#include "actions.p4"
 
 control wcmp_control(inout headers_t hdr,
                      inout local_metadata_t local_metadata,
@@ -31,7 +32,7 @@ control wcmp_control(inout headers_t hdr,
         implementation = wcmp_selector;
         counters = wcmp_table_counter;
         // default action support 
-        const default_action = _drop();
+        // const default_action = _drop();
     }
 
     apply {

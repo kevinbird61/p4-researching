@@ -1,9 +1,4 @@
 {
-  "program" : "basic.p4",
-  "__meta__" : {
-    "version" : [2, 7],
-    "compiler" : "https://github.com/p4lang/p4c"
-  },
   "header_types" : [
     {
       "name" : "scalars_0",
@@ -22,77 +17,8 @@
       ]
     },
     {
-      "name" : "packet_out_header_t",
-      "id" : 1,
-      "fields" : [
-        ["egress_port", 9, false],
-        ["_padding", 7, false]
-      ]
-    },
-    {
-      "name" : "packet_in_header_t",
-      "id" : 2,
-      "fields" : [
-        ["ingress_port", 9, false],
-        ["_padding", 7, false]
-      ]
-    },
-    {
-      "name" : "ethernet_t",
-      "id" : 3,
-      "fields" : [
-        ["dstAddr", 48, false],
-        ["srcAddr", 48, false],
-        ["etherType", 16, false]
-      ]
-    },
-    {
-      "name" : "ipv4_t",
-      "id" : 4,
-      "fields" : [
-        ["version", 4, false],
-        ["ihl", 4, false],
-        ["diffserv", 8, false],
-        ["totalLen", 16, false],
-        ["identification", 16, false],
-        ["flags", 3, false],
-        ["fragOffset", 13, false],
-        ["ttl", 8, false],
-        ["protocol", 8, false],
-        ["hdrChecksum", 16, false],
-        ["srcAddr", 32, false],
-        ["dstAddr", 32, false]
-      ]
-    },
-    {
-      "name" : "tcp_t",
-      "id" : 5,
-      "fields" : [
-        ["srcPort", 16, false],
-        ["dstPort", 16, false],
-        ["seqNo", 32, false],
-        ["ackNo", 32, false],
-        ["dataOffset", 4, false],
-        ["res", 4, false],
-        ["flags", 8, false],
-        ["window", 16, false],
-        ["checksum", 16, false],
-        ["urgentPtr", 16, false]
-      ]
-    },
-    {
-      "name" : "udp_t",
-      "id" : 6,
-      "fields" : [
-        ["srcPort", 16, false],
-        ["dstPort", 16, false],
-        ["length_", 16, false],
-        ["checksum", 16, false]
-      ]
-    },
-    {
       "name" : "standard_metadata",
-      "id" : 7,
+      "id" : 1,
       "fields" : [
         ["ingress_port", 9, false],
         ["egress_spec", 9, false],
@@ -114,7 +40,77 @@
         ["egress_rid", 16, false],
         ["checksum_error", 1, false],
         ["recirculate_flag", 32, false],
+        ["parser_error", 32, false],
         ["_padding_0", 5, false]
+      ]
+    },
+    {
+      "name" : "packet_out_header_t",
+      "id" : 2,
+      "fields" : [
+        ["egress_port", 9, false],
+        ["_padding", 7, false]
+      ]
+    },
+    {
+      "name" : "packet_in_header_t",
+      "id" : 3,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["_padding", 7, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 4,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 5,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "tcp_t",
+      "id" : 6,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["seqNo", 32, false],
+        ["ackNo", 32, false],
+        ["dataOffset", 4, false],
+        ["res", 4, false],
+        ["flags", 8, false],
+        ["window", 16, false],
+        ["checksum", 16, false],
+        ["urgentPtr", 16, false]
+      ]
+    },
+    {
+      "name" : "udp_t",
+      "id" : 7,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["length_", 16, false],
+        ["checksum", 16, false]
       ]
     }
   ],
@@ -182,12 +178,12 @@
   "header_union_stacks" : [],
   "field_lists" : [],
   "errors" : [
-    ["NoError", 1],
-    ["PacketTooShort", 2],
-    ["NoMatch", 3],
-    ["StackOutOfBounds", 4],
-    ["HeaderTooShort", 5],
-    ["ParserTimeout", 6]
+    ["NoError", 0],
+    ["PacketTooShort", 1],
+    ["NoMatch", 2],
+    ["StackOutOfBounds", 3],
+    ["HeaderTooShort", 4],
+    ["ParserTimeout", 5]
   ],
   "enums" : [],
   "parsers" : [
@@ -667,7 +663,7 @@
           ],
           "source_info" : {
             "filename" : "include/wcmp.p4",
-            "line" : 15,
+            "line" : 16,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -720,7 +716,13 @@
                 }
               }
             }
-          ]
+          ],
+          "source_info" : {
+            "filename" : "include/port_counters.p4",
+            "line" : 13,
+            "column" : 35,
+            "source_fragment" : "(bit<32>) standard_metadata.ingress_port"
+          }
         },
         {
           "op" : "count",
@@ -765,7 +767,13 @@
                 }
               }
             }
-          ]
+          ],
+          "source_info" : {
+            "filename" : "include/port_meters.p4",
+            "line" : 12,
+            "column" : 53,
+            "source_fragment" : "(bit<32>)standard_metadata.ingress_port"
+          }
         },
         {
           "op" : "execute_meter",
@@ -922,7 +930,13 @@
                 }
               }
             }
-          ]
+          ],
+          "source_info" : {
+            "filename" : "include/port_counters.p4",
+            "line" : 23,
+            "column" : 34,
+            "source_fragment" : "(bit<32>) standard_metadata.egress_port"
+          }
         },
         {
           "op" : "count",
@@ -967,7 +981,13 @@
                 }
               }
             }
-          ]
+          ],
+          "source_info" : {
+            "filename" : "include/port_meters.p4",
+            "line" : 26,
+            "column" : 52,
+            "source_fragment" : "(bit<32>)standard_metadata.egress_port"
+          }
         },
         {
           "op" : "execute_meter",
@@ -1292,7 +1312,7 @@
           "id" : 7,
           "source_info" : {
             "filename" : "include/wcmp.p4",
-            "line" : 18,
+            "line" : 19,
             "column" : 10,
             "source_fragment" : "wcmp_table"
           },
@@ -1436,7 +1456,7 @@
           "id" : 3,
           "source_info" : {
             "filename" : "include/wcmp.p4",
-            "line" : 36,
+            "line" : 39,
             "column" : 12,
             "source_fragment" : "local_metadata.next_hop_id != 0"
           },
@@ -1645,5 +1665,10 @@
       "intrinsic_metadata.recirculate_flag",
       ["standard_metadata", "recirculate_flag"]
     ]
-  ]
+  ],
+  "program" : "basic.p4",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
 }

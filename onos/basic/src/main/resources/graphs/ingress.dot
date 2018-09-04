@@ -1,0 +1,39 @@
+digraph ingress {
+subgraph cluster {
+graph [
+label="", labeljust=r, style=bold];
+0[label=__START__, margin="", shape=rectangle, style=solid];
+1[label=__EXIT__, margin="", shape=rectangle, style=solid];
+2[label="port_counters_ingress_ingress_port_counter_0/ingress_port_counter.count((bit<32>)standard_metadata.ingress_port);
+port_meters_ingress_ingress_port_meter_0/ingress_port_meter.execute_meter<MeterColor>((bit<32>)standard_metadata.ingress_port, port_meters_ingress_ingress_color_0/ingress_color);", margin="", shape=rectangle, style=solid];
+3[label="port_meters_ingress_ingress_color_0/ingress_color == 2;", margin="", shape=rectangle, style=solid];
+4[label="mark_to_drop();", margin="", shape=rectangle, style=solid];
+5[label="standard_metadata.ingress_port == 255;", margin="", shape=rectangle, style=solid];
+6[label="standard_metadata.egress_spec = hdr.packet_out.egress_port;
+hdr.packet_out.setInvalid();", margin="", shape=rectangle, style=solid];
+7[label="ingress.table0_control.table0", margin="", shape=ellipse, style=solid];
+8[label="host_meter_control_meter_tag_0/meter_tag = 0;", margin="", shape=rectangle, style=solid];
+9[label="ingress.host_meter_control.host_meter_table", margin="", shape=ellipse, style=solid];
+10[label="host_meter_control_meter_tag_0/meter_tag == 2;", margin="", shape=rectangle, style=solid];
+11[label="mark_to_drop();", margin="", shape=rectangle, style=solid];
+12[label="local_metadata.next_hop_id != 0;", margin="", shape=rectangle, style=solid];
+13[label="ingress.wcmp_control.wcmp_table", margin="", shape=ellipse, style=solid];
+0 -> 2[label=""];
+2 -> 3[label=""];
+3 -> 4[label=TRUE];
+3 -> 5[label=FALSE];
+4 -> 5[label=""];
+5 -> 6[label=TRUE];
+5 -> 7[label=FALSE];
+6 -> 1[label=""];
+7 -> 8[label=""];
+8 -> 9[label=""];
+9 -> 10[label=""];
+10 -> 11[label=TRUE];
+10 -> 12[label=FALSE];
+11 -> 12[label=""];
+12 -> 13[label=TRUE];
+12 -> 1[label=FALSE];
+13 -> 1[label=""];
+}
+}

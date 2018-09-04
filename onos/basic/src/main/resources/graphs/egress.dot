@@ -1,0 +1,23 @@
+digraph egress {
+subgraph cluster {
+graph [
+label="", labeljust=r, style=bold];
+0[label=__START__, margin="", shape=rectangle, style=solid];
+1[label=__EXIT__, margin="", shape=rectangle, style=solid];
+2[label="port_counters_egress_egress_port_counter_0/egress_port_counter.count((bit<32>)standard_metadata.egress_port);
+port_meters_egress_egress_port_meter_0/egress_port_meter.execute_meter<MeterColor>((bit<32>)standard_metadata.egress_port, port_meters_egress_egress_color_0/egress_color);", margin="", shape=rectangle, style=solid];
+3[label="port_meters_egress_egress_color_0/egress_color == 2;", margin="", shape=rectangle, style=solid];
+4[label="mark_to_drop();", margin="", shape=rectangle, style=solid];
+5[label="standard_metadata.egress_port == 255;", margin="", shape=rectangle, style=solid];
+6[label="hdr.packet_in.setValid();
+hdr.packet_in.ingress_port = standard_metadata.ingress_port;", margin="", shape=rectangle, style=solid];
+0 -> 2[label=""];
+2 -> 3[label=""];
+3 -> 4[label=TRUE];
+3 -> 5[label=FALSE];
+4 -> 5[label=""];
+5 -> 6[label=TRUE];
+5 -> 1[label=FALSE];
+6 -> 1[label=""];
+}
+}
