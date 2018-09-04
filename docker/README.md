@@ -11,13 +11,30 @@ This folder use to maintain the docker image which I use to implement minimal p4
 * Remove all existed container
     * `./main.sh cleanall`
 
-> (Deprecate)
-> * `./build.sh`
->    * build the environment (via Dockerfile)
-> * `./run.sh`
->     * if you have run build.sh before, then you just need to use run.sh only.
-> * `./clear.sh`
->     * if you want to clear this container, use clear.sh.
+
+## Direct usage
+
+Using docker to pull the p4 environment from docker hub.
+
+* Step 1: download docker image from docker hub
+```bash
+# P4 v0 environment (image for tutorials branch.)
+$ (sudo) docker pull kevinbird61/new-basic-p4env
+
+# P4 v1 environment (image for current/latest stable version. )
+$ (sudo) docker pull kevinbird61/new_p4env_v1
+```
+
+* Step 2: run up the docker image
+```bash
+# P4 v0 environment (image for tutorials branch.)
+$ (sudo) docker run -it --privileged kevinbird61/new-basic-p4env
+
+# P4 v1 environment (image for current/latest stable version. )
+$ (sudo) docker run -it --privileged kevinbird61/new_p4env_v1
+```
+
+* Step 3: enjoy P4 environment !
 
 ## Advance Usage
 
