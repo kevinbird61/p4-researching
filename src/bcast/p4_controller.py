@@ -119,7 +119,7 @@ def main(p4info_file_path, bmv2_file_path, bcast_flags):
         print "Installed P4 Program using SetForardingPipelineConfig on s1"
 
         # if bcast_flag != 0, then set the multicast group by p4runtime 
-        if bcast_flag >= 0:
+        if bcast_flags > 0:
             mc_group_entry = p4info_helper.buildMCEntry(
                 mc_group_id = 1,
                 replicas={1 : 1, 2 : 2, 3 : 3, 4 : 4}
@@ -181,4 +181,4 @@ if __name__ == '__main__':
         parser.exit(1)
 
     # Pass argument into main function
-    main(args.p4info, args.bmv2_json)
+    main(args.p4info, args.bmv2_json, args.bcast)

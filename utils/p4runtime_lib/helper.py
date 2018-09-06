@@ -97,7 +97,8 @@ class P4InfoHelper(object):
         p4runtime_match = p4runtime_pb2.FieldMatch()
         p4runtime_match.field_id = p4info_match.id
         match_type = p4info_match.match_type
-        if match_type == p4info_pb2.MatchField.VALID:
+        # change vaild => to unspecified
+        if match_type == p4info_pb2.MatchField.UNSPECIFIED:
             valid = p4runtime_match.valid
             valid.value = bool(value)
         elif match_type == p4info_pb2.MatchField.EXACT:
