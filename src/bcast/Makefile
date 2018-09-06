@@ -5,8 +5,7 @@ bcast: bcast.p4
 		--target bmv2 --arch v1model \
 		-o target.json \
 		--p4runtime-file target.p4info \
-		--p4runtime-format text bcast.p4 \
-		--bcast 1
-
+		--p4runtime-format text bcast.p4
+		
 controller: p4_controller.py
-	sudo python p4_controller.py
+	sudo python p4_controller.py --bcast 1
