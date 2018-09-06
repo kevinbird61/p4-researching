@@ -15,8 +15,8 @@
 import re
 
 import google.protobuf.text_format
-from p4 import p4runtime_pb2
-from p4.config import p4info_pb2
+from p4.v1 import p4runtime_pb2
+from p4.config.v1 import p4info_pb2
 
 from convert import encode
 
@@ -159,6 +159,24 @@ class P4InfoHelper(object):
         p4runtime_param.param_id = p4info_param.id
         p4runtime_param.value = encode(value, p4info_param.bitwidth)
         return p4runtime_param
+
+    # get replicas 
+    def get_replicas_pb(self, egress_port, instance):
+        p4runtime_replicas = p4runtime_pb2.Replica()
+        p4runtime_replicas.egress_port = egress_port
+        p4runtime_replicas.instance = instance
+        return p4runtime_replicas
+
+    # get mc_group_entry
+    def buildMCEntry(self, mc_group_id, replicas=None):
+        mc_group_entry = p4runtime_pb2.MulticastGroupEntry()
+        mc_group_entry.multicast_group_id = mc_group_id
+        if replicas:
+            mc_group_entry.replicas.extend([
+                self.get_replicas_pb(egress_port, instance)
+                for egress_port, instance in replicas.iteritems()
+            ])
+        return mc_group_entry
 
     def buildTableEntry(self,
                         table_name,

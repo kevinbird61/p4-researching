@@ -17,7 +17,7 @@ from abc import abstractmethod
 from datetime import datetime
 
 import grpc
-from p4 import p4runtime_pb2
+from p4.v1 import p4runtime_pb2
 from p4.tmp import p4config_pb2
 
 MSG_LOG_MAX_LEN = 1024
@@ -183,25 +183,18 @@ class SwitchConnection(object):
             for response in self.client_stub.Read(request):
                 yield response
 
-    # New, in order to readMeter
-    def ReadMeters(self, meter_id=None, index=None, dry_run=False):
-        request = p4runtime_pb2.ReadRequest()
+    # Write PRE (multicast group)
+    def WritePRE(self, mc_group, dry_run=False):
+        request = p4runtime_pb2.WriteRequest()
         request.device_id = self.device_id
-        entity = request.entities.add()
-        # meter
-        meter_entry = entity.meter_entry
-        if meter_id is not None:
-            # assign user-defined id
-            counter_entry.counter_id = counter_id
-        else:
-            counter_entry.counter_id = 0
-        if index is not None:
-            counter_entry.index.index = index
+        request.election_id.low = 1
+        update = request.updates.add()
+        update.type = p4runtime_pb2.Update.INSERT
+        update.entity.packet_replication_engine_entry.multicast_group_entry.CopyFrom(mc_group)
         if dry_run:
-            print "P4Runtime Read Meters: ", request
+            print "P4Runtime Write:", request
         else:
-            for response in self.client_stub.Read(request):
-                yield response
+            self.client_stub.Write(request)
 
 class GrpcRequestLogger(grpc.UnaryUnaryClientInterceptor,
                         grpc.UnaryStreamClientInterceptor):

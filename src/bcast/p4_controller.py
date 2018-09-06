@@ -91,7 +91,7 @@ def printGrpcError(e):
     traceback = sys.exc_info()[2]
     print "[%s:%s]" % (traceback.tb_frame.f_code.co_filename, traceback.tb_lineno)
 
-def main(p4info_file_path, bmv2_file_path):
+def main(p4info_file_path, bmv2_file_path, bcast_flags):
     # Instantiate a P4Runtime helper from the p4info file
     # - then need to read from the file compile from P4 Program, which call .p4info
     p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)
@@ -117,6 +117,16 @@ def main(p4info_file_path, bmv2_file_path):
         s1.SetForwardingPipelineConfig(p4info=p4info_helper.p4info,
                                         bmv2_json_file_path=bmv2_file_path)
         print "Installed P4 Program using SetForardingPipelineConfig on s1"
+
+        # if bcast_flag != 0, then set the multicast group by p4runtime 
+        if bcast_flag >= 0:
+            mc_group_entry = p4info_helper.buildMCEntry(
+                mc_group_id = 1,
+                replicas={1 : 1, 2 : 2, 3 : 3, 4 : 4}
+            )
+            # call WritePRE
+            s1.WritePRE(mc_group=mc_group_entry)
+            print "Install Multicast group entry on s1"
 
         # 設定 default action
         setDefaultDrop(p4info_helper,ingress_sw=s1)
@@ -156,6 +166,9 @@ if __name__ == '__main__':
     parser.add_argument('--bmv2-json', help='BMv2 JSON file from p4c',
             type=str, action="store", required=False,
             default="./target.json")
+    parser.add_argument('--bcast', help="Enable multicast group by p4runtime.(Instead of thrift)",
+            type=int, action="store", required=False,
+            default=0)
     args = parser.parse_args()
 
     if not os.path.exists(args.p4info):
