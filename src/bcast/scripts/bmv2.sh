@@ -7,7 +7,7 @@ sudo simple_switch \
     -i 2@s1-eth2 \
     -i 3@s1-eth3 \
     -i 4@s1-eth4 \
-    --pcap =pcaps \
+    --pcap \
     --thrift-port 9090 \
     --nanolog ipc:///tmp/bm-0-log.ipc \
     --device-id 0 \
