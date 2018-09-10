@@ -1,0 +1,2 @@
+table_add Bcast_ingress.forward Bcast_ingress.set_dmac 255.255.255.255 => ff:ff:ff:ff:ff:ff
+table_add Bcast_ingress.ipv4_lpm Bcast_ingress.broadcast 255.255.255.255/32 => 
