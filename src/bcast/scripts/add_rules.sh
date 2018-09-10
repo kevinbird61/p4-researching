@@ -1,0 +1,1 @@
+simple_switch_CLI < cli.txt
