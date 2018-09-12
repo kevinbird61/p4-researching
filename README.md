@@ -47,6 +47,8 @@ Learning how to build an ONOS application which support P4.
 
 National Cheng Kung University, 瞿旭民 (Kevin Cyu), kevinbird61@gmail.com
 
+* [DigitalOcean - Hsinchu: Learning P4 from example (slides)](https://docs.google.com/presentation/d/15NPJ3wnYTEr_La7Ny-n2Q8SLTVFJhv5rDmB2Alku3z0/edit?usp=sharing)
+
 ---
 
 # Reference
