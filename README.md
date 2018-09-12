@@ -31,6 +31,8 @@ My Researching work on P4.
 
 National Cheng Kung University, 瞿旭民 (Kevin Cyu), kevinbird61@gmail.com
 
+* [DigitalOcean - Hsinchu: Learning P4 from example (slides)](https://docs.google.com/presentation/d/15NPJ3wnYTEr_La7Ny-n2Q8SLTVFJhv5rDmB2Alku3z0/edit?usp=sharing)
+
 # Reference
 
 * [p4.org - P4_16 Spec - v1.0.0](https://p4.org/p4-spec/docs/P4-16-v1.0.0-spec.html)
