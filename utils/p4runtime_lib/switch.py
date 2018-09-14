@@ -183,6 +183,25 @@ class SwitchConnection(object):
             for response in self.client_stub.Read(request):
                 yield response
 
+    # Read Register 
+    def ReadRegister(self, register_id=None, index=None, dry_run=False):
+        request = p4runtime_pb2.ReadRequest()
+        request.device_id = self.device_id 
+        entity = request.entities.add()
+        register_entry = entity.register_entry 
+
+        if register_id is not None:
+            register_entry.register_id = register_id
+        else:
+            register_entry.register_id = 0
+        if index is not None:
+            register_entry.index.index = index
+        if dry_run:
+            print "P4Runtime Read Register: ", request 
+        else:
+            for response in self.client_stub.Read(request):
+                yield response 
+
     # Write PRE (multicast group)
     def WritePRE(self, mc_group, dry_run=False):
         request = p4runtime_pb2.WriteRequest()

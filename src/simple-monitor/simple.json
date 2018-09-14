@@ -1,9 +1,4 @@
 {
-  "program" : "simple.p4",
-  "__meta__" : {
-    "version" : [2, 7],
-    "compiler" : "https://github.com/p4lang/p4c"
-  },
   "header_types" : [
     {
       "name" : "scalars_0",
@@ -13,35 +8,8 @@
       ]
     },
     {
-      "name" : "ethernet_t",
-      "id" : 1,
-      "fields" : [
-        ["dstAddr", 48, false],
-        ["srcAddr", 48, false],
-        ["etherType", 16, false]
-      ]
-    },
-    {
-      "name" : "ipv4_t",
-      "id" : 2,
-      "fields" : [
-        ["version", 4, false],
-        ["ihl", 4, false],
-        ["diffserv", 8, false],
-        ["totalLen", 16, false],
-        ["identification", 16, false],
-        ["flags", 3, false],
-        ["fragOffset", 13, false],
-        ["ttl", 8, false],
-        ["protocol", 8, false],
-        ["hdrChecksum", 16, false],
-        ["srcAddr", 32, false],
-        ["dstAddr", 32, false]
-      ]
-    },
-    {
       "name" : "standard_metadata",
-      "id" : 3,
+      "id" : 1,
       "fields" : [
         ["ingress_port", 9, false],
         ["egress_spec", 9, false],
@@ -63,7 +31,35 @@
         ["egress_rid", 16, false],
         ["checksum_error", 1, false],
         ["recirculate_flag", 32, false],
+        ["parser_error", 32, false],
         ["_padding", 5, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
       ]
     }
   ],
@@ -428,7 +424,13 @@
                 }
               }
             }
-          ]
+          ],
+          "source_info" : {
+            "filename" : "simple.p4",
+            "line" : 85,
+            "column" : 35,
+            "source_fragment" : "(bit<32>)port"
+          }
         },
         {
           "op" : "count",
@@ -612,5 +614,10 @@
       "intrinsic_metadata.recirculate_flag",
       ["standard_metadata", "recirculate_flag"]
     ]
-  ]
+  ],
+  "program" : "simple.p4",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
 }
