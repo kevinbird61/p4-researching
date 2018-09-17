@@ -3,7 +3,10 @@
     {
       "name" : "scalars_0",
       "id" : 0,
-      "fields" : []
+      "fields" : [
+        ["tmp", 32, false],
+        ["tmp_0", 32, false]
+      ]
     },
     {
       "name" : "standard_metadata",
@@ -178,7 +181,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "register.p4",
-        "line" : 166,
+        "line" : 168,
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
@@ -219,7 +222,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "register.p4",
-        "line" : 142,
+        "line" : 144,
         "column" : 8,
         "source_fragment" : "update_checksum( ..."
       },
@@ -325,7 +328,7 @@
           ],
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 87,
+            "line" : 94,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -344,7 +347,7 @@
           ],
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 88,
+            "line" : 95,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -363,7 +366,7 @@
           ],
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 89,
+            "line" : 96,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -405,23 +408,43 @@
           ],
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 90,
+            "line" : 97,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
-        }
-      ]
-    },
-    {
-      "name" : "Basic_ingress.sampling",
-      "id" : 3,
-      "runtime_data" : [
+        },
         {
-          "name" : "index",
-          "bitwidth" : 32
-        }
-      ],
-      "primitives" : [
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "local",
+                    "value" : 1
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "register.p4",
+            "line" : 100,
+            "column" : 17,
+            "source_fragment" : "(bit<32>)port"
+          }
+        },
         {
           "op" : "register_write",
           "parameters" : [
@@ -430,8 +453,8 @@
               "value" : "Basic_ingress.reg_enq_ts"
             },
             {
-              "type" : "runtime_data",
-              "value" : 0
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
             },
             {
               "type" : "field",
@@ -440,9 +463,41 @@
           ],
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 95,
+            "line" : 87,
             "column" : 8,
             "source_fragment" : "reg_enq_ts.write(index, standard_metadata.enq_timestamp)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "local",
+                    "value" : 1
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "register.p4",
+            "line" : 100,
+            "column" : 17,
+            "source_fragment" : "(bit<32>)port"
           }
         },
         {
@@ -453,8 +508,8 @@
               "value" : "Basic_ingress.reg_enq_qdepth"
             },
             {
-              "type" : "runtime_data",
-              "value" : 0
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
             },
             {
               "type" : "field",
@@ -463,7 +518,7 @@
           ],
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 97,
+            "line" : 89,
             "column" : 8,
             "source_fragment" : "reg_enq_qdepth.write(index, standard_metadata.enq_qdepth)"
           }
@@ -488,7 +543,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 100,
+            "line" : 103,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -506,12 +561,11 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [2, 3, 1, 0],
-          "actions" : ["Basic_ingress.ipv4_forward", "Basic_ingress.sampling", "Basic_ingress.drop", "NoAction"],
+          "action_ids" : [2, 1, 0],
+          "actions" : ["Basic_ingress.ipv4_forward", "Basic_ingress.drop", "NoAction"],
           "base_default_next" : null,
           "next_tables" : {
             "Basic_ingress.ipv4_forward" : null,
-            "Basic_ingress.sampling" : null,
             "Basic_ingress.drop" : null,
             "NoAction" : null
           },
@@ -530,7 +584,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "register.p4",
-            "line" : 115,
+            "line" : 117,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -555,7 +609,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "register.p4",
-        "line" : 124,
+        "line" : 126,
         "column" : 8,
         "source_fragment" : "Basic_egress"
       },

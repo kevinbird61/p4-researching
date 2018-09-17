@@ -82,19 +82,22 @@ control Basic_ingress(
         mark_to_drop();
     }
 
+    action sampling(bit<32> index){
+        // write current enq timestamp into register
+        reg_enq_ts.write(index, standard_metadata.enq_timestamp);
+        // write current enq queueing depth into register
+        reg_enq_qdepth.write(index, standard_metadata.enq_qdepth);
+    }
+
     // ipv4 forward table
     action ipv4_forward(bit<48> dstAddr, bit<9> port){
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
-    }
 
-    action sampling(bit<32> ts_index, bit<32> qdep_index){
-        // write current enq timestamp into register
-        reg_enq_ts.write(ts_index, standard_metadata.enq_timestamp);
-        // write current enq queueing depth into register
-        reg_enq_qdepth.write(qdep_index, standard_metadata.enq_qdepth);
+        // apply sampling action
+        sampling((bit<32>)port);
     }
 
     table ipv4_lpm {
@@ -103,7 +106,6 @@ control Basic_ingress(
         }
         actions = {
             ipv4_forward;
-            sampling;
             drop;
             NoAction;
         }

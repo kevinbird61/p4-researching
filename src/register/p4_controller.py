@@ -52,29 +52,6 @@ def writeForwardRules(p4info_helper,ingress_sw,
     ingress_sw.WriteTableEntry(table_entry)
     print "Installed ingress tunnel rule on %s" % ingress_sw.name
 
-def writeSamplingRules(p4info_helper, ingress_sw, dst_ip_addr,
-    ts_index, qdep_index):
-    """
-        Install rules:
-
-        設定 ingress_sw 的寫入時機:
-        當匹配 ip addresss 等於 dst_ip_addr 時，便呼叫 switch 來對 register 寫入
-        index 從 controller 這邊來指定
-    """
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="Basic_ingress.ipv4_lpm",
-        match_fields={
-            "hdr.ipv4.dstAddr": (dst_ip_addr,32)
-        },
-        action_name="Basic_ingress.ipv4_forward",
-        action_params={
-            "ts_index": ts_index,
-            "qdep_index": qdep_index
-        })
-    # write into ingress of target sw
-    ingress_sw.WriteTableEntry(table_entry)
-    print "Installed ingress tunnel rule on %s" % ingress_sw.name
-
 def readTableRules(p4info_helper, sw):
     """
         Reads the table entries from all tables on the switch.
@@ -121,7 +98,8 @@ def readRegister(p4info_helper, sw, register_name, index):
     for response in sw.ReadRegister(p4info_helper.get_registers_id(register_name), index):
         for entity in response.entities:
             register = entity.register_entry
-            # TODO: P4Data usage in register_entry
+            # P4Data usage in register_entry (because we using bit<32> as register data type, so we use bitstring)
+            print "[SW: %s][Reg: %s] info: %s" % (sw.name, register_name, register.data.bitstring)
 
 def printGrpcError(e):
     print "gRPC Error: ", e.details(),
@@ -207,9 +185,6 @@ def main(p4info_file_path, bmv2_file_path):
         writeForwardRules(p4info_helper,ingress_sw=s3,
                         dst_eth_addr="00:00:00:00:03:03",port=1,dst_ip_addr="10.0.3.3")
 
-        # set sampling rules
-        
-
         # 完成寫入後，我們來讀取 s1,s2 的 table entries
         readTableRules(p4info_helper, s1)
         readTableRules(p4info_helper, s2)
@@ -218,22 +193,11 @@ def main(p4info_file_path, bmv2_file_path):
         # 並於每 2 秒內打印 tunnel counters
         while True:
             sleep(2)
-            print '\n============ Reading tunnel counters =============='
-            # 最後一個參數為 tunnel ID ! (e.g. Index)
-            # 這個範例中用 egress port number 作為 index
-            # 監控該 device 上所有對外出口累積的使用量
-            # s1
-            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 1)
-            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 2)
-            printCounter(p4info_helper, s1, "Basic_ingress.ingressTunnelCounter", 3)
-            # s2
-            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 1)
-            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 2)
-            printCounter(p4info_helper, s2, "Basic_ingress.ingressTunnelCounter", 3)
-            # s3
-            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 1)
-            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 2)
-            printCounter(p4info_helper, s3, "Basic_ingress.ingressTunnelCounter", 3)
+            print '\n============ Reading Register =============='
+            ## Register
+            readRegister(p4info_helper, s1, "Basic_ingress.reg_enq_ts", 1)
+            readRegister(p4info_helper, s1, "Basic_ingress.reg_enq_qdepth", 1)
+
 
 
     except KeyboardInterrupt:
