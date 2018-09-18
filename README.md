@@ -34,6 +34,11 @@ My Researching work on P4.
     * MPLS [example](src/mpls)
 * Learning how to implement broadcast 
     * bcast [example](src/bcast)
+* Learning how to use register
+    * register [example](src/register)
+    * table-array [example](src/table-entry)
+* Learning how to use meter
+    * meter [example](src/meter)
 
 > You can found some tutorials in [`branch:tutorials`](https://github.com/kevinbird61/p4-researching/tree/tutorials)
 
