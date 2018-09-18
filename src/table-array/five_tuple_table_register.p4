@@ -6,7 +6,7 @@
 #include "../codex/l4.p4"
 #include "../codex/enum.p4"
 
-struct header_t {
+struct headers {
     ethernet_t  ethernet;
     ipv4_t      ipv4;
     tcp_t       tcp;
@@ -96,14 +96,24 @@ control Five_tuple_calc(
             // - src port
             // - dst port
             // - protocol
-            bit<32> index = (bit<32>)(
+            /* bit<32> index = (bit<32>)(
                 (hdr.ipv4.srcAddr * 59) ^ 
                 (hdr.ipv4.dstAddr) ^
-                (hdr.tcp.srcPort << 16) ^
-                (hdr.tcp.dstPort) ^ 
-                (hdr.ipv4.protocol));
+                ((bit<32>)hdr.tcp.srcPort << 16) ^
+                ((bit<32>)hdr.tcp.dstPort) ^ 
+                ((bit<32>)hdr.ipv4.protocol));
+                */
+            // Notice: Because need to let the index value set in range 0~1023,
+            // so shift them brutally
+            bit<32> index = (bit<32>)(
+                (hdr.ipv4.srcAddr >> 25) ^ 
+                (hdr.ipv4.dstAddr >> 25) ^
+                ((bit<32>)hdr.tcp.srcPort >> 8) ^
+                ((bit<32>)hdr.tcp.dstPort >> 8) ^ 
+                ((bit<32>)hdr.ipv4.protocol));
             // get the previous value
-            bit<32> previous = five_tuple_table.read(index);
+            bit<32> previous = 32w0; 
+            five_tuple_table.read(previous, index);
             // +1 
             five_tuple_table.write(index, previous+1);
         }
@@ -114,14 +124,23 @@ control Five_tuple_calc(
             // - src port
             // - dst port
             // - protocol
-            bit<32> index = (bit<32>)(
+            /* bit<32> index = (bit<32>)(
                 (hdr.ipv4.srcAddr * 59) ^ 
                 (hdr.ipv4.dstAddr) ^
-                (hdr.udp.srcPort << 16) ^
-                (hdr.udp.dstPort) ^ 
-                (hdr.ipv4.protocol));
+                ((bit<32>)hdr.udp.srcPort << 16) ^
+                ((bit<32>)hdr.udp.dstPort) ^ 
+                ((bit<32>)hdr.ipv4.protocol));*/
+            // Notice: Because need to let the index value set in range 0~1023,
+            // so shift them brutally
+            bit<32> index = (bit<32>)(
+                (hdr.ipv4.srcAddr >> 25) ^ 
+                (hdr.ipv4.dstAddr >> 25) ^
+                ((bit<32>)hdr.udp.srcPort >> 8) ^
+                ((bit<32>)hdr.udp.dstPort >> 8) ^ 
+                ((bit<32>)hdr.ipv4.protocol));
             // get the previous value
-            bit<32> previous = five_tuple_table.read(index);
+            bit<32> previous = 32w0; 
+            five_tuple_table.read(previous, index);
             // +1 
             five_tuple_table.write(index, previous+1);
         }
@@ -142,7 +161,7 @@ control Basic_ingress(
 
     action ipv4_forward(bit<48> dstAddr, bit<9> port){
         standard_metadata.egress_spec = port;
-        hdr.ethernet.srcAddr = hdr.etherent.dstAddr;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
@@ -164,7 +183,7 @@ control Basic_ingress(
         if(hdr.ipv4.isValid()){
             ipv4_lpm.apply();
             // then apply 5-tuple 
-            Five_tuple_calc(hdr, metadata);
+            Five_tuple_calc.apply(hdr, metadata);
         }
     }
 }
@@ -221,6 +240,8 @@ control Basic_deparser(
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.udp);
+        packet.emit(hdr.tcp);
     }
 }
 
