@@ -36,7 +36,7 @@ My Researching work on P4.
     * bcast [example](src/bcast)
 * Learning how to use register
     * register [example](src/register)
-    * table-array [example](src/table-entry)
+    * table-array [example](src/table-array)
 * Learning how to use meter
     * meter [example](src/meter)
 
