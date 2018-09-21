@@ -4,9 +4,9 @@ set -x
 # Exit on errors.
 set -e
 
-BMV2_COMMIT="7e25eeb19d01eee1a8e982dc7ee90ee438c10a05"
-PI_COMMIT="219b3d67299ec09b49f433d7341049256ab5f512"
-P4C_COMMIT="48a57a6ae4f96961b74bd13f6bdeac5add7bb815"
+BMV2_COMMIT="master"
+PI_COMMIT="master"
+P4C_COMMIT="master"
 PROTOBUF_COMMIT="v3.2.0"
 GRPC_COMMIT="v1.3.2"
 
@@ -89,7 +89,7 @@ sudo ldconfig
 # Simple_switch_grpc target
 cd targets/simple_switch_grpc
 ./autogen.sh
-./configure
+./configure --with-thrift
 make -j${NUM_CORES}
 sudo make install
 sudo ldconfig
