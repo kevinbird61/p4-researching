@@ -19,7 +19,7 @@ sudo apt-get install -y --no-install-recommends \
   libboost-filesystem-dev \
   libboost-iostreams-dev \
   libboost-program-options-dev \
-  libboost-graph-dev
+  libboost-graph-dev \
   libboost-system-dev \
   libboost-test-dev \
   libboost-thread-dev \
