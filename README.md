@@ -14,6 +14,9 @@ My Researching work on P4.
 * Also you can build your own test environment in docker
     * [Installation for Docker](https://github.com/toolbuddy/ssfw#docker-installation)
     * [Build your own P4 testbed](docker/)
+* Installation Script for `Ubuntu 16.04.05`:
+    * Go to `install/` directory, have several scripts for installing p4 environment. (Also provide **component** installation, e.g. grpc, pb, p4c, pi, bmv2, mininet ...)
+    * You can use the scripts here to directly install in your local environment, e.g. VM, docker image, or physical machine.
 
 ---
 
@@ -43,8 +46,14 @@ My Researching work on P4.
 > You can found some tutorials in [`branch:tutorials`](https://github.com/kevinbird61/p4-researching/tree/tutorials)
 
 ## P4 with ONOS
-
 Learning how to build an ONOS application which support P4.
+
+## Tracing P4Runtime
+* Look [here](/res), have some diagram about P4Runtime's dependencies.
+
+## Build network namespace
+* If you don't want to use mininet, you can use `ip netns` instead.
+* Under [`net/`](net/), have a demo script for building several network namespace.
 
 ---
 
