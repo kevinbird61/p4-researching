@@ -16,19 +16,23 @@
         ["tmp_8", 32, false],
         ["tmp_9", 32, false],
         ["tmp_10", 32, false],
-        ["hashpipe_stage1_tmp_4", 32, false],
-        ["hashpipe_stage1_tmp_5", 32, false],
-        ["hashpipe_stage1_tmp_6", 32, false],
-        ["hashpipe_stage1_tmp_7", 32, false],
-        ["hashpipe_stage1_tmp_8", 32, false],
+        ["hashpipe_stage1_tmp", 32, false],
+        ["hashpipe_stage1_tmp_0", 32, false],
+        ["hashpipe_stage1_tmp_1", 32, false],
+        ["hashpipe_stage1_tmp_2", 32, false],
+        ["hashpipe_stage1_tmp_3", 32, false],
+        ["hashpipe_stage2_tmp", 32, false],
+        ["hashpipe_stage2_tmp_0", 32, false],
+        ["hashpipe_stage2_tmp_1", 32, false],
+        ["hashpipe_stage2_tmp_2", 32, false],
+        ["hashpipe_stage2_tmp_3", 32, false],
+        ["hashpipe_stage2_tmp_4", 32, false],
+        ["hashpipe_stage2_tmp_5", 1, false],
+        ["hashpipe_stage2_tmp_6", 1, false],
         ["hashpipe_stage2_tmp_7", 32, false],
         ["hashpipe_stage2_tmp_8", 32, false],
         ["hashpipe_stage2_tmp_9", 32, false],
         ["hashpipe_stage2_tmp_10", 32, false],
-        ["hashpipe_stage2_tmp_11", 32, false],
-        ["hashpipe_stage2_tmp_12", 32, false],
-        ["hashpipe_stage2_tmp_13", 1, false],
-        ["hashpipe_stage2_tmp_14", 1, false],
         ["metadata_t.l4_src_port", 16, false],
         ["metadata_t.l4_dst_port", 16, false],
         ["metadata_t.next_hop_id", 16, false],
@@ -460,7 +464,13 @@
       "name" : "ingress.table0_control.table0_counter",
       "id" : 0,
       "is_direct" : true,
-      "binding" : "ingress.table0_control.table0"
+      "binding" : "ingress.table0_control.table0",
+      "source_info" : {
+        "filename" : "include/table0.p4",
+        "line" : 11,
+        "column" : 50,
+        "source_fragment" : "table0_counter"
+      }
     }
   ],
   "register_arrays" : [
@@ -537,7 +547,65 @@
       "bitwidth" : 1
     }
   ],
-  "calculations" : [],
+  "calculations" : [
+    {
+      "name" : "calc",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "include/checksums.p4",
+        "line" : 16,
+        "column" : 8,
+        "source_fragment" : "update_checksum( ..."
+      },
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "fragOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    }
+  ],
   "learn_lists" : [],
   "actions" : [
     {
@@ -655,7 +723,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_4"]
+              "value" : ["scalars", "hashpipe_stage1_tmp"]
             },
             {
               "type" : "field",
@@ -681,7 +749,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_4"]
+              "value" : ["scalars", "hashpipe_stage1_tmp"]
             },
             {
               "type" : "field",
@@ -981,7 +1049,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_5"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_0"]
             },
             {
               "type" : "hexstr",
@@ -1007,7 +1075,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_5"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_0"]
             },
             {
               "type" : "expression",
@@ -1021,7 +1089,7 @@
                       "op" : "-",
                       "left" : {
                         "type" : "field",
-                        "value" : ["scalars", "hashpipe_stage1_tmp_4"]
+                        "value" : ["scalars", "hashpipe_stage1_tmp"]
                       },
                       "right" : {
                         "type" : "field",
@@ -1060,7 +1128,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_4"]
+              "value" : ["scalars", "hashpipe_stage1_tmp"]
             }
           ],
           "source_info" : {
@@ -1082,7 +1150,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_6"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_1"]
             },
             {
               "type" : "expression",
@@ -1131,7 +1199,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_6"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_1"]
             },
             {
               "type" : "hexstr",
@@ -1161,7 +1229,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_5"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_0"]
             }
           ],
           "source_info" : {
@@ -1238,7 +1306,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_2"]
             },
             {
               "type" : "hexstr",
@@ -1264,7 +1332,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_2"]
             },
             {
               "type" : "field",
@@ -1330,7 +1398,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_6"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_1"]
             }
           ],
           "source_info" : {
@@ -1407,7 +1475,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_8"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_3"]
             },
             {
               "type" : "hexstr",
@@ -1433,7 +1501,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_8"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_3"]
             },
             {
               "type" : "field",
@@ -1463,7 +1531,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_2"]
             }
           ],
           "source_info" : {
@@ -1489,7 +1557,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_tmp_8"]
+              "value" : ["scalars", "hashpipe_stage1_tmp_3"]
             }
           ],
           "source_info" : {
@@ -1511,18 +1579,18 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage2_tmp"]
             },
             {
               "type" : "field",
-              "value" : ["ipv4", "srcAddr"]
+              "value" : ["scalars", "metadata_t.mKeyCarried"]
             }
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
             "line" : 102,
             "column" : 39,
-            "source_fragment" : "(local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable"
+            "source_fragment" : "(local_metadata.mValid == 0) ? local_metadata.mKeyCarried : local_metadata.mKeyTable"
           }
         }
       ]
@@ -1537,7 +1605,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage2_tmp"]
             },
             {
               "type" : "field",
@@ -1548,7 +1616,7 @@
             "filename" : "include/hashpipe.p4",
             "line" : 102,
             "column" : 39,
-            "source_fragment" : "(local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable"
+            "source_fragment" : "(local_metadata.mValid == 0) ? local_metadata.mKeyCarried : local_metadata.mKeyTable"
           }
         }
       ]
@@ -1837,7 +1905,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_0"]
             },
             {
               "type" : "hexstr",
@@ -1848,7 +1916,7 @@
             "filename" : "include/hashpipe.p4",
             "line" : 103,
             "column" : 34,
-            "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr"
+            "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - local_metadata.mKeyCarried"
           }
         }
       ]
@@ -1863,7 +1931,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_0"]
             },
             {
               "type" : "expression",
@@ -1877,11 +1945,11 @@
                       "op" : "-",
                       "left" : {
                         "type" : "field",
-                        "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+                        "value" : ["scalars", "hashpipe_stage2_tmp"]
                       },
                       "right" : {
                         "type" : "field",
-                        "value" : ["ipv4", "srcAddr"]
+                        "value" : ["scalars", "metadata_t.mKeyCarried"]
                       }
                     }
                   },
@@ -1897,7 +1965,7 @@
             "filename" : "include/hashpipe.p4",
             "line" : 103,
             "column" : 34,
-            "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr"
+            "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - local_metadata.mKeyCarried"
           }
         }
       ]
@@ -1916,7 +1984,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage2_tmp"]
             }
           ],
           "source_info" : {
@@ -1938,7 +2006,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_9"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_1"]
             },
             {
               "type" : "field",
@@ -1964,11 +2032,11 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_9"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_1"]
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage2_tmp"]
             }
           ],
           "source_info" : {
@@ -1994,7 +2062,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_0"]
             }
           ],
           "source_info" : {
@@ -2016,11 +2084,11 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_10"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_2"]
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+              "value" : ["scalars", "hashpipe_stage2_tmp"]
             }
           ],
           "source_info" : {
@@ -2042,11 +2110,11 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_10"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_2"]
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_9"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_1"]
             }
           ],
           "source_info" : {
@@ -2068,7 +2136,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_11"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_3"]
             },
             {
               "type" : "field",
@@ -2094,7 +2162,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_11"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_3"]
             },
             {
               "type" : "field",
@@ -2160,7 +2228,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_10"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_2"]
             }
           ],
           "source_info" : {
@@ -2182,7 +2250,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_12"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_4"]
             },
             {
               "type" : "expression",
@@ -2231,11 +2299,11 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_12"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_4"]
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_11"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_3"]
             }
           ],
           "source_info" : {
@@ -2257,7 +2325,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_13"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_5"]
             },
             {
               "type" : "hexstr",
@@ -2283,7 +2351,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_13"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_5"]
             },
             {
               "type" : "hexstr",
@@ -2349,7 +2417,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_12"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_4"]
             }
           ],
           "source_info" : {
@@ -2371,11 +2439,11 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_14"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_6"]
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_13"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_5"]
             }
           ],
           "source_info" : {
@@ -2397,7 +2465,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_14"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_6"]
             },
             {
               "type" : "hexstr",
@@ -2416,6 +2484,110 @@
     {
       "name" : "act_36",
       "id" : 41,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 41,
+            "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_37",
+      "id" : 42,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.mKeyTable"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 75,
+            "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_38",
+      "id" : 43,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.mKeyCarried"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 75,
+            "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_39",
+      "id" : 44,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 41,
+            "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_40",
+      "id" : 45,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -2463,7 +2635,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage2_tmp_14"]
+              "value" : ["scalars", "hashpipe_stage2_tmp_6"]
             }
           ],
           "source_info" : {
@@ -2471,6 +2643,162 @@
             "line" : 116,
             "column" : 12,
             "source_fragment" : "validBits.write( local_metadata.mIndex%1024, (local_metadata.mValid == 0 ? tBitToWrite : 1))"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_41",
+      "id" : 46,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_9"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 43,
+            "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_42",
+      "id" : 47,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_10"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.mCountTable"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 77,
+            "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_43",
+      "id" : 48,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_10"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.mCountCarried"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 77,
+            "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_44",
+      "id" : 49,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_9"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_10"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 43,
+            "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_45",
+      "id" : 50,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.mKeyCarried"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_7"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 12,
+            "source_fragment" : "local_metadata.mKeyCarried ="
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_46",
+      "id" : 51,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.mCountCarried"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "hashpipe_stage2_tmp_9"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 12,
+            "source_fragment" : "local_metadata.mCountCarried ="
           }
         }
       ]
@@ -3349,11 +3677,34 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
+          "action_ids" : [45],
+          "actions" : ["act_40"],
+          "base_default_next" : "node_55",
+          "next_tables" : {
+            "act_40" : "node_55"
+          },
+          "default_entry" : {
+            "action_id" : 45,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_37",
+          "id" : 38,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
           "action_ids" : [41],
           "actions" : ["act_36"],
-          "base_default_next" : "ingress.table0_control.table0",
+          "base_default_next" : "tbl_act_41",
           "next_tables" : {
-            "act_36" : "ingress.table0_control.table0"
+            "act_36" : "tbl_act_41"
           },
           "default_entry" : {
             "action_id" : 41,
@@ -3363,8 +3714,215 @@
           }
         },
         {
+          "name" : "tbl_act_38",
+          "id" : 39,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [42],
+          "actions" : ["act_37"],
+          "base_default_next" : "tbl_act_40",
+          "next_tables" : {
+            "act_37" : "tbl_act_40"
+          },
+          "default_entry" : {
+            "action_id" : 42,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_39",
+          "id" : 40,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [43],
+          "actions" : ["act_38"],
+          "base_default_next" : "tbl_act_40",
+          "next_tables" : {
+            "act_38" : "tbl_act_40"
+          },
+          "default_entry" : {
+            "action_id" : 43,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_40",
+          "id" : 41,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [44],
+          "actions" : ["act_39"],
+          "base_default_next" : "tbl_act_41",
+          "next_tables" : {
+            "act_39" : "tbl_act_41"
+          },
+          "default_entry" : {
+            "action_id" : 44,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_41",
+          "id" : 42,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [50],
+          "actions" : ["act_45"],
+          "base_default_next" : "node_62",
+          "next_tables" : {
+            "act_45" : "node_62"
+          },
+          "default_entry" : {
+            "action_id" : 50,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_42",
+          "id" : 43,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [46],
+          "actions" : ["act_41"],
+          "base_default_next" : "tbl_act_46",
+          "next_tables" : {
+            "act_41" : "tbl_act_46"
+          },
+          "default_entry" : {
+            "action_id" : 46,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_43",
+          "id" : 44,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [47],
+          "actions" : ["act_42"],
+          "base_default_next" : "tbl_act_45",
+          "next_tables" : {
+            "act_42" : "tbl_act_45"
+          },
+          "default_entry" : {
+            "action_id" : 47,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_44",
+          "id" : 45,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [48],
+          "actions" : ["act_43"],
+          "base_default_next" : "tbl_act_45",
+          "next_tables" : {
+            "act_43" : "tbl_act_45"
+          },
+          "default_entry" : {
+            "action_id" : 48,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_45",
+          "id" : 46,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [49],
+          "actions" : ["act_44"],
+          "base_default_next" : "tbl_act_46",
+          "next_tables" : {
+            "act_44" : "tbl_act_46"
+          },
+          "default_entry" : {
+            "action_id" : 49,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_46",
+          "id" : 47,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [51],
+          "actions" : ["act_46"],
+          "base_default_next" : "ingress.table0_control.table0",
+          "next_tables" : {
+            "act_46" : "ingress.table0_control.table0"
+          },
+          "default_entry" : {
+            "action_id" : 51,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
           "name" : "ingress.table0_control.table0",
-          "id" : 38,
+          "id" : 48,
           "source_info" : {
             "filename" : "include/table0.p4",
             "line" : 25,
@@ -3721,7 +4279,7 @@
               "op" : "==",
               "left" : {
                 "type" : "field",
-                "value" : ["scalars", "hashpipe_stage2_tmp_8"]
+                "value" : ["scalars", "hashpipe_stage2_tmp_0"]
               },
               "right" : {
                 "type" : "hexstr",
@@ -3835,6 +4393,110 @@
           },
           "true_next" : "tbl_act_34",
           "false_next" : "tbl_act_35"
+        },
+        {
+          "name" : "node_55",
+          "id" : 15,
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 42,
+            "source_fragment" : "local_metadata.mDif == 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.mDif"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000000"
+              }
+            }
+          },
+          "true_next" : "tbl_act_37",
+          "false_next" : "node_57"
+        },
+        {
+          "name" : "node_57",
+          "id" : 16,
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 120,
+            "column" : 76,
+            "source_fragment" : "local_metadata.mCountTable < local_metadata.mCountCarried"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "<",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.mCountTable"]
+              },
+              "right" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.mCountCarried"]
+              }
+            }
+          },
+          "true_next" : "tbl_act_38",
+          "false_next" : "tbl_act_39"
+        },
+        {
+          "name" : "node_62",
+          "id" : 17,
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 44,
+            "source_fragment" : "local_metadata.mDif == 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.mDif"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000000"
+              }
+            }
+          },
+          "true_next" : "tbl_act_42",
+          "false_next" : "node_64"
+        },
+        {
+          "name" : "node_64",
+          "id" : 18,
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 121,
+            "column" : 78,
+            "source_fragment" : "local_metadata.mCountTable < local_metadata.mCountCarried"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "<",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.mCountTable"]
+              },
+              "right" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.mCountCarried"]
+              }
+            }
+          },
+          "true_next" : "tbl_act_43",
+          "false_next" : "tbl_act_44"
         }
       ]
     },
@@ -3853,7 +4515,32 @@
       "conditionals" : []
     }
   ],
-  "checksums" : [],
+  "checksums" : [
+    {
+      "name" : "cksum",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "include/checksums.p4",
+        "line" : 16,
+        "column" : 8,
+        "source_fragment" : "update_checksum( ..."
+      },
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc",
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["ipv4", "$valid$"]
+          }
+        }
+      }
+    }
+  ],
   "force_arith" : [],
   "extern_instances" : [],
   "field_aliases" : [

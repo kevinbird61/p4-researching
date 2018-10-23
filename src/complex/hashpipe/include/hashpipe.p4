@@ -99,8 +99,8 @@ control hashpipe_stage2(
             validBits.read(local_metadata.mValid, (local_metadata.mIndex)%TABLE_SLOTS);
 
             // check for empty location or different key
-            local_metadata.mKeyTable = (local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable;
-            local_metadata.mDif = (local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr;
+            local_metadata.mKeyTable = (local_metadata.mValid == 0) ? local_metadata.mKeyCarried : local_metadata.mKeyTable;
+            local_metadata.mDif = (local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - local_metadata.mKeyCarried;
 
             // update hash table
             bit<32> tKeyToWrite;
@@ -115,9 +115,10 @@ control hashpipe_stage2(
             tBitToWrite = (local_metadata.mKeyCarried == 0) ? 1w0 : 1w1;
             validBits.write( local_metadata.mIndex%TABLE_SLOTS, (local_metadata.mValid == 0 ? tBitToWrite : 1));
 
-            // TODO: 
             // - expel the key-counter pair inside current stage
             // - or current pair go to next stage
+            local_metadata.mKeyCarried = (local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried);
+            local_metadata.mCountCarried = (local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried);
         }
     }
 }
