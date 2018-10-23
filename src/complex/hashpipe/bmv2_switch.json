@@ -5,6 +5,13 @@
       "id" : 0,
       "fields" : [
         ["tmp", 32, false],
+        ["tmp_0", 32, false],
+        ["tmp_1", 32, false],
+        ["tmp_2", 32, false],
+        ["tmp_3", 32, false],
+        ["tmp_4", 32, false],
+        ["tmp_5", 32, false],
+        ["tmp_6", 32, false],
         ["hashpipe_stage1_packet_index_0", 32, false],
         ["hashpipe_stage1_mKeyTable_0", 32, false],
         ["hashpipe_stage1_mCountTable_0", 32, false],
@@ -920,6 +927,38 @@
       "runtime_data" : [],
       "primitives" : [
         {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 43,
+            "column" : 40,
+            "source_fragment" : "packet_index%1024"
+          }
+        },
+        {
           "op" : "register_read",
           "parameters" : [
             {
@@ -932,14 +971,46 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp"]
             }
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
             "line" : 43,
             "column" : 12,
-            "source_fragment" : "flowTracker.read(mKeyTable, packet_index)"
+            "source_fragment" : "flowTracker.read(mKeyTable, packet_index%1024)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 44,
+            "column" : 44,
+            "source_fragment" : "packet_index%1024"
           }
         },
         {
@@ -955,14 +1026,46 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp_0"]
             }
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
             "line" : 44,
             "column" : 12,
-            "source_fragment" : "packetCounter.read(mCountTable, packet_index)"
+            "source_fragment" : "packetCounter.read(mCountTable, packet_index%1024)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 45,
+            "column" : 35,
+            "source_fragment" : "packet_index%1024"
           }
         },
         {
@@ -978,14 +1081,14 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp_1"]
             }
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
             "line" : 45,
             "column" : 12,
-            "source_fragment" : "validBits.read(mValid, packet_index)"
+            "source_fragment" : "validBits.read(mValid, packet_index%1024)"
           }
         }
       ]
@@ -1101,7 +1204,39 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "tmp"]
+              "value" : ["scalars", "tmp_2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 54,
+            "column" : 36,
+            "source_fragment" : "packet_index%1024"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
             },
             {
               "type" : "expression",
@@ -1134,7 +1269,7 @@
           "source_info" : {
             "filename" : "include/hashpipe.p4",
             "line" : 54,
-            "column" : 50,
+            "column" : 55,
             "source_fragment" : "mCountTable+1"
           }
         },
@@ -1147,18 +1282,18 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp_2"]
             },
             {
               "type" : "field",
-              "value" : ["scalars", "tmp"]
+              "value" : ["scalars", "tmp_3"]
             }
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
             "line" : 54,
             "column" : 16,
-            "source_fragment" : "packetCounter.write(packet_index, mCountTable+1)"
+            "source_fragment" : "packetCounter.write(packet_index%1024, mCountTable+1)"
           }
         }
       ]
@@ -1169,6 +1304,38 @@
       "runtime_data" : [],
       "primitives" : [
         {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_4"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 56,
+            "column" : 36,
+            "source_fragment" : "packet_index%1024"
+          }
+        },
+        {
           "op" : "register_write",
           "parameters" : [
             {
@@ -1177,7 +1344,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp_4"]
             },
             {
               "type" : "hexstr",
@@ -1188,7 +1355,7 @@
             "filename" : "include/hashpipe.p4",
             "line" : 56,
             "column" : 16,
-            "source_fragment" : "packetCounter.write(packet_index, 1)"
+            "source_fragment" : "packetCounter.write(packet_index%1024, 1)"
           }
         }
       ]
@@ -1199,6 +1366,38 @@
       "runtime_data" : [],
       "primitives" : [
         {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_5"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 52,
+            "column" : 30,
+            "source_fragment" : "packet_index%1024"
+          }
+        },
+        {
           "op" : "register_write",
           "parameters" : [
             {
@@ -1207,7 +1406,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp_5"]
             },
             {
               "type" : "field",
@@ -1218,7 +1417,7 @@
             "filename" : "include/hashpipe.p4",
             "line" : 52,
             "column" : 12,
-            "source_fragment" : "flowTracker.write(packet_index, hdr.ipv4.srcAddr)"
+            "source_fragment" : "flowTracker.write(packet_index%1024, hdr.ipv4.srcAddr)"
           }
         }
       ]
@@ -1229,6 +1428,38 @@
       "runtime_data" : [],
       "primitives" : [
         {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_6"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/hashpipe.p4",
+            "line" : 58,
+            "column" : 28,
+            "source_fragment" : "packet_index%1024"
+          }
+        },
+        {
           "op" : "register_write",
           "parameters" : [
             {
@@ -1237,7 +1468,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "hashpipe_stage1_packet_index_0"]
+              "value" : ["scalars", "tmp_6"]
             },
             {
               "type" : "hexstr",
@@ -1248,7 +1479,7 @@
             "filename" : "include/hashpipe.p4",
             "line" : 58,
             "column" : 12,
-            "source_fragment" : "validBits.write( packet_index, 1w1)"
+            "source_fragment" : "validBits.write(packet_index%1024, 1w1)"
           }
         }
       ]

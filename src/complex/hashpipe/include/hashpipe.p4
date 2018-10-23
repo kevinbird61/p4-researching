@@ -40,22 +40,22 @@ control hashpipe_stage1(
             }
 
             // read the key and value at the location
-            flowTracker.read(mKeyTable, packet_index);
-            packetCounter.read(mCountTable, packet_index);
-            validBits.read(mValid, packet_index);
+            flowTracker.read(mKeyTable, packet_index%TABLE_SLOTS);
+            packetCounter.read(mCountTable, packet_index%TABLE_SLOTS);
+            validBits.read(mValid, packet_index%TABLE_SLOTS);
 
             // check for empty location or different key
             mKeyTable = (mValid == 0) ? hdr.ipv4.srcAddr : mKeyTable;
             mDif = (mValid == 0) ? 0 : mKeyTable - hdr.ipv4.srcAddr;
 
             // update hash table (policy: always insert)
-            flowTracker.write(packet_index, hdr.ipv4.srcAddr);
+            flowTracker.write(packet_index%TABLE_SLOTS, hdr.ipv4.srcAddr);
             if(mDif == (bit<32>)0){
-                packetCounter.write(packet_index, mCountTable+1);
+                packetCounter.write(packet_index%TABLE_SLOTS, mCountTable+1);
             } else {
-                packetCounter.write(packet_index, 1);
+                packetCounter.write(packet_index%TABLE_SLOTS, 1);
             }
-            validBits.write( packet_index, 1w1);
+            validBits.write(packet_index%TABLE_SLOTS, 1w1);
 
             // FIXME: update metadata carried to the next table stage
             if(mDif == (bit<32>)0){
