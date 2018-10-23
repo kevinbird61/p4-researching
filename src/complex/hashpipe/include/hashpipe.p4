@@ -19,52 +19,105 @@ control hashpipe_stage1(
     // (additional) collision 
     // register<bit<32>>(TABLE_SLOTS) collision;
 
-    // per packet id 
-    bit<32> packet_index;
-    // temp variables
-    bit<32> mKeyTable;
-    bit<32> mCountTable;
-    bit<32> mDif;
-    bit<1>  mValid;
-
     apply {
         if(hdr.ipv4.isValid()){
-            // get "packet_index" 
+            /*
+                Stage 1
+                - make sure always insert the new flow !
+            */
+            // get location (outside the action)
+            a_b_hash.apply(2,3,hdr.ipv4.srcAddr,local_metadata.mIndex);
+            /* 5-tuple
             if(hdr.tcp.isValid()){
-                five_tuple.apply(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.ipv4.protocol,
-                    hdr.tcp.srcPort, hdr.tcp.dstPort, packet_index);
+            five_tuple.apply(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.ipv4.protocol,
+                hdr.tcp.srcPort, hdr.tcp.dstPort, local_metadata.mIndex);
             }
             else if(hdr.udp.isValid()){
                 five_tuple.apply(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.ipv4.protocol,
-                    hdr.udp.srcPort, hdr.udp.dstPort, packet_index);
-            }
-
+                    hdr.udp.srcPort, hdr.udp.dstPort, local_metadata.mIndex);
+            }*/
             // read the key and value at the location
-            flowTracker.read(mKeyTable, packet_index%TABLE_SLOTS);
-            packetCounter.read(mCountTable, packet_index%TABLE_SLOTS);
-            validBits.read(mValid, packet_index%TABLE_SLOTS);
+            flowTracker.read(local_metadata.mKeyTable, (local_metadata.mIndex)%TABLE_SLOTS);
+            packetCounter.read(local_metadata.mCountTable, (local_metadata.mIndex)%TABLE_SLOTS);
+            validBits.read(local_metadata.mValid, (local_metadata.mIndex)%TABLE_SLOTS);
 
             // check for empty location or different key
-            mKeyTable = (mValid == 0) ? hdr.ipv4.srcAddr : mKeyTable;
-            mDif = (mValid == 0) ? 0 : mKeyTable - hdr.ipv4.srcAddr;
+            local_metadata.mKeyTable = (local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable;
+            local_metadata.mDif = (local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr;
 
             // update hash table (policy: always insert)
-            flowTracker.write(packet_index%TABLE_SLOTS, hdr.ipv4.srcAddr);
-            if(mDif == (bit<32>)0){
-                packetCounter.write(packet_index%TABLE_SLOTS, mCountTable+1);
+            flowTracker.write( local_metadata.mIndex%TABLE_SLOTS, hdr.ipv4.srcAddr );
+            /*if(local_metadata.mDif == (bit<32>)0){
+                packetCounter.write( local_metadata.mIndex%TABLE_SLOTS, local_metadata.mCountTable+1 );
             } else {
-                packetCounter.write(packet_index%TABLE_SLOTS, 1);
-            }
-            validBits.write(packet_index%TABLE_SLOTS, 1w1);
+                packetCounter.write( local_metadata.mIndex%TABLE_SLOTS, 1 );
+            }*/
+            packetCounter.write( local_metadata.mIndex%TABLE_SLOTS, ((local_metadata.mDif == 0) ? local_metadata.mCountTable+1 : 1));
 
-            // FIXME: update metadata carried to the next table stage
-            if(mDif == (bit<32>)0){
-                // metadata.mKeyCarried = 0;
-                // metadata.mCountCarried = 0;
+            validBits.write( local_metadata.mIndex%TABLE_SLOTS, 1w1 );
+
+            // update metadata carried to the next table stage
+            /*if(local_metadata.mDif == (bit<32>)0){
+                local_metadata.mKeyCarried = 0;
+                local_metadata.mCountCarried = 0;
             } else {
-                // metadata.mKeyCarried = mKeyTable;
-                // metadata.mCountCarried = mCountTable;
-            }
+                local_metadata.mKeyCarried = local_metadata.mKeyTable;
+                local_metadata.mCountCarried = local_metadata.mCountTable;
+            }*/
+            local_metadata.mKeyCarried = (local_metadata.mDif == 0) ? 0 : local_metadata.mKeyTable;
+            local_metadata.mCountCarried = (local_metadata.mDif == 0) ? 0 : local_metadata.mCountTable;
+        }
+    }
+}
+
+control hashpipe_stage2(
+    inout headers hdr,
+    inout metadata_t local_metadata
+){
+    // store IP src
+    register<bit<32>>(TABLE_SLOTS) flowTracker;
+    // store packet count
+    register<bit<32>>(TABLE_SLOTS) packetCounter;
+    // valid bit
+    register<bit<1>>(TABLE_SLOTS) validBits;
+    // (additional) collision 
+    // register<bit<32>>(TABLE_SLOTS) collision;
+
+    apply {
+        if(hdr.ipv4.isValid()){
+            /*
+                Stage 2
+                - need to deal with conflict
+                - compare with its counter
+            */
+            // get location 
+            a_b_hash.apply(5,7, local_metadata.mKeyCarried ,local_metadata.mIndex);
+
+            // read the key and value at the location
+            flowTracker.read(local_metadata.mKeyTable, (local_metadata.mIndex)%TABLE_SLOTS);
+            packetCounter.read(local_metadata.mCountTable, (local_metadata.mIndex)%TABLE_SLOTS);
+            validBits.read(local_metadata.mValid, (local_metadata.mIndex)%TABLE_SLOTS);
+
+            // check for empty location or different key
+            local_metadata.mKeyTable = (local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable;
+            local_metadata.mDif = (local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr;
+
+            // update hash table
+            bit<32> tKeyToWrite;
+            tKeyToWrite = (local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyCarried : local_metadata.mKeyTable;
+            flowTracker.write( local_metadata.mIndex%TABLE_SLOTS, (local_metadata.mDif == 0 ? local_metadata.mKeyTable : tKeyToWrite) );
+
+            bit<32> tCountToWrite;
+            tCountToWrite = (local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountCarried : local_metadata.mCountTable;
+            packetCounter.write( local_metadata.mIndex%TABLE_SLOTS, (local_metadata.mDif == 0 ? local_metadata.mCountTable + local_metadata.mCountCarried : tCountToWrite));
+
+            bit<1> tBitToWrite;
+            tBitToWrite = (local_metadata.mKeyCarried == 0) ? 1w0 : 1w1;
+            validBits.write( local_metadata.mIndex%TABLE_SLOTS, (local_metadata.mValid == 0 ? tBitToWrite : 1));
+
+            // TODO: 
+            // - expel the key-counter pair inside current stage
+            // - or current pair go to next stage
         }
     }
 }

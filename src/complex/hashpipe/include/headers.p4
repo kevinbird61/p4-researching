@@ -44,10 +44,18 @@ struct headers {
 }
 
 struct metadata_t {
-    bit<16>       l4_src_port;
-    bit<16>       l4_dst_port;
-    next_hop_id_t next_hop_id;
+    // Normal metadata
+    bit<16>         l4_src_port;
+    bit<16>         l4_dst_port;
+    next_hop_id_t   next_hop_id;
+    // HashPipe
+    bit<32>         mIndex;             // hash index
+    bit<32>         mKeyCarried;        // expel IP src (use between stage)
+    bit<32>         mKeyTable;          // read from flowTracker
+    bit<32>         mCountCarried;      // expel counter of mKeyCarried
+    bit<32>         mCountTable;        // read from packetCounter
+    bit<32>         mDif;               // Check if mKeyCarried and mKeyTable is different or not
+    bit<1>          mValid;             // the bucket of hash index is empty or not
 }
-
 
 #endif

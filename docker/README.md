@@ -34,7 +34,16 @@ $ (sudo) docker run -it --privileged kevinbird61/new-basic-p4env
 $ (sudo) docker run -it --privileged kevinbird61/new_p4env_v1
 ```
 
-* Step 3: enjoy P4 environment !
+* Step 3: mount this P4 repository or your P4 repository into docker image: 
+```bash
+# P4 v0 environment (image for tutorials branch.)
+$ (sudo) docker run --rm -ti -w /root -v <P4_repo_location_in_your_local_machine>:/root kevinbird61/new-basic-p4env
+
+# P4 v1 environment (image for current/latest stable version. )
+$ (sudo) docker run --rm -ti -w /root -v <P4_repo_location_in_your_local_machine>:/root kevinbird61/new_p4env_v1
+```
+
+* Step : enjoy P4 environment !
 
 ## Advance Usage
 

@@ -30,6 +30,7 @@ control ingress(inout headers hdr,
 
     apply {
         hashpipe_stage1.apply(hdr, local_metadata);
+        hashpipe_stage2.apply(hdr, local_metadata);
         //port_counters_ingress.apply(hdr, standard_metadata);
         //port_meters_ingress.apply(hdr, standard_metadata);
         //packetio_ingress.apply(hdr, standard_metadata);
