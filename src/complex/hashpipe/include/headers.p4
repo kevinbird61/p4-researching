@@ -19,6 +19,20 @@ const MeterColor MeterColor_GREEN = 8w0;
 const MeterColor MeterColor_YELLOW = 8w1;
 const MeterColor MeterColor_RED = 8w2;
 
+// packet-in (send-to-controller)
+@controller_header("packet_in")
+header packet_in_header_t {
+    bit<9>  ingress_port;
+    bit<7>  _padding;
+}
+
+// packet-out (send-from-controller)
+@controller_header("packet_out")
+header packet_out_header_t {
+    bit<9>  egress_port;
+    bit<7>  _padding;
+}
+
 // header struct for packet
 struct headers {
     packet_out_header_t packet_out;
@@ -35,18 +49,5 @@ struct metadata_t {
     next_hop_id_t next_hop_id;
 }
 
-// packet-in (send-to-controller)
-@controller_header("packet_in")
-header packet_in_header_t {
-    bit<9>  ingress_port;
-    bit<7>  _padding;
-}
-
-// packet-out (send-from-controller)
-@controller_header("packet_out")
-header packet_out_header_t {
-    bit<9>  egress_port;
-    bit<7>  _padding;
-}
 
 #endif

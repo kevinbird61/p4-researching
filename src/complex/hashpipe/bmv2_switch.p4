@@ -15,6 +15,8 @@
 //#include "include/wcmp.p4"
 // host meter table
 //#include "include/host_meter_table.p4"
+// hashpipe 
+#include "include/hashpipe.p4"
 // table 0
 #include "include/table0.p4"
 
@@ -27,6 +29,7 @@ control ingress(inout headers hdr,
                 inout standard_metadata_t standard_metadata) {
 
     apply {
+        hashpipe_stage1.apply(hdr, local_metadata);
         //port_counters_ingress.apply(hdr, standard_metadata);
         //port_meters_ingress.apply(hdr, standard_metadata);
         //packetio_ingress.apply(hdr, standard_metadata);
