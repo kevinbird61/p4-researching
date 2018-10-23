@@ -26,25 +26,8 @@ My Researching work on P4.
 # About this repository
 
 ## P4 (with `Mininet`)
-* Learning how to write a P4 program by [basic example](src/basic).
-* Learning how to make a P4Runtime controller(I called it simple-monitor) by [simple example](src/simple-monitor).
-* Learning how to use a P4Runtime controller:
-    * From [example of p4lang/tutorials - p4runtime](src/advance-tunnel).
-    * From [advance usage(larger topo, modify/delete table entries support) of controller](src/advance-topo).
-* Learning how to use [In-band Network Telemetry (`WIP`)](src/int)
-    * Using `psa.p4`(Can't compiled)/`v1model.p4`(Compiled, but not tested) architecture to construct transit/sink target device.
-* Learning how to implement NAT 
-    * Simple NAT forward/reverse [example](src/simple-nat)
-    * More complicated (`WIP`)
-* Learning how to implement MPLS
-    * MPLS [example](src/mpls)
-* Learning how to implement broadcast 
-    * bcast [example](src/bcast)
-* Learning how to use register
-    * register [example](src/register)
-    * table-array [example](src/table-array)
-* Learning how to use meter
-    * meter [example](src/meter)
+
+* More details under [`src/`](src/)
 
 > You can found some tutorials in [`branch:tutorials`](https://github.com/kevinbird61/p4-researching/tree/tutorials)
 
