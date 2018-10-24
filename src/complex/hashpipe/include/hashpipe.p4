@@ -27,6 +27,13 @@ control hashpipe_stage1(
             */
             // get location (outside the action)
             a_b_hash.apply(2,3,hdr.ipv4.srcAddr,local_metadata.mIndex);
+            /*
+                Origin method - 
+
+                modify_field_with_hash_based_offset(local_metadata.mIndex, 0, HashAlgorithm.xor16, 32);
+
+                (https://github.com/p4lang/behavioral-model/blob/c1ac26f1e3ccbefc85bdf273b7337d3ce0bd478c/targets/simple_switch/primitives.cpp#L262)
+            */
             /* 5-tuple
             if(hdr.tcp.isValid()){
             five_tuple.apply(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.ipv4.protocol,

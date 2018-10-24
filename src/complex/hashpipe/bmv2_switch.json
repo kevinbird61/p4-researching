@@ -515,7 +515,7 @@
       "id" : 3,
       "source_info" : {
         "filename" : "include/hashpipe.p4",
-        "line" : 78,
+        "line" : 85,
         "column" : 28,
         "source_fragment" : "flowTracker"
       },
@@ -527,7 +527,7 @@
       "id" : 4,
       "source_info" : {
         "filename" : "include/hashpipe.p4",
-        "line" : 80,
+        "line" : 87,
         "column" : 28,
         "source_fragment" : "packetCounter"
       },
@@ -539,7 +539,7 @@
       "id" : 5,
       "source_info" : {
         "filename" : "include/hashpipe.p4",
-        "line" : 82,
+        "line" : 89,
         "column" : 27,
         "source_fragment" : "validBits"
       },
@@ -732,7 +732,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 45,
+            "line" : 52,
             "column" : 39,
             "source_fragment" : "(local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable"
           }
@@ -758,7 +758,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 45,
+            "line" : 52,
             "column" : 39,
             "source_fragment" : "(local_metadata.mValid == 0) ? hdr.ipv4.srcAddr : local_metadata.mKeyTable"
           }
@@ -899,7 +899,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 40,
+            "line" : 47,
             "column" : 55,
             "source_fragment" : "(local_metadata.mIndex)%1024"
           }
@@ -922,7 +922,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 40,
+            "line" : 47,
             "column" : 12,
             "source_fragment" : "flowTracker.read(local_metadata.mKeyTable, (local_metadata.mIndex)%1024)"
           }
@@ -954,7 +954,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 41,
+            "line" : 48,
             "column" : 59,
             "source_fragment" : "(local_metadata.mIndex)%1024"
           }
@@ -977,7 +977,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 41,
+            "line" : 48,
             "column" : 12,
             "source_fragment" : "packetCounter.read(local_metadata.mCountTable, (local_metadata.mIndex)%1024)"
           }
@@ -1009,7 +1009,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 42,
+            "line" : 49,
             "column" : 50,
             "source_fragment" : "(local_metadata.mIndex)%1024"
           }
@@ -1032,7 +1032,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 42,
+            "line" : 49,
             "column" : 12,
             "source_fragment" : "validBits.read(local_metadata.mValid, (local_metadata.mIndex)%1024)"
           }
@@ -1058,7 +1058,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 46,
+            "line" : 53,
             "column" : 34,
             "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr"
           }
@@ -1107,7 +1107,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 46,
+            "line" : 53,
             "column" : 34,
             "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - hdr.ipv4.srcAddr"
           }
@@ -1133,7 +1133,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 45,
+            "line" : 52,
             "column" : 12,
             "source_fragment" : "local_metadata.mKeyTable ="
           }
@@ -1182,7 +1182,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 55,
+            "line" : 62,
             "column" : 62,
             "source_fragment" : "(local_metadata.mDif == 0) ? local_metadata.mCountTable+1 : 1"
           }
@@ -1208,7 +1208,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 55,
+            "line" : 62,
             "column" : 62,
             "source_fragment" : "(local_metadata.mDif == 0) ? local_metadata.mCountTable+1 : 1"
           }
@@ -1234,7 +1234,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 46,
+            "line" : 53,
             "column" : 12,
             "source_fragment" : "local_metadata.mDif ="
           }
@@ -1266,7 +1266,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 49,
+            "line" : 56,
             "column" : 31,
             "source_fragment" : "local_metadata.mIndex%1024"
           }
@@ -1289,7 +1289,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 49,
+            "line" : 56,
             "column" : 12,
             "source_fragment" : "flowTracker.write( local_metadata.mIndex%1024, hdr.ipv4.srcAddr )"
           }
@@ -1315,7 +1315,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 67,
+            "line" : 74,
             "column" : 41,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : local_metadata.mKeyTable"
           }
@@ -1341,7 +1341,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 67,
+            "line" : 74,
             "column" : 41,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : local_metadata.mKeyTable"
           }
@@ -1380,7 +1380,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 55,
+            "line" : 62,
             "column" : 33,
             "source_fragment" : "local_metadata.mIndex%1024"
           }
@@ -1403,7 +1403,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 55,
+            "line" : 62,
             "column" : 12,
             "source_fragment" : "packetCounter.write( local_metadata.mIndex%1024, ((local_metadata.mDif == 0) ? local_metadata.mCountTable+1 : 1))"
           }
@@ -1435,7 +1435,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 57,
+            "line" : 64,
             "column" : 29,
             "source_fragment" : "local_metadata.mIndex%1024"
           }
@@ -1458,7 +1458,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 57,
+            "line" : 64,
             "column" : 12,
             "source_fragment" : "validBits.write( local_metadata.mIndex%1024, 1w1 )"
           }
@@ -1484,7 +1484,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 68,
+            "line" : 75,
             "column" : 43,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : local_metadata.mCountTable"
           }
@@ -1510,7 +1510,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 68,
+            "line" : 75,
             "column" : 43,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : local_metadata.mCountTable"
           }
@@ -1536,7 +1536,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 67,
+            "line" : 74,
             "column" : 12,
             "source_fragment" : "local_metadata.mKeyCarried ="
           }
@@ -1562,7 +1562,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 68,
+            "line" : 75,
             "column" : 12,
             "source_fragment" : "local_metadata.mCountCarried ="
           }
@@ -1588,7 +1588,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 102,
+            "line" : 109,
             "column" : 39,
             "source_fragment" : "(local_metadata.mValid == 0) ? local_metadata.mKeyCarried : local_metadata.mKeyTable"
           }
@@ -1614,7 +1614,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 102,
+            "line" : 109,
             "column" : 39,
             "source_fragment" : "(local_metadata.mValid == 0) ? local_metadata.mKeyCarried : local_metadata.mKeyTable"
           }
@@ -1755,7 +1755,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 97,
+            "line" : 104,
             "column" : 55,
             "source_fragment" : "(local_metadata.mIndex)%1024"
           }
@@ -1778,7 +1778,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 97,
+            "line" : 104,
             "column" : 12,
             "source_fragment" : "flowTracker.read(local_metadata.mKeyTable, (local_metadata.mIndex)%1024)"
           }
@@ -1810,7 +1810,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 98,
+            "line" : 105,
             "column" : 59,
             "source_fragment" : "(local_metadata.mIndex)%1024"
           }
@@ -1833,7 +1833,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 98,
+            "line" : 105,
             "column" : 12,
             "source_fragment" : "packetCounter.read(local_metadata.mCountTable, (local_metadata.mIndex)%1024)"
           }
@@ -1865,7 +1865,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 99,
+            "line" : 106,
             "column" : 50,
             "source_fragment" : "(local_metadata.mIndex)%1024"
           }
@@ -1888,7 +1888,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 99,
+            "line" : 106,
             "column" : 12,
             "source_fragment" : "validBits.read(local_metadata.mValid, (local_metadata.mIndex)%1024)"
           }
@@ -1914,7 +1914,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 103,
+            "line" : 110,
             "column" : 34,
             "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - local_metadata.mKeyCarried"
           }
@@ -1963,7 +1963,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 103,
+            "line" : 110,
             "column" : 34,
             "source_fragment" : "(local_metadata.mValid == 0) ? 0 : local_metadata.mKeyTable - local_metadata.mKeyCarried"
           }
@@ -1989,7 +1989,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 102,
+            "line" : 109,
             "column" : 12,
             "source_fragment" : "local_metadata.mKeyTable ="
           }
@@ -2015,7 +2015,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 107,
+            "line" : 114,
             "column" : 26,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyCarried : local_metadata.mKeyTable"
           }
@@ -2041,7 +2041,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 107,
+            "line" : 114,
             "column" : 26,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyCarried : local_metadata.mKeyTable"
           }
@@ -2067,7 +2067,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 103,
+            "line" : 110,
             "column" : 12,
             "source_fragment" : "local_metadata.mDif ="
           }
@@ -2093,7 +2093,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 108,
+            "line" : 115,
             "column" : 60,
             "source_fragment" : "local_metadata.mDif == 0 ? local_metadata.mKeyTable : tKeyToWrite"
           }
@@ -2119,7 +2119,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 108,
+            "line" : 115,
             "column" : 60,
             "source_fragment" : "local_metadata.mDif == 0 ? local_metadata.mKeyTable : tKeyToWrite"
           }
@@ -2145,7 +2145,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 111,
+            "line" : 118,
             "column" : 28,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountCarried : local_metadata.mCountTable"
           }
@@ -2171,7 +2171,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 111,
+            "line" : 118,
             "column" : 28,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountCarried : local_metadata.mCountTable"
           }
@@ -2210,7 +2210,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 108,
+            "line" : 115,
             "column" : 31,
             "source_fragment" : "local_metadata.mIndex%1024"
           }
@@ -2233,7 +2233,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 108,
+            "line" : 115,
             "column" : 12,
             "source_fragment" : "flowTracker.write( local_metadata.mIndex%1024, (local_metadata.mDif == 0 ? local_metadata.mKeyTable : tKeyToWrite) )"
           }
@@ -2282,7 +2282,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 112,
+            "line" : 119,
             "column" : 62,
             "source_fragment" : "local_metadata.mDif == 0 ? local_metadata.mCountTable + local_metadata.mCountCarried : tCountToWrite"
           }
@@ -2308,7 +2308,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 112,
+            "line" : 119,
             "column" : 62,
             "source_fragment" : "local_metadata.mDif == 0 ? local_metadata.mCountTable + local_metadata.mCountCarried : tCountToWrite"
           }
@@ -2334,7 +2334,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 115,
+            "line" : 122,
             "column" : 26,
             "source_fragment" : "(local_metadata.mKeyCarried == 0) ? 1w0 : 1w1"
           }
@@ -2360,7 +2360,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 115,
+            "line" : 122,
             "column" : 26,
             "source_fragment" : "(local_metadata.mKeyCarried == 0) ? 1w0 : 1w1"
           }
@@ -2399,7 +2399,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 112,
+            "line" : 119,
             "column" : 33,
             "source_fragment" : "local_metadata.mIndex%1024"
           }
@@ -2422,7 +2422,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 112,
+            "line" : 119,
             "column" : 12,
             "source_fragment" : "packetCounter.write( local_metadata.mIndex%1024, (local_metadata.mDif == 0 ? local_metadata.mCountTable + local_metadata.mCountCarried : tCountToWrite))"
           }
@@ -2448,7 +2448,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 116,
+            "line" : 123,
             "column" : 58,
             "source_fragment" : "local_metadata.mValid == 0 ? tBitToWrite : 1"
           }
@@ -2474,7 +2474,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 116,
+            "line" : 123,
             "column" : 58,
             "source_fragment" : "local_metadata.mValid == 0 ? tBitToWrite : 1"
           }
@@ -2500,7 +2500,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 41,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried)"
           }
@@ -2526,7 +2526,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 75,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried"
           }
@@ -2552,7 +2552,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 75,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried"
           }
@@ -2578,7 +2578,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 41,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mKeyTable : local_metadata.mKeyCarried)"
           }
@@ -2617,7 +2617,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 116,
+            "line" : 123,
             "column" : 29,
             "source_fragment" : "local_metadata.mIndex%1024"
           }
@@ -2640,7 +2640,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 116,
+            "line" : 123,
             "column" : 12,
             "source_fragment" : "validBits.write( local_metadata.mIndex%1024, (local_metadata.mValid == 0 ? tBitToWrite : 1))"
           }
@@ -2666,7 +2666,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 43,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried)"
           }
@@ -2692,7 +2692,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 77,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried"
           }
@@ -2718,7 +2718,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 77,
             "source_fragment" : "(local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried"
           }
@@ -2744,7 +2744,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 43,
             "source_fragment" : "(local_metadata.mDif == 0) ? 0 : ((local_metadata.mCountTable < local_metadata.mCountCarried) ? local_metadata.mCountTable : local_metadata.mCountCarried)"
           }
@@ -2770,7 +2770,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 12,
             "source_fragment" : "local_metadata.mKeyCarried ="
           }
@@ -2796,7 +2796,7 @@
           ],
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 12,
             "source_fragment" : "local_metadata.mCountCarried ="
           }
@@ -4038,7 +4038,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 45,
+            "line" : 52,
             "column" : 40,
             "source_fragment" : "local_metadata.mValid == 0"
           },
@@ -4064,7 +4064,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 46,
+            "line" : 53,
             "column" : 35,
             "source_fragment" : "local_metadata.mValid == 0"
           },
@@ -4090,7 +4090,7 @@
           "id" : 3,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 55,
+            "line" : 62,
             "column" : 63,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4116,7 +4116,7 @@
           "id" : 4,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 67,
+            "line" : 74,
             "column" : 42,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4142,7 +4142,7 @@
           "id" : 5,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 68,
+            "line" : 75,
             "column" : 44,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4168,7 +4168,7 @@
           "id" : 6,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 87,
+            "line" : 94,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -4191,7 +4191,7 @@
           "id" : 7,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 102,
+            "line" : 109,
             "column" : 40,
             "source_fragment" : "local_metadata.mValid == 0"
           },
@@ -4217,7 +4217,7 @@
           "id" : 8,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 103,
+            "line" : 110,
             "column" : 35,
             "source_fragment" : "local_metadata.mValid == 0"
           },
@@ -4243,7 +4243,7 @@
           "id" : 9,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 107,
+            "line" : 114,
             "column" : 27,
             "source_fragment" : "local_metadata.mCountTable < local_metadata.mCountCarried"
           },
@@ -4269,7 +4269,7 @@
           "id" : 10,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 108,
+            "line" : 115,
             "column" : 60,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4295,7 +4295,7 @@
           "id" : 11,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 111,
+            "line" : 118,
             "column" : 29,
             "source_fragment" : "local_metadata.mCountTable < local_metadata.mCountCarried"
           },
@@ -4321,7 +4321,7 @@
           "id" : 12,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 112,
+            "line" : 119,
             "column" : 62,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4347,7 +4347,7 @@
           "id" : 13,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 115,
+            "line" : 122,
             "column" : 27,
             "source_fragment" : "local_metadata.mKeyCarried == 0"
           },
@@ -4373,7 +4373,7 @@
           "id" : 14,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 116,
+            "line" : 123,
             "column" : 58,
             "source_fragment" : "local_metadata.mValid == 0"
           },
@@ -4399,7 +4399,7 @@
           "id" : 15,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 42,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4425,7 +4425,7 @@
           "id" : 16,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 120,
+            "line" : 127,
             "column" : 76,
             "source_fragment" : "local_metadata.mCountTable < local_metadata.mCountCarried"
           },
@@ -4451,7 +4451,7 @@
           "id" : 17,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 44,
             "source_fragment" : "local_metadata.mDif == 0"
           },
@@ -4477,7 +4477,7 @@
           "id" : 18,
           "source_info" : {
             "filename" : "include/hashpipe.p4",
-            "line" : 121,
+            "line" : 128,
             "column" : 78,
             "source_fragment" : "local_metadata.mCountTable < local_metadata.mCountCarried"
           },
