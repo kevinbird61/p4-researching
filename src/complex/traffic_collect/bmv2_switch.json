@@ -10,6 +10,14 @@
         ["host_meter_control_meter_tag", 8, false],
         ["tmp_1", 32, false],
         ["tmp_2", 32, false],
+        ["tmp_3", 32, false],
+        ["tmp_4", 32, false],
+        ["tmp_5", 32, false],
+        ["tmp_6", 32, false],
+        ["traffic_collection_mIndex", 32, false],
+        ["traffic_collection_ReadFromTimeTable", 32, false],
+        ["traffic_collection_ReadFromLen", 32, false],
+        ["traffic_collection_ReadPktSize", 32, false],
         ["port_meters_egress_egress_color", 8, false],
         ["metadata_t.l4_src_port", 16, false],
         ["metadata_t.l4_dst_port", 16, false],
@@ -522,46 +530,77 @@
   ],
   "register_arrays" : [
     {
-      "name" : "egress.flowTracker",
+      "name" : "egress.traffic_collection.time_interval",
       "id" : 0,
       "source_info" : {
-        "filename" : "bmv2_switch.p4",
-        "line" : 50,
+        "filename" : "include/collection.p4",
+        "line" : 16,
         "column" : 28,
-        "source_fragment" : "flowTracker"
+        "source_fragment" : "time_interval"
       },
       "size" : 1024,
       "bitwidth" : 32
     },
     {
-      "name" : "egress.packetCounter",
+      "name" : "egress.traffic_collection.enq_length",
       "id" : 1,
       "source_info" : {
-        "filename" : "bmv2_switch.p4",
-        "line" : 52,
+        "filename" : "include/collection.p4",
+        "line" : 18,
         "column" : 28,
-        "source_fragment" : "packetCounter"
+        "source_fragment" : "enq_length"
       },
       "size" : 1024,
       "bitwidth" : 32
     },
     {
-      "name" : "egress.validBits",
+      "name" : "egress.traffic_collection.deq_length",
       "id" : 2,
       "source_info" : {
-        "filename" : "bmv2_switch.p4",
-        "line" : 54,
-        "column" : 27,
-        "source_fragment" : "validBits"
+        "filename" : "include/collection.p4",
+        "line" : 19,
+        "column" : 28,
+        "source_fragment" : "deq_length"
       },
       "size" : 1024,
-      "bitwidth" : 1
+      "bitwidth" : 32
+    },
+    {
+      "name" : "egress.traffic_collection.packet_size",
+      "id" : 3,
+      "source_info" : {
+        "filename" : "include/collection.p4",
+        "line" : 21,
+        "column" : 28,
+        "source_fragment" : "packet_size"
+      },
+      "size" : 1024,
+      "bitwidth" : 32
     }
   ],
   "calculations" : [
     {
       "name" : "calc",
       "id" : 0,
+      "algo" : "crc32",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_0",
+      "id" : 1,
       "source_info" : {
         "filename" : "include/checksums.p4",
         "line" : 16,
@@ -956,6 +995,534 @@
       "runtime_data" : [],
       "primitives" : [
         {
+          "op" : "modify_field_with_hash_based_offset",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "calculation",
+              "value" : "calc"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000020"
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 28,
+            "column" : 12,
+            "source_fragment" : "hash(mIndex, HashAlgorithm.crc32, 32w0, { ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "traffic_collection_mIndex"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x000003ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 34,
+            "column" : 12,
+            "source_fragment" : "mIndex = mIndex%1024"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_ReadFromTimeTable"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.time_interval"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 38,
+            "column" : 12,
+            "source_fragment" : "time_interval.read(ReadFromTimeTable, mIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : ">>",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "+",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "traffic_collection_ReadFromTimeTable"]
+                              },
+                              "right" : {
+                                "type" : "field",
+                                "value" : ["standard_metadata", "deq_timedelta"]
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x1"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 39,
+            "column" : 40,
+            "source_fragment" : "(ReadFromTimeTable + standard_metadata.deq_timedelta)/2"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.time_interval"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 39,
+            "column" : 12,
+            "source_fragment" : "time_interval.write(mIndex, (ReadFromTimeTable + standard_metadata.deq_timedelta)/2 )"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_ReadFromLen"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.enq_length"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 42,
+            "column" : 12,
+            "source_fragment" : "enq_length.read(ReadFromLen, mIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : ">>",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "+",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "traffic_collection_ReadFromLen"]
+                              },
+                              "right" : {
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "&",
+                                  "left" : {
+                                    "type" : "field",
+                                    "value" : ["standard_metadata", "enq_qdepth"]
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0xffffffff"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x1"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 43,
+            "column" : 37,
+            "source_fragment" : "(ReadFromLen + (bit<32>)standard_metadata.enq_qdepth)/2"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.enq_length"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 43,
+            "column" : 12,
+            "source_fragment" : "enq_length.write(mIndex, (ReadFromLen + (bit<32>)standard_metadata.enq_qdepth)/2 )"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_ReadFromLen"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.deq_length"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 44,
+            "column" : 12,
+            "source_fragment" : "deq_length.read(ReadFromLen, mIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : ">>",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "+",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "traffic_collection_ReadFromLen"]
+                              },
+                              "right" : {
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "&",
+                                  "left" : {
+                                    "type" : "field",
+                                    "value" : ["standard_metadata", "deq_qdepth"]
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0xffffffff"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x1"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 45,
+            "column" : 37,
+            "source_fragment" : "(ReadFromLen + (bit<32>)standard_metadata.deq_qdepth)/2"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.deq_length"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 45,
+            "column" : 12,
+            "source_fragment" : "deq_length.write(mIndex, (ReadFromLen + (bit<32>)standard_metadata.deq_qdepth)/2 )"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_ReadPktSize"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.packet_size"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 48,
+            "column" : 12,
+            "source_fragment" : "packet_size.read(ReadPktSize, mIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_4"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : ">>",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "+",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "traffic_collection_ReadPktSize"]
+                              },
+                              "right" : {
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "&",
+                                  "left" : {
+                                    "type" : "field",
+                                    "value" : ["ipv4", "totalLen"]
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0xffffffff"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x1"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 49,
+            "column" : 38,
+            "source_fragment" : "(ReadPktSize + (bit<32>)hdr.ipv4.totalLen)/2"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "egress.traffic_collection.packet_size"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "traffic_collection_mIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_4"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 49,
+            "column" : 12,
+            "source_fragment" : "packet_size.write(mIndex, (ReadPktSize + (bit<32>)hdr.ipv4.totalLen)/2 )"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_5",
+      "id" : 12,
+      "runtime_data" : [],
+      "primitives" : [
+        {
           "op" : "drop",
           "parameters" : [],
           "source_info" : {
@@ -968,8 +1535,8 @@
       ]
     },
     {
-      "name" : "act_5",
-      "id" : 12,
+      "name" : "act_6",
+      "id" : 13,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -977,7 +1544,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "tmp_1"]
+              "value" : ["scalars", "tmp_5"]
             },
             {
               "type" : "expression",
@@ -1013,7 +1580,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "tmp_1"]
+              "value" : ["scalars", "tmp_5"]
             }
           ],
           "source_info" : {
@@ -1028,7 +1595,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "tmp_2"]
+              "value" : ["scalars", "tmp_6"]
             },
             {
               "type" : "expression",
@@ -1064,7 +1631,7 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "tmp_2"]
+              "value" : ["scalars", "tmp_6"]
             },
             {
               "type" : "field",
@@ -1081,8 +1648,8 @@
       ]
     },
     {
-      "name" : "act_6",
-      "id" : 13,
+      "name" : "act_7",
+      "id" : 14,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -1128,7 +1695,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "bmv2_switch.p4",
-        "line" : 25,
+        "line" : 24,
         "column" : 8,
         "source_fragment" : "ingress"
       },
@@ -1461,11 +2028,11 @@
       "id" : 1,
       "source_info" : {
         "filename" : "bmv2_switch.p4",
-        "line" : 45,
+        "line" : 44,
         "column" : 8,
         "source_fragment" : "egress"
       },
-      "init_table" : "tbl_act_4",
+      "init_table" : "node_14",
       "tables" : [
         {
           "name" : "tbl_act_4",
@@ -1477,14 +2044,14 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [12],
-          "actions" : ["act_5"],
-          "base_default_next" : "node_15",
+          "action_ids" : [11],
+          "actions" : ["act_4"],
+          "base_default_next" : "tbl_act_5",
           "next_tables" : {
-            "act_5" : "node_15"
+            "act_4" : "tbl_act_5"
           },
           "default_entry" : {
-            "action_id" : 12,
+            "action_id" : 11,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
@@ -1500,14 +2067,14 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [11],
-          "actions" : ["act_4"],
+          "action_ids" : [13],
+          "actions" : ["act_6"],
           "base_default_next" : "node_17",
           "next_tables" : {
-            "act_4" : "node_17"
+            "act_6" : "node_17"
           },
           "default_entry" : {
-            "action_id" : 11,
+            "action_id" : 13,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
@@ -1523,14 +2090,37 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [13],
-          "actions" : ["act_6"],
-          "base_default_next" : null,
+          "action_ids" : [12],
+          "actions" : ["act_5"],
+          "base_default_next" : "node_19",
           "next_tables" : {
-            "act_6" : null
+            "act_5" : "node_19"
           },
           "default_entry" : {
-            "action_id" : 13,
+            "action_id" : 12,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_7",
+          "id" : 10,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [14],
+          "actions" : ["act_7"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "act_7" : null
+          },
+          "default_entry" : {
+            "action_id" : 14,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
@@ -1540,8 +2130,31 @@
       "action_profiles" : [],
       "conditionals" : [
         {
-          "name" : "node_15",
+          "name" : "node_14",
           "id" : 3,
+          "source_info" : {
+            "filename" : "include/collection.p4",
+            "line" : 24,
+            "column" : 11,
+            "source_fragment" : "hdr.ipv4.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["ipv4", "$valid$"]
+              }
+            }
+          },
+          "true_next" : "tbl_act_4",
+          "false_next" : "tbl_act_5"
+        },
+        {
+          "name" : "node_17",
+          "id" : 4,
           "source_info" : {
             "filename" : "include/port_meters.p4",
             "line" : 27,
@@ -1562,12 +2175,12 @@
               }
             }
           },
-          "true_next" : "tbl_act_5",
-          "false_next" : "node_17"
+          "true_next" : "tbl_act_6",
+          "false_next" : "node_19"
         },
         {
-          "name" : "node_17",
-          "id" : 4,
+          "name" : "node_19",
+          "id" : 5,
           "source_info" : {
             "filename" : "include/packet_io.p4",
             "line" : 20,
@@ -1589,7 +2202,7 @@
             }
           },
           "false_next" : null,
-          "true_next" : "tbl_act_6"
+          "true_next" : "tbl_act_7"
         }
       ]
     }
@@ -1606,7 +2219,7 @@
       },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
-      "calculation" : "calc",
+      "calculation" : "calc_0",
       "if_cond" : {
         "type" : "expression",
         "value" : {
