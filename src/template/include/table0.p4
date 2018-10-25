@@ -46,7 +46,7 @@ control table0_control(inout headers hdr,
 
     apply {
         table0.apply();
-     }
+    }
 }
 
 #endif
