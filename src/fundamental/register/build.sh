@@ -7,7 +7,7 @@ make
 #       - topology.json
 #       - *.p4.json
 #       - "simple_switch_grpc"
-sudo python ../../utils/run_exercise.py \
+sudo python ../../../utils/run_exercise.py \
     --topo topology.json \
     --switch_json register.json \
     --behavioral-exe simple_switch_grpc
