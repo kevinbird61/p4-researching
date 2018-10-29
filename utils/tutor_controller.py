@@ -179,7 +179,7 @@ def main(p4info_file_path, bmv2_file_path):
         printGrpcError(e)
 
     # Then close all the connections
-    # ShutdownAllSwitchConnections()
+    ShutdownAllSwitchConnections()
 
 
 if __name__ == '__main__':

@@ -191,7 +191,7 @@ class P4RuntimeSwitch(P4Switch):
     next_grpc_port = 50051
     next_thrift_port = 9090
     # default packet-in / packet-out port usage
-    next_cpu_port = 60000
+    cpu_port = 255
 
     def __init__(self, name, sw_path = None, json_path = None,
                  grpc_port = None,
@@ -252,8 +252,7 @@ class P4RuntimeSwitch(P4Switch):
             P4Switch.device_id += 1
         self.nanomsg = "ipc:///tmp/bm-{}-log.ipc".format(self.device_id)
         # setting cpu port
-        self.cpu_port = P4RuntimeSwitch.next_cpu_port
-        P4RuntimeSwitch.next_cpu_port += 1
+        self.cpu_port = P4RuntimeSwitch.cpu_port
 
 
     def check_switch_started(self, pid):

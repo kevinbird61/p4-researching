@@ -18,7 +18,8 @@ header packet_in_header_t {
 // packet out 
 @controller_header("packet_out")
 header packet_out_header_t {
-    bit<9>  egress_port;
+    bit<9> egress_port;
+    bit<16> mcast_grp;
 }
 
 // header struct for packet

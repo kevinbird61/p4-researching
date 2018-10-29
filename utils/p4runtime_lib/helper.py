@@ -168,6 +168,13 @@ class P4InfoHelper(object):
         p4runtime_replicas.instance = instance
         return p4runtime_replicas
 
+    # get metadata 
+    def get_metadata_pb(self, metadata_id, value):
+        p4runtime_metadata = p4runtime_pb2.PacketMetadata()
+        p4runtime_metadata.metadata_id = metadata_id
+        p4runtime_metadata.value = value
+        return p4runtime_metadata
+
     # get mc_group_entry
     def buildMCEntry(self, mc_group_id, replicas=None):
         mc_group_entry = p4runtime_pb2.MulticastGroupEntry()
@@ -178,6 +185,17 @@ class P4InfoHelper(object):
                 for egress_port, instance in replicas.iteritems()
             ])
         return mc_group_entry
+
+    # get packetout
+    def buildPacketOut(self, payload, metadata=None):
+        packet_out = p4runtime_pb2.PacketOut()
+        packet_out.payload = payload
+        if metadata:
+            packet_out.metadata.extend([
+                self.get_metadata_pb(metadata_id, value)
+                for metadata_id, value in metadata.iteritems()
+            ])
+        return packet_out
 
     def buildTableEntry(self,
                         table_name,
