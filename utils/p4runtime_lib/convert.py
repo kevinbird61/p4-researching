@@ -78,13 +78,13 @@ def encode(x, bitwidth):
             encoded_bytes = encodeMac(x)
         elif matchesIPv4(x):
             encoded_bytes = encodeIPv4(x)
-        elif matchesIPv6(x):
-            encoded_bytes = encodeIPv6(x)
+        #elif matchesIPv6(x):
+        #    encoded_bytes = encodeIPv6(x)
         else:
             # Assume that the string is already encoded
-            # encoded_bytes = x
+            encoded_bytes = x
             # using encode IPV6 
-            encoded_bytes = encodeIPv6(x)
+            # encoded_bytes = encodeIPv6(x)
     elif type(x) == int:
         encoded_bytes = encodeNum(x, bitwidth)
     else:

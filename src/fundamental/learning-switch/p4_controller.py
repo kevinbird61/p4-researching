@@ -9,6 +9,9 @@ sys.path.append(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
         '../../../utils/'))
 
+SWITCH_TO_HOST_PORT = 1
+SWITCH_TO_SWITCH_PORT = 2
+
 # And then we import
 import p4runtime_lib.bmv2
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
@@ -35,7 +38,9 @@ def writeARPFlood(p4info_helper, sw, in_port, dst_eth_addr, port=None):
             "standard_metadata.ingress_port": in_port,
             "hdr.ethernet.dstAddr": dst_eth_addr
         },
-        action_name = "basic_tutorial_ingress.arp.flooding"
+        action_name = "basic_tutorial_ingress.arp.flooding",
+        action_params = {
+        }
     )
     sw.WriteTableEntry(table_entry)
     print "Installed ARP Flooding rule via P4Runtime."
@@ -52,6 +57,10 @@ def main(p4info_file_path, bmv2_file_path):
     # Instantiate a P4Runtime helper from the p4info file
     # - then need to read from the file compile from P4 Program, which call .p4info
     p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)
+    port_map = {}
+    arp_rules = {}
+    flag = 0
+    bcast = "ff:ff:ff:ff:ff:ff"
 
     try:
         """
@@ -84,14 +93,12 @@ def main(p4info_file_path, bmv2_file_path):
             })
         s1.WritePRE(mc_group = mc_group_entry)
         print "Installed mgrp on s1."
-        port_map = {}
-        arp_rules = {}
-        flag = 0
-        bcast = "ff:ff:ff:ff:ff:ff"
+        
 
         while True:
             packetin = s1.PacketIn()
             if packetin.WhichOneof('update')=='packet':
+                # print("Received Packet-in\n")
                 packet = packetin.packet.payload
                 pkt = Ether(_pkt=packet)
                 metadata = packetin.packet.metadata 
@@ -103,7 +110,7 @@ def main(p4info_file_path, bmv2_file_path):
                 pkt_eth_dst = pkt.getlayer(Ether).dst 
                 ether_type = pkt.getlayer(Ether).type 
 
-                if ether_type is 2048 or ether_type is 2054:
+                if ether_type == 2048 or ether_type == 2054:
                     port_map.setdefault(pkt_eth_src, value)
                     arp_rules.setdefault(value, [])
 
@@ -136,11 +143,11 @@ def main(p4info_file_path, bmv2_file_path):
                             }
                         )
                         s1.PacketOut(packet_out)
-            print "Finished PacketOut.\n"
-            print "=========================\n"
-            print "port_map:%s\n" % port_map
-            print "arp_rules:%s\n" % arp_rules
-            print "=========================\n"
+                    print "Finished PacketOut."
+                    print "========================="
+                    print "port_map:%s" % port_map
+                    print "arp_rules:%s" % arp_rules
+                    print "=========================\n"
 
     except KeyboardInterrupt:
         # using ctrl + c to exit

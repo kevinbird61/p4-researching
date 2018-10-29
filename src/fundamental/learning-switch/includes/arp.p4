@@ -12,8 +12,8 @@ control arp (
         hdr.packet_in.ingress_port = standard_metadata.ingress_port;
     }
 
-    action flooding(bit<16> mcast_grp_id){
-        standard_metadata.mcast_grp = mcast_grp_id;
+    action flooding(){
+        standard_metadata.mcast_grp = 1;
     }
 
     action arp_reply(bit<9> port){

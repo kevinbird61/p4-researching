@@ -215,7 +215,7 @@ class SwitchConnection(object):
         else:
             self.client_stub.Write(request)
 
-    def PacketOut(self, packet, dry_run=False):
+    def PacketOut(self, packet, dry_run=False, **kwargs):
         request = p4runtime_pb2.StreamMessageRequest()
         request.packet.CopyFrom(packet)
         if dry_run:
@@ -225,7 +225,7 @@ class SwitchConnection(object):
             for item in self.stream_msg_resp:
                 return item
     
-    def PacketIn(self, dry_run=False):
+    def PacketIn(self, dry_run=False, **kwargs):
         request = p4runtime_pb2.StreamMessageRequest()
         if dry_run:
             print "P4 Runtime PacketIn: ", request 

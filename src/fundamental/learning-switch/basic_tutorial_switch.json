@@ -568,12 +568,7 @@
     {
       "name" : "basic_tutorial_ingress.arp.flooding",
       "id" : 4,
-      "runtime_data" : [
-        {
-          "name" : "mcast_grp_id",
-          "bitwidth" : 16
-        }
-      ],
+      "runtime_data" : [],
       "primitives" : [
         {
           "op" : "assign",
@@ -583,15 +578,15 @@
               "value" : ["standard_metadata", "mcast_grp"]
             },
             {
-              "type" : "runtime_data",
-              "value" : 0
+              "type" : "hexstr",
+              "value" : "0x0001"
             }
           ],
           "source_info" : {
             "filename" : "includes/arp.p4",
             "line" : 16,
             "column" : 8,
-            "source_fragment" : "standard_metadata.mcast_grp = mcast_grp_id"
+            "source_fragment" : "standard_metadata.mcast_grp = 1"
           }
         }
       ]

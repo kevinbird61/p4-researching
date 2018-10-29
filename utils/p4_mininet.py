@@ -288,7 +288,7 @@ class P4RuntimeSwitch(P4Switch):
         if self.grpc_port:
             args.append("-- --grpc-server-addr 0.0.0.0:" + str(self.grpc_port))
         if self.cpu_port:
-            args.append("-- --cpu-port " + str(self.cpu_port))
+            args.append("--cpu-port " + str(self.cpu_port))
         cmd = ' '.join(args)
         info(cmd + "\n")
 
