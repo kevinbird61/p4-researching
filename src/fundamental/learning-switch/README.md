@@ -2,9 +2,14 @@
 
 展示 learning switch 的範例。
 
+![](res/arp.png)
+
 ## Goal
 
 * 透過 packet-in/packet-out 來發現未知的 ports/packets、送到 controller 做處理後，加入所需的 rules 後來完成 switch 學習的過程
+
+* workflow:
+![](res/workflow.png)
 
 ## Run 
 
