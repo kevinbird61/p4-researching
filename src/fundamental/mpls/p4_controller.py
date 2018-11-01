@@ -6,7 +6,7 @@ from time import sleep
 # set our lib path
 sys.path.append(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
-        '../../utils/'))
+        '../../../utils/'))
 # And then we import
 import p4runtime_lib.bmv2
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
@@ -239,10 +239,10 @@ def main(p4info_file_path, bmv2_file_path):
         print "Installed P4 Program using SetForardingPipelineConfig on s4"
 
         # 設定 default action
-        setDefaultDrop(p4info_helper,ingress_sw=s1)
-        setDefaultDrop(p4info_helper,ingress_sw=s2)
-        setDefaultDrop(p4info_helper,ingress_sw=s3)
-        setDefaultDrop(p4info_helper,ingress_sw=s4)
+        #setDefaultDrop(p4info_helper,ingress_sw=s1)
+        #setDefaultDrop(p4info_helper,ingress_sw=s2)
+        #setDefaultDrop(p4info_helper,ingress_sw=s3)
+        #setDefaultDrop(p4info_helper,ingress_sw=s4)
 
         # 設定 forward rules
         # - s1 (MPLS Ingress)

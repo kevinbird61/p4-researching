@@ -6,7 +6,7 @@ from time import sleep
 # set our lib path
 sys.path.append(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
-        '../../utils/'))
+        '../../../utils/'))
 # And then we import
 import p4runtime_lib.bmv2
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
