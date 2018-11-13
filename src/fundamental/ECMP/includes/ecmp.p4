@@ -9,8 +9,11 @@ control ecmp_table(
     inout metadata_t metadata,
     inout standard_metadata_t standard_metadata
 ){
+    direct_counter(CounterType.packets_and_bytes) ecmp_table_counter;
+
     action set_ecmp_select(bit<16> ecmp_base, bit<32> ecmp_count) {
-        /* TODO: hash on 5-tuple and save the hash result in meta.ecmp_select 
+        ecmp_table_counter.count();
+        /* hash on 5-tuple and save the hash result in meta.ecmp_select 
            so that the ecmp_nhop table can use it to make a forwarding decision accordingly */
         hash(
             metadata.ecmp_select, 
@@ -43,6 +46,7 @@ control ecmp_table(
             set_ecmp_select;
         }
         default_action = drop();
+        counters = ecmp_table_counter;
         size = 1024;
     }
     table ecmp_nhop {

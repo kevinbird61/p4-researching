@@ -182,6 +182,22 @@ class SwitchConnection(object):
         else:
             for response in self.client_stub.Read(request):
                 yield response
+    
+    def ReadDirectCounter(self, table_id=False, dry_run=False):
+        request = p4runtime_pb2.ReadRequest()
+        request.device_id = self.device_id
+        entity = request.entities.add()
+        direct_counter_entry = entity.direct_counter_entry
+        # assign 
+        if table_id is not None:
+            direct_counter_entry.table_entry.table_id = table_id
+        else:
+            direct_counter_entry.table_entry.table_id = 0
+        if dry_run:
+            print "P4Runtime Read Direct Counters:", request
+        else:
+            for response in self.client_stub.Read(request):
+                yield response
 
     # Read Register 
     def ReadRegister(self, register_id=None, index=None, dry_run=False):

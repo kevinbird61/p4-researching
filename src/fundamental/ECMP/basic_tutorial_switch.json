@@ -369,7 +369,20 @@
     }
   ],
   "meter_arrays" : [],
-  "counter_arrays" : [],
+  "counter_arrays" : [
+    {
+      "name" : "basic_tutorial_ingress.ecmp_table.ecmp_table_counter",
+      "id" : 0,
+      "is_direct" : true,
+      "binding" : "basic_tutorial_ingress.ecmp_table.ecmp_group",
+      "source_info" : {
+        "filename" : "includes/ecmp.p4",
+        "line" : 12,
+        "column" : 50,
+        "source_fragment" : "ecmp_table_counter"
+      }
+    }
+  ],
   "register_arrays" : [],
   "calculations" : [
     {
@@ -667,7 +680,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 15,
+            "line" : 17,
             "column" : 8,
             "source_fragment" : "hash( ..."
           }
@@ -706,7 +719,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 31,
+            "line" : 34,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = nhop_dmac"
           }
@@ -725,7 +738,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 32,
+            "line" : 35,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.dstAddr = nhop_ipv4"
           }
@@ -744,7 +757,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 33,
+            "line" : 36,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -786,7 +799,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 34,
+            "line" : 37,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
@@ -840,7 +853,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 75,
+            "line" : 79,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = smac"
           }
@@ -903,7 +916,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 37,
+            "line" : 40,
             "column" : 10,
             "source_fragment" : "ecmp_group"
           },
@@ -918,7 +931,7 @@
           "match_type" : "lpm",
           "type" : "simple",
           "max_size" : 1024,
-          "with_counters" : false,
+          "with_counters" : true,
           "support_timeout" : false,
           "direct_meters" : null,
           "action_ids" : [1, 5],
@@ -940,7 +953,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 48,
+            "line" : 52,
             "column" : 10,
             "source_fragment" : "ecmp_nhop"
           },
@@ -1003,7 +1016,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 61,
+            "line" : 65,
             "column" : 12,
             "source_fragment" : "hdr.ipv4.isValid() && hdr.ipv4.ttl > 0"
           },
@@ -1059,7 +1072,7 @@
           "id" : 3,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 78,
+            "line" : 82,
             "column" : 10,
             "source_fragment" : "send_frame"
           },
