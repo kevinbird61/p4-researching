@@ -5,9 +5,9 @@
         "h3"
     ],
     "switches": {
-        "s1": {},
-        "s2": {},
-        "s3": {}
+        "s1": { "runtime_json" : "s1-runtime.json" },
+        "s2": { "runtime_json" : "s2-runtime.json" },
+        "s3": { "runtime_json" : "s3-runtime.json" }
     },
     "links": [
         ["h1","s1"],

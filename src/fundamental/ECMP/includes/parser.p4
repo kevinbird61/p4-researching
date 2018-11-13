@@ -32,6 +32,20 @@ parser basic_tutor_switch_parser(
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
+        transition select(hdr.ipv4.protocol){
+            PROTO_TCP: parse_tcp;
+            PROTO_UDP: parse_udp;
+            default: accept;
+        }
+    }
+
+    state parse_tcp {
+        packet.extract(hdr.tcp);
+        transition accept;
+    }
+
+    state parse_udp {
+        packet.extract(hdr.udp);
         transition accept;
     }
 }

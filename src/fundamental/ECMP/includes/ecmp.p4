@@ -42,6 +42,7 @@ control ecmp_table(
             drop;
             set_ecmp_select;
         }
+        default_action = drop();
         size = 1024;
     }
     table ecmp_nhop {
@@ -52,6 +53,7 @@ control ecmp_table(
             drop;
             set_nhop;
         }
+        default_action = drop();
         size = 2;
     }
 
