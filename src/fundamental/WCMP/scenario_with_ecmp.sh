@@ -8,6 +8,6 @@ make
 #       - *.p4.json
 #       - "simple_switch_grpc"
 sudo python ../../../utils/run_exercise.py \
-    --topo topology.json \
+    --topo scenario_with_ecmp/topology.json \
     --switch_json basic_tutorial_switch.json \
     --behavioral-exe simple_switch_grpc

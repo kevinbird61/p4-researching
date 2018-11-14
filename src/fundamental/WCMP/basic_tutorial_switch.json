@@ -5,6 +5,7 @@
       "id" : 0,
       "fields" : [
         ["tmp", 32, false],
+        ["tmp_0", 32, false],
         ["metadata_t.ecmp_select", 14, false],
         ["metadata_t.l4_srcPort", 16, false],
         ["metadata_t.l4_dstPort", 16, false],
@@ -426,15 +427,27 @@
   "meter_arrays" : [],
   "counter_arrays" : [
     {
-      "name" : "basic_tutorial_ingress.ecmp_table.ecmp_port_counter",
+      "name" : "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter",
       "id" : 0,
       "source_info" : {
-        "filename" : "includes/ecmp.p4",
-        "line" : 12,
-        "column" : 49,
-        "source_fragment" : "ecmp_port_counter"
+        "filename" : "includes/port_counter.p4",
+        "line" : 11,
+        "column" : 37,
+        "source_fragment" : "ingress_port_counter"
       },
-      "size" : 1024,
+      "size" : 10,
+      "is_direct" : false
+    },
+    {
+      "name" : "basic_tutorial_egress.port_counters_egress.egress_port_counter",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "includes/port_counter.p4",
+        "line" : 21,
+        "column" : 37,
+        "source_fragment" : "egress_port_counter"
+      },
+      "size" : 10,
       "is_direct" : false
     }
   ],
@@ -735,7 +748,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 17,
+            "line" : 15,
             "column" : 8,
             "source_fragment" : "hash( ..."
           }
@@ -770,7 +783,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 33,
+            "line" : 31,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = nhop_dmac"
           }
@@ -789,7 +802,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 35,
+            "line" : 33,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -831,11 +844,18 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 36,
+            "line" : 34,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
-        },
+        }
+      ]
+    },
+    {
+      "name" : "act",
+      "id" : 7,
+      "runtime_data" : [],
+      "primitives" : [
         {
           "op" : "assign",
           "parameters" : [
@@ -850,8 +870,8 @@
                 "value" : {
                   "op" : "&",
                   "left" : {
-                    "type" : "local",
-                    "value" : 1
+                    "type" : "field",
+                    "value" : ["standard_metadata", "ingress_port"]
                   },
                   "right" : {
                     "type" : "hexstr",
@@ -862,10 +882,10 @@
             }
           ],
           "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 38,
-            "column" : 32,
-            "source_fragment" : "(bit<32>)port"
+            "filename" : "includes/port_counter.p4",
+            "line" : 14,
+            "column" : 35,
+            "source_fragment" : "(bit<32>) standard_metadata.ingress_port"
           }
         },
         {
@@ -873,7 +893,7 @@
           "parameters" : [
             {
               "type" : "counter_array",
-              "value" : "basic_tutorial_ingress.ecmp_table.ecmp_port_counter"
+              "value" : "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter"
             },
             {
               "type" : "field",
@@ -881,17 +901,17 @@
             }
           ],
           "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 38,
+            "filename" : "includes/port_counter.p4",
+            "line" : 14,
             "column" : 8,
-            "source_fragment" : "ecmp_port_counter.count((bit<32>)port)"
+            "source_fragment" : "ingress_port_counter.count((bit<32>) standard_metadata.ingress_port)"
           }
         }
       ]
     },
     {
       "name" : "drop",
-      "id" : 7,
+      "id" : 8,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -908,13 +928,13 @@
     },
     {
       "name" : "NoAction",
-      "id" : 8,
+      "id" : 9,
       "runtime_data" : [],
       "primitives" : []
     },
     {
       "name" : "basic_tutorial_egress.ecmp_rewrite.rewrite_mac",
-      "id" : 9,
+      "id" : 10,
       "runtime_data" : [
         {
           "name" : "smac",
@@ -936,9 +956,67 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 79,
+            "line" : 75,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = smac"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_0",
+      "id" : 11,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "egress_port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/port_counter.p4",
+            "line" : 24,
+            "column" : 34,
+            "source_fragment" : "(bit<32>) standard_metadata.egress_port"
+          }
+        },
+        {
+          "op" : "count",
+          "parameters" : [
+            {
+              "type" : "counter_array",
+              "value" : "basic_tutorial_egress.port_counters_egress.egress_port_counter"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/port_counter.p4",
+            "line" : 24,
+            "column" : 8,
+            "source_fragment" : "egress_port_counter.count((bit<32>) standard_metadata.egress_port)"
           }
         }
       ]
@@ -950,7 +1028,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic_tutorial_switch.p4",
-        "line" : 20,
+        "line" : 23,
         "column" : 8,
         "source_fragment" : "basic_tutorial_ingress"
       },
@@ -999,7 +1077,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 41,
+            "line" : 37,
             "column" : 10,
             "source_fragment" : "ecmp_group"
           },
@@ -1036,7 +1114,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 52,
+            "line" : 48,
             "column" : 10,
             "source_fragment" : "ecmp_nhop"
           },
@@ -1056,16 +1134,39 @@
           "direct_meters" : null,
           "action_ids" : [2, 6],
           "actions" : ["drop", "basic_tutorial_ingress.ecmp_table.set_nhop"],
-          "base_default_next" : null,
+          "base_default_next" : "tbl_act",
           "next_tables" : {
-            "drop" : null,
-            "basic_tutorial_ingress.ecmp_table.set_nhop" : null
+            "drop" : "tbl_act",
+            "basic_tutorial_ingress.ecmp_table.set_nhop" : "tbl_act"
           },
           "default_entry" : {
             "action_id" : 2,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act",
+          "id" : 3,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7],
+          "actions" : ["act"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "act" : null
+          },
+          "default_entry" : {
+            "action_id" : 7,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
           }
         }
       ],
@@ -1099,7 +1200,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 65,
+            "line" : 61,
             "column" : 12,
             "source_fragment" : "hdr.ipv4.isValid() && hdr.ipv4.ttl > 0"
           },
@@ -1134,8 +1235,8 @@
               }
             }
           },
-          "false_next" : null,
-          "true_next" : "basic_tutorial_ingress.ecmp_table.ecmp_group"
+          "true_next" : "basic_tutorial_ingress.ecmp_table.ecmp_group",
+          "false_next" : "tbl_act"
         }
       ]
     },
@@ -1144,7 +1245,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "basic_tutorial_switch.p4",
-        "line" : 42,
+        "line" : 48,
         "column" : 8,
         "source_fragment" : "basic_tutorial_egress"
       },
@@ -1152,10 +1253,10 @@
       "tables" : [
         {
           "name" : "basic_tutorial_egress.ecmp_rewrite.send_frame",
-          "id" : 3,
+          "id" : 4,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 82,
+            "line" : 78,
             "column" : 10,
             "source_fragment" : "send_frame"
           },
@@ -1173,19 +1274,42 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [9, 7, 8],
+          "action_ids" : [10, 8, 9],
           "actions" : ["basic_tutorial_egress.ecmp_rewrite.rewrite_mac", "drop", "NoAction"],
-          "base_default_next" : null,
+          "base_default_next" : "tbl_act_0",
           "next_tables" : {
-            "basic_tutorial_egress.ecmp_rewrite.rewrite_mac" : null,
-            "drop" : null,
-            "NoAction" : null
+            "basic_tutorial_egress.ecmp_rewrite.rewrite_mac" : "tbl_act_0",
+            "drop" : "tbl_act_0",
+            "NoAction" : "tbl_act_0"
           },
           "default_entry" : {
-            "action_id" : 8,
+            "action_id" : 9,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_0",
+          "id" : 5,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [11],
+          "actions" : ["act_0"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "act_0" : null
+          },
+          "default_entry" : {
+            "action_id" : 11,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
           }
         }
       ],

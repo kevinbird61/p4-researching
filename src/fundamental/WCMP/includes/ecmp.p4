@@ -9,8 +9,6 @@ control ecmp_table(
     inout metadata_t metadata,
     inout standard_metadata_t standard_metadata
 ){
-    counter(1024, CounterType.packets_and_bytes) ecmp_port_counter;
-
     action set_ecmp_select(bit<16> ecmp_base, bit<32> ecmp_count) {
         /* hash on 5-tuple and save the hash result in meta.ecmp_select 
            so that the ecmp_nhop table can use it to make a forwarding decision accordingly */
@@ -34,8 +32,6 @@ control ecmp_table(
         // hdr.ipv4.dstAddr = nhop_ipv4;
         standard_metadata.egress_spec = port;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
-        // count 
-        ecmp_port_counter.count((bit<32>)port);
     }
 
     table ecmp_group {

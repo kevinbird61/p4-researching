@@ -14,6 +14,9 @@
 #include "includes/ecmp.p4"
 #include "includes/wcmp.p4"
 
+// monitor
+#include "includes/port_counter.p4"
+
 //------------------------------------------------------------------------------
 // INGRESS PIPELINE
 //------------------------------------------------------------------------------
@@ -33,6 +36,9 @@ control basic_tutorial_ingress(
 
         // using action_selector/action_profile to support WCMP
         //wcmp_control.apply(hdr, metadata, standard_metadata);
+
+        // port counter 
+        port_counters_ingress.apply(hdr, standard_metadata);
     }
 }
 
@@ -48,6 +54,9 @@ control basic_tutorial_egress(
         // Pipelines in Egress
 
         ecmp_rewrite.apply(hdr, metadata, standard_metadata);
+
+        // port counter (for egress)
+        port_counters_egress.apply(hdr, standard_metadata);
     }
 }
 
