@@ -41,11 +41,19 @@ WCMP 主要針對 ECMP 的兩個缺點做解決：
 * Normal Uplink (For normal leaf)
 ![](res/wcmp_uplink_normal.png)
 
-### P4 switch 
+### Scenario with ECMP
 
-利用 pre-installed rules (e.g. sX-runtime.json) 來為我們這個 scenario 來做初始化。並呼叫 `./build.sh` 建立事先定義好的 topology (via `topology.json`)
+利用 pre-installed rules (e.g. sX-runtime.json) 來為我們這個 scenario 來做初始化。並呼叫 `./scenario_with_ecmp.sh` 建立事先定義好的 topology (via `topology.json`)
 
-一樣讓 h1 送目標 IP 為 `10.0.0.1` 的封包，在 switch 上做 5-tuple 的 hashing （ 與 ECMP 相同 ），並對應到其連接的 Spine 上，並做 nexthop 的指定。
+這個版本先使用在 ECMP 的方式（詳細可以到 ECMP 的資料夾下察看），透過安插 table entries 的數量作為 "weight" 的體現。
+
+這個簡單的 scenario 的運作過程： 一樣讓 h1 送目標 IP 為 `10.0.2.2` 的封包，在 switch 上做 5-tuple 的 hashing （ 與 ECMP 相同 ），並對應到其連接的 Spine 上，並做 nexthop 的指定。 而身為 spine 的 s5,6,7 上面則安插了針對 10.0.2.2 的 ECMP rules，收到時即對他做 ecmp select 後丟到 s2 （ h2 所屬的 leaf ） 上面，讓 s2 轉發給 h2 做接收。
+
+而操作方式則是在 `./scenario_with_ecmp.sh` 運行成功進入 mininet CLI 後，便可以呼叫 `xterm h1 h2`，用 xterm 開啟兩個摹擬出的 host。 並在 h2 使用 `./receiver.sh` 建立 tcp server、 h1 使用 `./sender.sh` 建立 tcp client 呼叫。 可以看到 h2 接收端可以穩穩接收到 h1 所發出的封包。
+
+這樣還不夠，主要觀察的點在於 leaf1 (s1) 是否因為 WCMP 的機制而做到 load balancing ? 可以使用 P4Runtime 的簡易 python controller / 或是 simple_switch_CLI  對 counter 做觀察：
+* via `simple_switch_CLI` 觀察 s1 上 egress port counter （雖然比例是設 **1:1:2:2** ，不過出來的結果比較接近 **1:1:4:4** 的呈現）：
+![](res/scenario_with_ecmp.png)
 
 
 ## Reference
