@@ -35,7 +35,7 @@ control basic_tutorial_ingress(
         ecmp_table.apply(hdr, metadata, standard_metadata);
 
         // using action_selector/action_profile to support WCMP
-        //wcmp_control.apply(hdr, metadata, standard_metadata);
+        wcmp_control.apply(hdr, metadata, standard_metadata);
 
         // port counter 
         port_counters_ingress.apply(hdr, standard_metadata);

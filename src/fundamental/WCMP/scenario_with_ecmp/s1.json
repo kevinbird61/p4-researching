@@ -6,7 +6,7 @@
       {
         "table": "basic_tutorial_ingress.ecmp_table.ecmp_group",
         "match": {
-          "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
+          "hdr.ipv4.dstAddr": ["10.0.0.0", 16]
         },
         "action_name": "basic_tutorial_ingress.ecmp_table.set_ecmp_select",
         "action_params": {

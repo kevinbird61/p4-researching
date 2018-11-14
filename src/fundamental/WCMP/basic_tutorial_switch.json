@@ -427,8 +427,14 @@
   "meter_arrays" : [],
   "counter_arrays" : [
     {
-      "name" : "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter",
+      "name" : "basic_tutorial_ingress.wcmp_control.wcmp_table_counter",
       "id" : 0,
+      "is_direct" : true,
+      "binding" : "basic_tutorial_ingress.wcmp_control.wcmp_table"
+    },
+    {
+      "name" : "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter",
+      "id" : 1,
       "source_info" : {
         "filename" : "includes/port_counter.p4",
         "line" : 11,
@@ -440,7 +446,7 @@
     },
     {
       "name" : "basic_tutorial_egress.port_counters_egress.egress_port_counter",
-      "id" : 1,
+      "id" : 2,
       "source_info" : {
         "filename" : "includes/port_counter.p4",
         "line" : 21,
@@ -598,8 +604,14 @@
       "primitives" : []
     },
     {
-      "name" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward",
+      "name" : "NoAction",
       "id" : 4,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward",
+      "id" : 5,
       "runtime_data" : [
         {
           "name" : "dstAddr",
@@ -714,7 +726,7 @@
     },
     {
       "name" : "basic_tutorial_ingress.ecmp_table.set_ecmp_select",
-      "id" : 5,
+      "id" : 6,
       "runtime_data" : [
         {
           "name" : "ecmp_base",
@@ -757,7 +769,7 @@
     },
     {
       "name" : "basic_tutorial_ingress.ecmp_table.set_nhop",
-      "id" : 6,
+      "id" : 7,
       "runtime_data" : [
         {
           "name" : "nhop_dmac",
@@ -852,8 +864,39 @@
       ]
     },
     {
+      "name" : "basic_tutorial_ingress.wcmp_control.set_egress_port",
+      "id" : 8,
+      "runtime_data" : [
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/wcmp.p4",
+            "line" : 15,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = port"
+          }
+        }
+      ]
+    },
+    {
       "name" : "act",
-      "id" : 7,
+      "id" : 9,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -911,7 +954,7 @@
     },
     {
       "name" : "drop",
-      "id" : 8,
+      "id" : 10,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -928,13 +971,13 @@
     },
     {
       "name" : "NoAction",
-      "id" : 9,
+      "id" : 11,
       "runtime_data" : [],
       "primitives" : []
     },
     {
       "name" : "basic_tutorial_egress.ecmp_rewrite.rewrite_mac",
-      "id" : 10,
+      "id" : 12,
       "runtime_data" : [
         {
           "name" : "smac",
@@ -965,7 +1008,7 @@
     },
     {
       "name" : "act_0",
-      "id" : 11,
+      "id" : 13,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -1057,7 +1100,7 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [4, 0, 3],
+          "action_ids" : [5, 0, 3],
           "actions" : ["basic_tutorial_ingress.ipv4_forwarding.ipv4_forward", "drop", "NoAction"],
           "base_default_next" : "node_4",
           "next_tables" : {
@@ -1095,7 +1138,7 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [1, 5],
+          "action_ids" : [1, 6],
           "actions" : ["drop", "basic_tutorial_ingress.ecmp_table.set_ecmp_select"],
           "base_default_next" : "basic_tutorial_ingress.ecmp_table.ecmp_nhop",
           "next_tables" : {
@@ -1132,12 +1175,12 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [2, 6],
+          "action_ids" : [2, 7],
           "actions" : ["drop", "basic_tutorial_ingress.ecmp_table.set_nhop"],
-          "base_default_next" : "tbl_act",
+          "base_default_next" : "basic_tutorial_ingress.wcmp_control.wcmp_table",
           "next_tables" : {
-            "drop" : "tbl_act",
-            "basic_tutorial_ingress.ecmp_table.set_nhop" : "tbl_act"
+            "drop" : "basic_tutorial_ingress.wcmp_control.wcmp_table",
+            "basic_tutorial_ingress.ecmp_table.set_nhop" : "basic_tutorial_ingress.wcmp_control.wcmp_table"
           },
           "default_entry" : {
             "action_id" : 2,
@@ -1147,8 +1190,33 @@
           }
         },
         {
-          "name" : "tbl_act",
+          "name" : "basic_tutorial_ingress.wcmp_control.wcmp_table",
           "id" : 3,
+          "source_info" : {
+            "filename" : "includes/wcmp.p4",
+            "line" : 18,
+            "column" : 10,
+            "source_fragment" : "wcmp_table"
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "indirect_ws",
+          "action_profile" : "basic_tutorial_ingress.wcmp_control.wcmp_selector",
+          "max_size" : 1024,
+          "with_counters" : true,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [8, 4],
+          "actions" : ["basic_tutorial_ingress.wcmp_control.set_egress_port", "NoAction"],
+          "base_default_next" : "tbl_act",
+          "next_tables" : {
+            "basic_tutorial_ingress.wcmp_control.set_egress_port" : "tbl_act",
+            "NoAction" : "tbl_act"
+          }
+        },
+        {
+          "name" : "tbl_act",
+          "id" : 4,
           "key" : [],
           "match_type" : "exact",
           "type" : "simple",
@@ -1156,21 +1224,52 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [7],
+          "action_ids" : [9],
           "actions" : ["act"],
           "base_default_next" : null,
           "next_tables" : {
             "act" : null
           },
           "default_entry" : {
-            "action_id" : 7,
+            "action_id" : 9,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
           }
         }
       ],
-      "action_profiles" : [],
+      "action_profiles" : [
+        {
+          "name" : "basic_tutorial_ingress.wcmp_control.wcmp_selector",
+          "id" : 0,
+          "max_size" : 64,
+          "selector" : {
+            "algo" : "crc16",
+            "input" : [
+              {
+                "type" : "field",
+                "value" : ["ipv4", "srcAddr"]
+              },
+              {
+                "type" : "field",
+                "value" : ["ipv4", "dstAddr"]
+              },
+              {
+                "type" : "field",
+                "value" : ["ipv4", "protocol"]
+              },
+              {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.l4_srcPort"]
+              },
+              {
+                "type" : "field",
+                "value" : ["scalars", "metadata_t.l4_dstPort"]
+              }
+            ]
+          }
+        }
+      ],
       "conditionals" : [
         {
           "name" : "node_2",
@@ -1236,7 +1335,7 @@
             }
           },
           "true_next" : "basic_tutorial_ingress.ecmp_table.ecmp_group",
-          "false_next" : "tbl_act"
+          "false_next" : "basic_tutorial_ingress.wcmp_control.wcmp_table"
         }
       ]
     },
@@ -1253,7 +1352,7 @@
       "tables" : [
         {
           "name" : "basic_tutorial_egress.ecmp_rewrite.send_frame",
-          "id" : 4,
+          "id" : 5,
           "source_info" : {
             "filename" : "includes/ecmp.p4",
             "line" : 78,
@@ -1274,7 +1373,7 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [10, 8, 9],
+          "action_ids" : [12, 10, 11],
           "actions" : ["basic_tutorial_egress.ecmp_rewrite.rewrite_mac", "drop", "NoAction"],
           "base_default_next" : "tbl_act_0",
           "next_tables" : {
@@ -1283,7 +1382,7 @@
             "NoAction" : "tbl_act_0"
           },
           "default_entry" : {
-            "action_id" : 9,
+            "action_id" : 11,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
@@ -1291,7 +1390,7 @@
         },
         {
           "name" : "tbl_act_0",
-          "id" : 5,
+          "id" : 6,
           "key" : [],
           "match_type" : "exact",
           "type" : "simple",
@@ -1299,14 +1398,14 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [11],
+          "action_ids" : [13],
           "actions" : ["act_0"],
           "base_default_next" : null,
           "next_tables" : {
             "act_0" : null
           },
           "default_entry" : {
-            "action_id" : 11,
+            "action_id" : 13,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
