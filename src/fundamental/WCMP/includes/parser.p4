@@ -41,11 +41,15 @@ parser basic_tutor_switch_parser(
 
     state parse_tcp {
         packet.extract(hdr.tcp);
+        metadata.l4_srcPort = hdr.tcp.srcPort;
+        metadata.l4_dstPort = hdr.tcp.dstPort;
         transition accept;
     }
 
     state parse_udp {
         packet.extract(hdr.udp);
+        metadata.l4_srcPort = hdr.udp.srcPort;
+        metadata.l4_dstPort = hdr.udp.dstPort;
         transition accept;
     }
 }

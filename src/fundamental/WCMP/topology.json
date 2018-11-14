@@ -6,8 +6,8 @@
         "h4"
     ],
     "switches": {
-        "s1": {},"s2": {},"s3": {},"s4": {},
-        "s5": {},"s6": {},"s7": {}
+        "s1": { "runtime_json" : "sXruntime/s1.json" },"s2": { "runtime_json" : "sXruntime/s2.json" },"s3": {},"s4": {},
+        "s5": { "runtime_json" : "sXruntime/s5.json" },"s6": { "runtime_json" : "sXruntime/s6.json" },"s7": { "runtime_json" : "sXruntime/s7.json" }
     },
     "links": [
         ["h1","s1"],["h2","s2"],["h3","s3"],["h4","s4"],

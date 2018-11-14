@@ -1,0 +1,39 @@
+{
+    "target": "bmv2",
+    "p4info": "basic_tutorial_switch.p4info",
+    "bmv2_json": "basic_tutorial_switch.json",
+    "table_entries": [
+        {
+            "table": "basic_tutorial_ingress.ecmp_table.ecmp_group",
+            "match": {
+              "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
+            },
+            "action_name": "basic_tutorial_ingress.ecmp_table.set_ecmp_select",
+            "action_params": {
+              "ecmp_base": 0,
+              "ecmp_count": 1
+            }
+          },
+          {
+            "table": "basic_tutorial_ingress.ecmp_table.ecmp_nhop",
+            "match": {
+              "metadata.ecmp_select": 0
+            },
+            "action_name": "basic_tutorial_ingress.ecmp_table.set_nhop",
+            "action_params": {
+              "nhop_dmac": "00:00:00:00:02:02",
+              "port" : 1
+            }
+          },
+          {
+            "table": "basic_tutorial_egress.ecmp_rewrite.send_frame",
+            "match": {
+              "standard_metadata.egress_port": 1
+            },
+            "action_name": "basic_tutorial_egress.ecmp_rewrite.rewrite_mac",
+            "action_params": {
+              "smac": "00:00:00:02:01:00"
+            }
+          }
+    ]
+}

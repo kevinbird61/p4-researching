@@ -33,7 +33,9 @@ struct headers_t {
 
 // metadata inside switch pipeline
 struct metadata_t {
-
+    bit<14> ecmp_select;
+    bit<16> l4_srcPort;
+    bit<16> l4_dstPort;
 }
 
 #endif

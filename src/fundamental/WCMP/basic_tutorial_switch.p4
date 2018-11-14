@@ -11,6 +11,8 @@
 
 // application
 #include "includes/ipv4_forward.p4"
+#include "includes/ecmp.p4"
+#include "includes/wcmp.p4"
 
 //------------------------------------------------------------------------------
 // INGRESS PIPELINE
@@ -25,6 +27,12 @@ control basic_tutorial_ingress(
 
         // forwarding
         ipv4_forwarding.apply(hdr, metadata, standard_metadata);
+
+        // using ECMP to implement WCMP (by multiple table entries)
+        ecmp_table.apply(hdr, metadata, standard_metadata);
+
+        // using action_selector/action_profile to support WCMP
+        //wcmp_control.apply(hdr, metadata, standard_metadata);
     }
 }
 
@@ -38,6 +46,8 @@ control basic_tutorial_egress(
 ){
     apply {
         // Pipelines in Egress
+
+        ecmp_rewrite.apply(hdr, metadata, standard_metadata);
     }
 }
 
