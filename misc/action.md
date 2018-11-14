@@ -37,6 +37,11 @@ match_kind {
 * 而在 Controller 使用時，需要下 action profile member ID & group ID 到switch 中
 * 可以當作是比較高階、特殊的 Matching 機制
 
+### 參考資料
+* [jafingerhut/p4-guide : action-profile-and-selector， 展示相關使用](https://github.com/jafingerhut/p4-guide/tree/master/action-profile-and-selector)
+* [p4c/backends/bmv2/simple_switch](https://github.com/p4lang/p4c/blob/master/backends/bmv2/simple_switch/simpleSwitch.cpp)
+* [p4c/frontends/p4/fromv1.0/v1model.p4](https://github.com/p4lang/p4c/blob/master/frontends/p4/fromv1.0/v1model.h)
+
 ## `One shot Action Selector Programming`
 
 > [spec](https://s3-us-west-2.amazonaws.com/p4runtime/docs/v1.0.0-rc3/P4Runtime-Spec.html#sec-oneshot)

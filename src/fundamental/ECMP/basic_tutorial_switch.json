@@ -374,13 +374,7 @@
       "name" : "basic_tutorial_ingress.ecmp_table.ecmp_table_counter",
       "id" : 0,
       "is_direct" : true,
-      "binding" : "basic_tutorial_ingress.ecmp_table.ecmp_group",
-      "source_info" : {
-        "filename" : "includes/ecmp.p4",
-        "line" : 12,
-        "column" : 50,
-        "source_fragment" : "ecmp_table_counter"
-      }
+      "binding" : "basic_tutorial_ingress.ecmp_table.ecmp_group"
     }
   ],
   "register_arrays" : [],
@@ -680,7 +674,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ecmp.p4",
-            "line" : 17,
+            "line" : 18,
             "column" : 8,
             "source_fragment" : "hash( ..."
           }
@@ -1114,12 +1108,6 @@
     {
       "name" : "cksum",
       "id" : 0,
-      "source_info" : {
-        "filename" : "includes/checksums.p4",
-        "line" : 20,
-        "column" : 8,
-        "source_fragment" : "update_checksum( ..."
-      },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
       "calculation" : "calc_0",
