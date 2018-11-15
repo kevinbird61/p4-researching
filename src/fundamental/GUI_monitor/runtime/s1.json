@@ -1,0 +1,40 @@
+{
+    "target": "bmv2",
+    "p4info": "basic_tutorial_switch.p4info",
+    "bmv2_json": "basic_tutorial_switch.json",
+    "table_entries": [
+        {
+        "table": "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.1.1", 32]
+        },
+        "action_name": "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward",
+        "action_params": {
+            "dstAddr": "00:00:00:00:01:01",
+            "port": 1
+        }
+        },
+        {
+        "table": "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
+        },
+        "action_name": "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward",
+        "action_params": {
+            "dstAddr": "00:00:00:02:02:00",
+            "port": 2
+        }
+        },
+        {
+        "table": "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.3.3", 32]
+        },
+        "action_name": "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward",
+        "action_params": {
+            "dstAddr": "00:00:00:03:03:00",
+            "port": 3
+        }
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "counter": [
+        {
+            "name": "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter",
+            "index": 1
+        },
+        {
+            "name": "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter",
+            "index": 2
+        },
+        {
+            "name": "basic_tutorial_ingress.port_counters_ingress.ingress_port_counter",
+            "index": 3
+        },
+        {
+            "name": "basic_tutorial_egress.port_counters_egress.egress_port_counter",
+            "index": 1
+        },
+        {
+            "name": "basic_tutorial_egress.port_counters_egress.egress_port_counter",
+            "index": 2
+        },
+        {
+            "name": "basic_tutorial_egress.port_counters_egress.egress_port_counter",
+            "index": 3
+        }
+    ]
+}
