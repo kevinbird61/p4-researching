@@ -4,8 +4,14 @@
       "name" : "scalars_0",
       "id" : 0,
       "fields" : [
-        ["metadata_t.ecmp_select", 14, false],
-        ["_padding_2", 2, false]
+        ["local_routing_control_valid_bit", 1, false],
+        ["local_routing_control_get_port", 9, false],
+        ["local_routing_control_src_hash_key", 32, false],
+        ["local_routing_control_tmp", 9, false],
+        ["metadata_t.l4_srcPort", 16, false],
+        ["metadata_t.l4_dstPort", 16, false],
+        ["metadata_t.hash_key", 32, false],
+        ["_padding_2", 5, false]
       ]
     },
     {
@@ -317,6 +323,32 @@
                 }
               ],
               "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "metadata_t.l4_srcPort"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["tcp", "srcPort"]
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "metadata_t.l4_dstPort"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["tcp", "dstPort"]
+                }
+              ],
+              "op" : "set"
             }
           ],
           "transitions" : [
@@ -340,6 +372,32 @@
                 }
               ],
               "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "metadata_t.l4_srcPort"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["udp", "srcPort"]
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "metadata_t.l4_dstPort"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["udp", "dstPort"]
+                }
+              ],
+              "op" : "set"
             }
           ],
           "transitions" : [
@@ -361,7 +419,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "includes/parser.p4",
-        "line" : 54,
+        "line" : 58,
         "column" : 8,
         "source_fragment" : "basic_tutor_switch_deparser"
       },
@@ -369,21 +427,33 @@
     }
   ],
   "meter_arrays" : [],
-  "counter_arrays" : [
+  "counter_arrays" : [],
+  "register_arrays" : [
     {
-      "name" : "basic_tutorial_ingress.ecmp_table.ecmp_table_counter",
+      "name" : "basic_tutorial_ingress.local_routing_control.RoutingTable",
       "id" : 0,
-      "is_direct" : true,
-      "binding" : "basic_tutorial_ingress.ecmp_table.ecmp_group",
       "source_info" : {
-        "filename" : "includes/ecmp.p4",
-        "line" : 12,
-        "column" : 50,
-        "source_fragment" : "ecmp_table_counter"
-      }
+        "filename" : "includes/local_routing.p4",
+        "line" : 21,
+        "column" : 27,
+        "source_fragment" : "RoutingTable"
+      },
+      "size" : 1024,
+      "bitwidth" : 9
+    },
+    {
+      "name" : "basic_tutorial_ingress.local_routing_control.ValidBit",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "includes/local_routing.p4",
+        "line" : 22,
+        "column" : 27,
+        "source_fragment" : "ValidBit"
+      },
+      "size" : 1024,
+      "bitwidth" : 1
     }
   ],
-  "register_arrays" : [],
   "calculations" : [
     {
       "name" : "calc",
@@ -392,29 +462,24 @@
       "input" : [
         {
           "type" : "field",
-          "value" : ["ipv4", "srcAddr"]
-        },
-        {
-          "type" : "field",
           "value" : ["ipv4", "dstAddr"]
-        },
-        {
-          "type" : "field",
-          "value" : ["ipv4", "protocol"]
-        },
-        {
-          "type" : "field",
-          "value" : ["tcp", "srcPort"]
-        },
-        {
-          "type" : "field",
-          "value" : ["tcp", "dstPort"]
         }
       ]
     },
     {
       "name" : "calc_0",
       "id" : 1,
+      "algo" : "crc16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_1",
+      "id" : 2,
       "source_info" : {
         "filename" : "includes/checksums.p4",
         "line" : 20,
@@ -490,48 +555,285 @@
       ]
     },
     {
-      "name" : "drop",
-      "id" : 1,
-      "runtime_data" : [],
-      "primitives" : [
-        {
-          "op" : "drop",
-          "parameters" : [],
-          "source_info" : {
-            "filename" : "includes/actions.p4",
-            "line" : 7,
-            "column" : 4,
-            "source_fragment" : "mark_to_drop()"
-          }
-        }
-      ]
-    },
-    {
-      "name" : "drop",
-      "id" : 2,
-      "runtime_data" : [],
-      "primitives" : [
-        {
-          "op" : "drop",
-          "parameters" : [],
-          "source_info" : {
-            "filename" : "includes/actions.p4",
-            "line" : 7,
-            "column" : 4,
-            "source_fragment" : "mark_to_drop()"
-          }
-        }
-      ]
-    },
-    {
       "name" : "NoAction",
-      "id" : 3,
+      "id" : 1,
       "runtime_data" : [],
       "primitives" : []
     },
     {
+      "name" : "basic_tutorial_ingress.local_routing_control.local_lookup",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "modify_field_with_hash_based_offset",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.hash_key"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "calculation",
+              "value" : "calc"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000400"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 26,
+            "column" : 8,
+            "source_fragment" : "hash( ..."
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_valid_bit"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "basic_tutorial_ingress.local_routing_control.ValidBit"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.hash_key"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 48,
+            "column" : 8,
+            "source_fragment" : "ValidBit.read(valid_bit, metadata.hash_key)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_get_port"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "basic_tutorial_ingress.local_routing_control.RoutingTable"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata_t.hash_key"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 49,
+            "column" : 8,
+            "source_fragment" : "RoutingTable.read(get_port, metadata.hash_key)"
+          }
+        },
+        {
+          "op" : "modify_field_with_hash_based_offset",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_src_hash_key"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "calculation",
+              "value" : "calc_0"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000400"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 52,
+            "column" : 8,
+            "source_fragment" : "hash( ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "?",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "egress_spec"]
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["scalars", "local_routing_control_tmp"]
+                  },
+                  "cond" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "==",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "local_routing_control_valid_bit"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x00"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 63,
+            "column" : 41,
+            "source_fragment" : "(valid_bit == (bit<1>) 1w0) ? standard_metadata.egress_spec : get_port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "?",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "local_routing_control_get_port"]
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["scalars", "local_routing_control_tmp"]
+                  },
+                  "cond" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "not",
+                      "left" : null,
+                      "right" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "==",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["scalars", "local_routing_control_valid_bit"]
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 63,
+            "column" : 41,
+            "source_fragment" : "(valid_bit == (bit<1>) 1w0) ? standard_metadata.egress_spec : get_port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_tmp"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 63,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec ="
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "basic_tutorial_ingress.local_routing_control.ValidBit"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_src_hash_key"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 66,
+            "column" : 8,
+            "source_fragment" : "ValidBit.write(src_hash_key, (bit<1>)1w1)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "basic_tutorial_ingress.local_routing_control.RoutingTable"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_routing_control_src_hash_key"]
+            },
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "ingress_port"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 67,
+            "column" : 8,
+            "source_fragment" : "RoutingTable.write(src_hash_key, standard_metadata.ingress_port)"
+          }
+        }
+      ]
+    },
+    {
       "name" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward",
-      "id" : 4,
+      "id" : 3,
       "runtime_data" : [
         {
           "name" : "dstAddr",
@@ -643,222 +945,6 @@
           }
         }
       ]
-    },
-    {
-      "name" : "basic_tutorial_ingress.ecmp_table.set_ecmp_select",
-      "id" : 5,
-      "runtime_data" : [
-        {
-          "name" : "ecmp_base",
-          "bitwidth" : 16
-        },
-        {
-          "name" : "ecmp_count",
-          "bitwidth" : 32
-        }
-      ],
-      "primitives" : [
-        {
-          "op" : "modify_field_with_hash_based_offset",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["scalars", "metadata_t.ecmp_select"]
-            },
-            {
-              "type" : "runtime_data",
-              "value" : 0
-            },
-            {
-              "type" : "calculation",
-              "value" : "calc"
-            },
-            {
-              "type" : "runtime_data",
-              "value" : 1
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 18,
-            "column" : 8,
-            "source_fragment" : "hash( ..."
-          }
-        }
-      ]
-    },
-    {
-      "name" : "basic_tutorial_ingress.ecmp_table.set_nhop",
-      "id" : 6,
-      "runtime_data" : [
-        {
-          "name" : "nhop_dmac",
-          "bitwidth" : 48
-        },
-        {
-          "name" : "nhop_ipv4",
-          "bitwidth" : 32
-        },
-        {
-          "name" : "port",
-          "bitwidth" : 9
-        }
-      ],
-      "primitives" : [
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["ethernet", "dstAddr"]
-            },
-            {
-              "type" : "runtime_data",
-              "value" : 0
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 34,
-            "column" : 8,
-            "source_fragment" : "hdr.ethernet.dstAddr = nhop_dmac"
-          }
-        },
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["ipv4", "dstAddr"]
-            },
-            {
-              "type" : "runtime_data",
-              "value" : 1
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 35,
-            "column" : 8,
-            "source_fragment" : "hdr.ipv4.dstAddr = nhop_ipv4"
-          }
-        },
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["standard_metadata", "egress_spec"]
-            },
-            {
-              "type" : "runtime_data",
-              "value" : 2
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 36,
-            "column" : 8,
-            "source_fragment" : "standard_metadata.egress_spec = port"
-          }
-        },
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["ipv4", "ttl"]
-            },
-            {
-              "type" : "expression",
-              "value" : {
-                "type" : "expression",
-                "value" : {
-                  "op" : "&",
-                  "left" : {
-                    "type" : "expression",
-                    "value" : {
-                      "op" : "+",
-                      "left" : {
-                        "type" : "field",
-                        "value" : ["ipv4", "ttl"]
-                      },
-                      "right" : {
-                        "type" : "hexstr",
-                        "value" : "0xff"
-                      }
-                    }
-                  },
-                  "right" : {
-                    "type" : "hexstr",
-                    "value" : "0xff"
-                  }
-                }
-              }
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 37,
-            "column" : 8,
-            "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
-          }
-        }
-      ]
-    },
-    {
-      "name" : "drop",
-      "id" : 7,
-      "runtime_data" : [],
-      "primitives" : [
-        {
-          "op" : "drop",
-          "parameters" : [],
-          "source_info" : {
-            "filename" : "includes/actions.p4",
-            "line" : 7,
-            "column" : 4,
-            "source_fragment" : "mark_to_drop()"
-          }
-        }
-      ]
-    },
-    {
-      "name" : "NoAction",
-      "id" : 8,
-      "runtime_data" : [],
-      "primitives" : []
-    },
-    {
-      "name" : "basic_tutorial_egress.ecmp_rewrite.rewrite_mac",
-      "id" : 9,
-      "runtime_data" : [
-        {
-          "name" : "smac",
-          "bitwidth" : 48
-        }
-      ],
-      "primitives" : [
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["ethernet", "srcAddr"]
-            },
-            {
-              "type" : "runtime_data",
-              "value" : 0
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 79,
-            "column" : 8,
-            "source_fragment" : "hdr.ethernet.srcAddr = smac"
-          }
-        }
-      ]
     }
   ],
   "pipelines" : [
@@ -874,8 +960,37 @@
       "init_table" : "node_2",
       "tables" : [
         {
-          "name" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
+          "name" : "basic_tutorial_ingress.local_routing_control.local_routing_table",
           "id" : 0,
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 70,
+            "column" : 10,
+            "source_fragment" : "local_routing_table"
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [2],
+          "actions" : ["basic_tutorial_ingress.local_routing_control.local_lookup"],
+          "base_default_next" : "node_4",
+          "next_tables" : {
+            "basic_tutorial_ingress.local_routing_control.local_lookup" : "node_4"
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
+          "id" : 1,
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
             "line" : 20,
@@ -896,90 +1011,16 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [4, 0, 3],
+          "action_ids" : [3, 0, 1],
           "actions" : ["basic_tutorial_ingress.ipv4_forwarding.ipv4_forward", "drop", "NoAction"],
-          "base_default_next" : "node_4",
+          "base_default_next" : null,
           "next_tables" : {
-            "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward" : "node_4",
-            "drop" : "node_4",
-            "NoAction" : "node_4"
-          },
-          "default_entry" : {
-            "action_id" : 0,
-            "action_const" : false,
-            "action_data" : [],
-            "action_entry_const" : false
-          }
-        },
-        {
-          "name" : "basic_tutorial_ingress.ecmp_table.ecmp_group",
-          "id" : 1,
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 40,
-            "column" : 10,
-            "source_fragment" : "ecmp_group"
-          },
-          "key" : [
-            {
-              "match_type" : "lpm",
-              "name" : "hdr.ipv4.dstAddr",
-              "target" : ["ipv4", "dstAddr"],
-              "mask" : null
-            }
-          ],
-          "match_type" : "lpm",
-          "type" : "simple",
-          "max_size" : 1024,
-          "with_counters" : true,
-          "support_timeout" : false,
-          "direct_meters" : null,
-          "action_ids" : [1, 5],
-          "actions" : ["drop", "basic_tutorial_ingress.ecmp_table.set_ecmp_select"],
-          "base_default_next" : "basic_tutorial_ingress.ecmp_table.ecmp_nhop",
-          "next_tables" : {
-            "drop" : "basic_tutorial_ingress.ecmp_table.ecmp_nhop",
-            "basic_tutorial_ingress.ecmp_table.set_ecmp_select" : "basic_tutorial_ingress.ecmp_table.ecmp_nhop"
+            "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward" : null,
+            "drop" : null,
+            "NoAction" : null
           },
           "default_entry" : {
             "action_id" : 1,
-            "action_const" : false,
-            "action_data" : [],
-            "action_entry_const" : false
-          }
-        },
-        {
-          "name" : "basic_tutorial_ingress.ecmp_table.ecmp_nhop",
-          "id" : 2,
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 52,
-            "column" : 10,
-            "source_fragment" : "ecmp_nhop"
-          },
-          "key" : [
-            {
-              "match_type" : "exact",
-              "name" : "metadata.ecmp_select",
-              "target" : ["scalars", "metadata_t.ecmp_select"],
-              "mask" : null
-            }
-          ],
-          "match_type" : "exact",
-          "type" : "simple",
-          "max_size" : 2,
-          "with_counters" : false,
-          "support_timeout" : false,
-          "direct_meters" : null,
-          "action_ids" : [2, 6],
-          "actions" : ["drop", "basic_tutorial_ingress.ecmp_table.set_nhop"],
-          "base_default_next" : null,
-          "next_tables" : {
-            "drop" : null,
-            "basic_tutorial_ingress.ecmp_table.set_nhop" : null
-          },
-          "default_entry" : {
-            "action_id" : 2,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
@@ -991,6 +1032,29 @@
         {
           "name" : "node_2",
           "id" : 0,
+          "source_info" : {
+            "filename" : "includes/local_routing.p4",
+            "line" : 81,
+            "column" : 11,
+            "source_fragment" : "hdr.ipv4.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["ipv4", "$valid$"]
+              }
+            }
+          },
+          "true_next" : "basic_tutorial_ingress.local_routing_control.local_routing_table",
+          "false_next" : "node_4"
+        },
+        {
+          "name" : "node_4",
+          "id" : 1,
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
             "line" : 34,
@@ -1008,51 +1072,8 @@
               }
             }
           },
-          "true_next" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
-          "false_next" : "node_4"
-        },
-        {
-          "name" : "node_4",
-          "id" : 1,
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 65,
-            "column" : 12,
-            "source_fragment" : "hdr.ipv4.isValid() && hdr.ipv4.ttl > 0"
-          },
-          "expression" : {
-            "type" : "expression",
-            "value" : {
-              "op" : "and",
-              "left" : {
-                "type" : "expression",
-                "value" : {
-                  "op" : "d2b",
-                  "left" : null,
-                  "right" : {
-                    "type" : "field",
-                    "value" : ["ipv4", "$valid$"]
-                  }
-                }
-              },
-              "right" : {
-                "type" : "expression",
-                "value" : {
-                  "op" : ">",
-                  "left" : {
-                    "type" : "field",
-                    "value" : ["ipv4", "ttl"]
-                  },
-                  "right" : {
-                    "type" : "hexstr",
-                    "value" : "0x00"
-                  }
-                }
-              }
-            }
-          },
           "false_next" : null,
-          "true_next" : "basic_tutorial_ingress.ecmp_table.ecmp_group"
+          "true_next" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm"
         }
       ]
     },
@@ -1061,51 +1082,12 @@
       "id" : 1,
       "source_info" : {
         "filename" : "basic_tutorial_switch.p4",
-        "line" : 37,
+        "line" : 38,
         "column" : 8,
         "source_fragment" : "basic_tutorial_egress"
       },
-      "init_table" : "basic_tutorial_egress.ecmp_rewrite.send_frame",
-      "tables" : [
-        {
-          "name" : "basic_tutorial_egress.ecmp_rewrite.send_frame",
-          "id" : 3,
-          "source_info" : {
-            "filename" : "includes/ecmp.p4",
-            "line" : 82,
-            "column" : 10,
-            "source_fragment" : "send_frame"
-          },
-          "key" : [
-            {
-              "match_type" : "exact",
-              "name" : "standard_metadata.egress_port",
-              "target" : ["standard_metadata", "egress_port"],
-              "mask" : null
-            }
-          ],
-          "match_type" : "exact",
-          "type" : "simple",
-          "max_size" : 256,
-          "with_counters" : false,
-          "support_timeout" : false,
-          "direct_meters" : null,
-          "action_ids" : [9, 7, 8],
-          "actions" : ["basic_tutorial_egress.ecmp_rewrite.rewrite_mac", "drop", "NoAction"],
-          "base_default_next" : null,
-          "next_tables" : {
-            "basic_tutorial_egress.ecmp_rewrite.rewrite_mac" : null,
-            "drop" : null,
-            "NoAction" : null
-          },
-          "default_entry" : {
-            "action_id" : 8,
-            "action_const" : false,
-            "action_data" : [],
-            "action_entry_const" : false
-          }
-        }
-      ],
+      "init_table" : null,
+      "tables" : [],
       "action_profiles" : [],
       "conditionals" : []
     }
@@ -1122,7 +1104,7 @@
       },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
-      "calculation" : "calc_0",
+      "calculation" : "calc_1",
       "if_cond" : {
         "type" : "expression",
         "value" : {
