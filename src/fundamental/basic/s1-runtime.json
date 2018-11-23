@@ -4,12 +4,6 @@
     "bmv2_json": "l3_forward.json",
     "table_entries": [
         {
-            "table": "Basic_ingress.ipv4_lpm",
-            "default_action": true,
-            "action_name": "Basic_ingress.drop",
-            "action_params": { }
-        },
-        {
         "table": "Basic_ingress.ipv4_lpm",
         "match": {
             "hdr.ipv4.dstAddr": ["10.0.1.1", 32]

@@ -432,7 +432,7 @@
             "NoAction" : null
           },
           "default_entry" : {
-            "action_id" : 0,
+            "action_id" : 1,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
@@ -485,6 +485,12 @@
     {
       "name" : "cksum",
       "id" : 0,
+      "source_info" : {
+        "filename" : "l3_forward.p4",
+        "line" : 122,
+        "column" : 8,
+        "source_fragment" : "update_checksum( ..."
+      },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
       "calculation" : "calc",

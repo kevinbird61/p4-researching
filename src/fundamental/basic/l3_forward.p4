@@ -88,7 +88,7 @@ control Basic_ingress(
             NoAction;
         }
         size = 1024;
-        default_action = NoAction();
+        default_action = drop();
     }
 
     apply {
