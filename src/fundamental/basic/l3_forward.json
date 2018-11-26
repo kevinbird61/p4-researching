@@ -182,7 +182,7 @@
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
-      "order" : ["ethernet", "ipv4"]
+      "order" : ["ethernet"]
     }
   ],
   "meter_arrays" : [],
