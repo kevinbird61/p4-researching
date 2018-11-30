@@ -11,6 +11,10 @@
 
 // application
 #include "includes/ipv4_forward.p4"
+#include "includes/int_source.p4"
+#include "includes/int_transit.p4"
+#include "includes/int_sink.p4"
+#include "includes/int_common.p4"
 
 //------------------------------------------------------------------------------
 // INGRESS PIPELINE
@@ -25,6 +29,13 @@ control basic_tutorial_ingress(
 
         // forwarding
         ipv4_forwarding.apply(hdr, metadata, standard_metadata);
+
+        // INT source/transit/sink (using Match/Action rules to specify which type on that switch)
+        int_source.apply(hdr, metadata, standard_metadata);
+        int_transit.apply(hdr, metadata, standard_metadata);
+        int_sink.apply(hdr, metadata, standard_metadata);
+
+
     }
 }
 
@@ -38,6 +49,7 @@ control basic_tutorial_egress(
 ){
     apply {
         /* Pipelines in Egress */
+
     }
 }
 

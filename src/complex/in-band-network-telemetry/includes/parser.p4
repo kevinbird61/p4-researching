@@ -42,7 +42,7 @@ parser basic_tutor_switch_parser(
     state parse_tcp {
         packet.extract(hdr.tcp);
         metadata.l4_srcPort = hdr.tcp.srcPort;
-        metadata.l4_dstPort = hdr.udp.dstPort;
+        metadata.l4_dstPort = hdr.tcp.dstPort;
         transition select((hdr.ipv4.dscp & INT_DSCP)){
             INT_DSCP: parse_int_shim;
             default: accept;
@@ -51,7 +51,7 @@ parser basic_tutor_switch_parser(
 
     state parse_udp {
         packet.extract(hdr.udp);
-        metadata.l4_srcPort = hdr.tcp.srcPort;
+        metadata.l4_srcPort = hdr.udp.srcPort;
         metadata.l4_dstPort = hdr.udp.dstPort;
         transition select((hdr.ipv4.dscp & INT_DSCP)){
             INT_DSCP: parse_int_shim;
@@ -74,7 +74,7 @@ parser basic_tutor_switch_parser(
         metadata.parser_metadata.remaining_q_occupancy = HOP_CNT - hdr.int_header.remaining_hop_cnt;
 
         transition select(hdr.int_shim.len - INT_HEADER_LEN_WORD){
-            0: parser_int_tail; // end
+            0: parse_int_tail; // end
             default: parse_switch_id;
         }
     }
