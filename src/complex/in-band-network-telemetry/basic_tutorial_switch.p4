@@ -50,6 +50,8 @@ control basic_tutorial_egress(
     apply {
         /* Pipelines in Egress */
 
+        // INT 
+        int_clone.apply(hdr, metadata, standard_metadata);
     }
 }
 

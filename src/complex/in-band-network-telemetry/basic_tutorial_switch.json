@@ -2118,6 +2118,370 @@
           }
         }
       ]
+    },
+    {
+      "name" : "basic_tutorial_ingress.int_sink.process_int_sink",
+      "id" : 7,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["udp", "dstPort"]
+            },
+            {
+              "type" : "field",
+              "value" : ["int_tail", "dest_port"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 14,
+            "column" : 8,
+            "source_fragment" : "hdr.udp.dstPort = hdr.int_tail.dest_port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "dscp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["int_tail", "dscp"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x3f"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 15,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.dscp = (bit<6>)hdr.int_tail.dscp"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "totalLen"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "-",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "totalLen"]
+                      },
+                      "right" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "&",
+                              "left" : {
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "<<",
+                                  "left" : {
+                                    "type" : "expression",
+                                    "value" : {
+                                      "op" : "&",
+                                      "left" : {
+                                        "type" : "expression",
+                                        "value" : {
+                                          "op" : "-",
+                                          "left" : {
+                                            "type" : "field",
+                                            "value" : ["int_shim", "len"]
+                                          },
+                                          "right" : {
+                                            "type" : "expression",
+                                            "value" : {
+                                              "op" : "&",
+                                              "left" : {
+                                                "type" : "field",
+                                                "value" : ["int_header", "ins_cnt"]
+                                              },
+                                              "right" : {
+                                                "type" : "hexstr",
+                                                "value" : "0xff"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "right" : {
+                                        "type" : "hexstr",
+                                        "value" : "0xff"
+                                      }
+                                    }
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0x2"
+                                  }
+                                }
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xff"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 18,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.totalLen = hdr.ipv4.totalLen - (bit<16>)((hdr.int_shim.len - (bit<8>)hdr.int_header.ins_cnt) << 2)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "totalLen"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "totalLen"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xfff4"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 19,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.totalLen = hdr.ipv4.totalLen - 12"
+          }
+        },
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "int_shim"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 23,
+            "column" : 8,
+            "source_fragment" : "hdr.int_shim.setInvalid()"
+          }
+        },
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "int_header"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 24,
+            "column" : 8,
+            "source_fragment" : "hdr.int_header.setInvalid()"
+          }
+        },
+        {
+          "op" : "pop",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "int_switch_id"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x04"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 25,
+            "column" : 8,
+            "source_fragment" : "hdr.int_switch_id.pop_front(HOP_CNT)"
+          }
+        },
+        {
+          "op" : "pop",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "int_hop_latency"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x04"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 26,
+            "column" : 8,
+            "source_fragment" : "hdr.int_hop_latency.pop_front(HOP_CNT)"
+          }
+        },
+        {
+          "op" : "pop",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "int_q_occupancy"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x04"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 27,
+            "column" : 8,
+            "source_fragment" : "hdr.int_q_occupancy.pop_front(HOP_CNT)"
+          }
+        },
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "int_tail"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 28,
+            "column" : 8,
+            "source_fragment" : "hdr.int_tail.setInvalid()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "NoAction",
+      "id" : 8,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "basic_tutorial_egress.int_clone.set_monitor_params",
+      "id" : 9,
+      "runtime_data" : [
+        {
+          "name" : "monitor_eth_dstAddr",
+          "bitwidth" : 48
+        },
+        {
+          "name" : "monitor_ip_dstAddr",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 54,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = monitor_eth_dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 55,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.dstAddr = monitor_ip_dstAddr"
+          }
+        }
+      ]
     }
   ],
   "pipelines" : [
@@ -2248,7 +2612,7 @@
           "id" : 3,
           "source_info" : {
             "filename" : "includes/int_sink.p4",
-            "line" : 12,
+            "line" : 31,
             "column" : 10,
             "source_fragment" : "int_sink_table"
           },
@@ -2266,10 +2630,11 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [4],
-          "actions" : ["NoAction"],
+          "action_ids" : [7, 4],
+          "actions" : ["basic_tutorial_ingress.int_sink.process_int_sink", "NoAction"],
           "base_default_next" : null,
           "next_tables" : {
+            "basic_tutorial_ingress.int_sink.process_int_sink" : null,
             "NoAction" : null
           },
           "default_entry" : {
@@ -2316,8 +2681,52 @@
         "column" : 8,
         "source_fragment" : "basic_tutorial_egress"
       },
-      "init_table" : null,
-      "tables" : [],
+      "init_table" : "basic_tutorial_egress.int_clone.generate_report",
+      "tables" : [
+        {
+          "name" : "basic_tutorial_egress.int_clone.generate_report",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "includes/int_sink.p4",
+            "line" : 58,
+            "column" : 10,
+            "source_fragment" : "generate_report"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "standard_metadata.instance_type",
+              "target" : ["standard_metadata", "instance_type"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "standard_metadata.ingress_port",
+              "target" : ["standard_metadata", "ingress_port"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [9, 8],
+          "actions" : ["basic_tutorial_egress.int_clone.set_monitor_params", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "basic_tutorial_egress.int_clone.set_monitor_params" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 8,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
       "action_profiles" : [],
       "conditionals" : []
     }
