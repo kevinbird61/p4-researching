@@ -1,0 +1,4 @@
+table_add basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm basic_tutorial_ingress.ipv4_forwarding.ipv4_forward 10.0.1.1/32 => 00:00:00:00:01:01 1
+table_add basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm basic_tutorial_ingress.ipv4_forwarding.ipv4_forward 10.0.1.2/32 => 00:00:00:00:01:02 2
+table_add basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm basic_tutorial_ingress.ipv4_forwarding.ipv4_forward 10.0.5.3/32 => 00:00:00:01:05:03 5
+table_add basic_tutorial_ingress.local_firewall_func.tb_local_firewall basic_tutorial_ingress.local_firewall_func.update_and_match 2 => 
