@@ -33,6 +33,8 @@ control local_firewall_func (
         // set the value to 1
         port = 32w1;
         local_firewall_state.write(flow_id, port);
+        // set invalid
+        hdr.notify.setInvalid();
         // set mark_drop bit
         metadata.mark_drop = 1w1;
     }
@@ -45,44 +47,33 @@ control local_firewall_func (
             HashAlgorithm.crc16,
             (bit<32>)0,
             {
-                hdr.notify.malform_srcAddr
+                hdr.ipv4.srcAddr
             },
             (bit<32>)1023);
-        
+        // read from local_firewall_state
+        local_firewall_state.read(port, flow_id);
+        // set mark_drop bit
+        metadata.mark_drop = ( port == 32w1 ? 1w1 : 1w0);
+
+        // for destination check
+        hash(flow_id,
+            HashAlgorithm.crc16,
+            (bit<32>)0,
+            {
+                hdr.ipv4.dstAddr
+            },
+            (bit<32>)1023);
         // read from local_firewall_state
         local_firewall_state.read(port, flow_id);
         // set mark_drop bit
         metadata.mark_drop = ( port == 32w1 ? 1w1 : 1w0);
     }
 
-    table tb_local_firewall {
-        key = {
-            hdr.ipv4.dscp: exact;
-        }
-        actions = {
-            update_and_match;
-            match;
-        }
-        size=1;
-        default_action=match();
-    }
-
-    table tb_drop {
-        key = {
-            metadata.mark_drop: exact;
-        }
-        actions = {
-            drop;
-            NoAction;
-        }
-        size=128;
-        default_action=NoAction();
-    }
-
     apply {
         if(hdr.notify.isValid()){
-            tb_local_firewall.apply();
+            update_and_match();
         }
+        match();
         if(metadata.mark_drop == 1w1){
             mark_to_drop();
         }

@@ -9,8 +9,9 @@
         ["local_firewall_func_flow_id_0", 32, false],
         ["local_firewall_func_port_0", 32, false],
         ["local_firewall_func_tmp", 1, false],
+        ["local_firewall_func_tmp_0", 1, false],
         ["metadata_t.mark_drop", 1, false],
-        ["_padding_2", 6, false]
+        ["_padding_2", 5, false]
       ]
     },
     {
@@ -470,13 +471,24 @@
       "input" : [
         {
           "type" : "field",
-          "value" : ["notify", "malform_srcAddr"]
+          "value" : ["ipv4", "srcAddr"]
         }
       ]
     },
     {
       "name" : "calc_1",
       "id" : 2,
+      "algo" : "crc16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_2",
+      "id" : 3,
       "source_info" : {
         "filename" : "includes/checksums.p4",
         "line" : 20,
@@ -705,25 +717,6 @@
       "runtime_data" : [],
       "primitives" : [
         {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["standard_metadata", "mcast_grp"]
-            },
-            {
-              "type" : "hexstr",
-              "value" : "0x0001"
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/firewall.p4",
-            "line" : 21,
-            "column" : 8,
-            "source_fragment" : "standard_metadata.mcast_grp = 1"
-          }
-        },
-        {
           "op" : "add_header",
           "parameters" : [
             {
@@ -773,7 +766,7 @@
             "filename" : "includes/firewall.p4",
             "line" : 26,
             "column" : 8,
-            "source_fragment" : "hdr.ipv4.dscp = 6w2"
+            "source_fragment" : "hdr.ipv4.dscp = 2"
           }
         },
         {
@@ -823,18 +816,75 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["ipv4", "dstAddr"]
+              "value" : ["ipv4", "srcAddr"]
             },
             {
-              "type" : "hexstr",
-              "value" : "0x00000000"
+              "type" : "field",
+              "value" : ["ipv4", "dstAddr"]
             }
           ],
           "source_info" : {
             "filename" : "includes/firewall.p4",
             "line" : 29,
             "column" : 8,
-            "source_fragment" : "hdr.ipv4.dstAddr = 32w0"
+            "source_fragment" : "hdr.ipv4.srcAddr = hdr.ipv4.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "dstAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["notify", "malform_srcAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/firewall.p4",
+            "line" : 30,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.dstAddr = hdr.notify.malform_srcAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "ingress_port"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/firewall.p4",
+            "line" : 32,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = standard_metadata.ingress_port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/firewall.p4",
+            "line" : 34,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = hdr.ethernet.srcAddr"
           }
         }
       ]
@@ -937,22 +987,18 @@
           }
         },
         {
-          "op" : "assign",
+          "op" : "remove_header",
           "parameters" : [
             {
-              "type" : "field",
-              "value" : ["scalars", "metadata_t.mark_drop"]
-            },
-            {
-              "type" : "hexstr",
-              "value" : "0x01"
+              "type" : "header",
+              "value" : "notify"
             }
           ],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
             "line" : 37,
             "column" : 8,
-            "source_fragment" : "metadata.mark_drop = 1w1"
+            "source_fragment" : "hdr.notify.setInvalid()"
           }
         }
       ]
@@ -984,7 +1030,7 @@
           ],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 44,
+            "line" : 46,
             "column" : 8,
             "source_fragment" : "hash(flow_id, ..."
           }
@@ -1007,7 +1053,7 @@
           ],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 53,
+            "line" : 54,
             "column" : 8,
             "source_fragment" : "local_firewall_state.read(port, flow_id)"
           }
@@ -1053,7 +1099,7 @@
           ],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 55,
+            "line" : 56,
             "column" : 31,
             "source_fragment" : "port == 32w1 ? 1w1 : 1w0"
           }
@@ -1106,7 +1152,156 @@
           ],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 55,
+            "line" : 56,
+            "column" : 31,
+            "source_fragment" : "port == 32w1 ? 1w1 : 1w0"
+          }
+        },
+        {
+          "op" : "modify_field_with_hash_based_offset",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_firewall_func_flow_id_0"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "calculation",
+              "value" : "calc_1"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x000003ff"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_learning_firewall.p4",
+            "line" : 59,
+            "column" : 8,
+            "source_fragment" : "hash(flow_id, ..."
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_firewall_func_port_0"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "basic_tutorial_ingress.local_firewall_func.local_firewall_state"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_firewall_func_flow_id_0"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_learning_firewall.p4",
+            "line" : 67,
+            "column" : 8,
+            "source_fragment" : "local_firewall_state.read(port, flow_id)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_firewall_func_tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "?",
+                  "left" : {
+                    "type" : "hexstr",
+                    "value" : "0x01"
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["scalars", "local_firewall_func_tmp_0"]
+                  },
+                  "cond" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "==",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "local_firewall_func_port_0"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x00000001"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_learning_firewall.p4",
+            "line" : 69,
+            "column" : 31,
+            "source_fragment" : "port == 32w1 ? 1w1 : 1w0"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "local_firewall_func_tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "?",
+                  "left" : {
+                    "type" : "hexstr",
+                    "value" : "0x00"
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["scalars", "local_firewall_func_tmp_0"]
+                  },
+                  "cond" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "not",
+                      "left" : null,
+                      "right" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "==",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["scalars", "local_firewall_func_port_0"]
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x00000001"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/local_learning_firewall.p4",
+            "line" : 69,
             "column" : 31,
             "source_fragment" : "port == 32w1 ? 1w1 : 1w0"
           }
@@ -1120,12 +1315,12 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "local_firewall_func_tmp"]
+              "value" : ["scalars", "local_firewall_func_tmp_0"]
             }
           ],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 55,
+            "line" : 69,
             "column" : 8,
             "source_fragment" : "metadata.mark_drop ="
           }
@@ -1142,7 +1337,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 87,
+            "line" : 78,
             "column" : 12,
             "source_fragment" : "mark_to_drop()"
           }
@@ -1205,7 +1400,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "includes/firewall.p4",
-            "line" : 32,
+            "line" : 37,
             "column" : 10,
             "source_fragment" : "tb_firewall"
           },
@@ -1239,45 +1434,54 @@
           }
         },
         {
-          "name" : "basic_tutorial_ingress.local_firewall_func.tb_local_firewall",
+          "name" : "tbl_local_firewall_func_update_and_match",
           "id" : 2,
-          "source_info" : {
-            "filename" : "includes/local_learning_firewall.p4",
-            "line" : 58,
-            "column" : 10,
-            "source_fragment" : "tb_local_firewall"
-          },
-          "key" : [
-            {
-              "match_type" : "exact",
-              "name" : "hdr.ipv4.dscp",
-              "target" : ["ipv4", "dscp"],
-              "mask" : null
-            }
-          ],
+          "key" : [],
           "match_type" : "exact",
           "type" : "simple",
-          "max_size" : 1,
+          "max_size" : 1024,
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [6, 7],
-          "actions" : ["basic_tutorial_ingress.local_firewall_func.update_and_match", "basic_tutorial_ingress.local_firewall_func.match"],
-          "base_default_next" : "node_7",
+          "action_ids" : [6],
+          "actions" : ["basic_tutorial_ingress.local_firewall_func.update_and_match"],
+          "base_default_next" : "tbl_local_firewall_func_match",
           "next_tables" : {
-            "basic_tutorial_ingress.local_firewall_func.update_and_match" : "node_7",
-            "basic_tutorial_ingress.local_firewall_func.match" : "node_7"
+            "basic_tutorial_ingress.local_firewall_func.update_and_match" : "tbl_local_firewall_func_match"
+          },
+          "default_entry" : {
+            "action_id" : 6,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_local_firewall_func_match",
+          "id" : 3,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7],
+          "actions" : ["basic_tutorial_ingress.local_firewall_func.match"],
+          "base_default_next" : "node_8",
+          "next_tables" : {
+            "basic_tutorial_ingress.local_firewall_func.match" : "node_8"
           },
           "default_entry" : {
             "action_id" : 7,
-            "action_const" : false,
+            "action_const" : true,
             "action_data" : [],
-            "action_entry_const" : false
+            "action_entry_const" : true
           }
         },
         {
           "name" : "tbl_act",
-          "id" : 3,
+          "id" : 4,
           "key" : [],
           "match_type" : "exact",
           "type" : "simple",
@@ -1329,7 +1533,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 83,
+            "line" : 73,
             "column" : 11,
             "source_fragment" : "hdr.notify.isValid()"
           },
@@ -1344,15 +1548,15 @@
               }
             }
           },
-          "true_next" : "basic_tutorial_ingress.local_firewall_func.tb_local_firewall",
-          "false_next" : "node_7"
+          "true_next" : "tbl_local_firewall_func_update_and_match",
+          "false_next" : "tbl_local_firewall_func_match"
         },
         {
-          "name" : "node_7",
+          "name" : "node_8",
           "id" : 2,
           "source_info" : {
             "filename" : "includes/local_learning_firewall.p4",
-            "line" : 86,
+            "line" : 77,
             "column" : 11,
             "source_fragment" : "metadata.mark_drop == 1w1"
           },
@@ -1402,7 +1606,7 @@
       },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
-      "calculation" : "calc_1",
+      "calculation" : "calc_2",
       "if_cond" : {
         "type" : "expression",
         "value" : {

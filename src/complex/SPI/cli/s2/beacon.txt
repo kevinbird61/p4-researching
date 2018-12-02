@@ -1,0 +1,2 @@
+table_add basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm basic_tutorial_ingress.ipv4_forwarding.ipv4_forward 10.0.1.0/24 => 00:00:00:02:01:00 1
+table_add basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm basic_tutorial_ingress.ipv4_forwarding.ipv4_forward 10.0.5.4/32 => 00:00:00:02:05:04 2

@@ -18,15 +18,20 @@ control firewall_func (
             To collect some useful information.
         */
         // set this packet as broadcast packet 
-        standard_metadata.mcast_grp = 1;
+        // standard_metadata.mcast_grp = 1;
         // set notify packet available
         hdr.notify.setValid();
         hdr.notify.malform_srcAddr = hdr.ipv4.srcAddr;
         // using special bit in IPv4 header to indicate this packet is a "notify" packet
-        hdr.ipv4.dscp = 6w2; // bit<6> 2
+        hdr.ipv4.dscp = 2; // bit<6> 2
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
         // modify destination address 
-        hdr.ipv4.dstAddr = 32w0;
+        hdr.ipv4.srcAddr = hdr.ipv4.dstAddr;
+        hdr.ipv4.dstAddr = hdr.notify.malform_srcAddr;
+        // set port
+        standard_metadata.egress_spec = standard_metadata.ingress_port;
+        // destination MAC
+        hdr.ethernet.dstAddr = hdr.ethernet.srcAddr;
     }
 
     table tb_firewall {
