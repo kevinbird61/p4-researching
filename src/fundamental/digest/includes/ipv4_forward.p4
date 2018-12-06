@@ -34,7 +34,7 @@ control ipv4_forwarding(
             drop;
         }
         size = 1024;
-        default_action = drop();
+        default_action = unknown_source();
     }
 
     apply {

@@ -250,6 +250,26 @@ class SwitchConnection(object):
             for item in self.stream_msg_resp:
                 return item
 
+    # Digest 
+    def DigestListAck(self, digest_ack, dry_run=False, **kwargs):
+        request = p4runtime_pb2.StreamMessageRequest()
+        request.digest_ack.CopyFrom(digest_ack)
+        if dry_run: 
+            print "P4 Runtime DigestListAck: ", request 
+        else:
+            self.requests_stream.put(request)
+            for item in self.stream_msg_resp:
+                return item 
+
+    def DigestList(self, dry_run=False, **kwargs):
+        request = p4runtime_pb2.StreamMessageRequest()
+        if dry_run:
+            print "P4 Runtime DigestList Response: ", request 
+        else: 
+            self.requests_stream.put(request)
+            for item in self.stream_msg_resp:
+                return item 
+
 class GrpcRequestLogger(grpc.UnaryUnaryClientInterceptor,
                         grpc.UnaryStreamClientInterceptor):
     """Implementation of a gRPC interceptor that logs request to a file"""

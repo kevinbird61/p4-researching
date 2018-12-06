@@ -435,6 +435,12 @@
     {
       "id" : 1,
       "name" : "mac_learn_digest_t",
+      "source_info" : {
+        "filename" : "includes/ipv4_forward.p4",
+        "line" : 15,
+        "column" : 12,
+        "source_fragment" : "{ hdr.ethernet.srcAddr, ..."
+      },
       "elements" : [
         {
           "type" : "field",
@@ -519,7 +525,13 @@
               "type" : "hexstr",
               "value" : "0x1"
             }
-          ]
+          ],
+          "source_info" : {
+            "filename" : "includes/ipv4_forward.p4",
+            "line" : 14,
+            "column" : 8,
+            "source_fragment" : "digest<mac_learn_digest_t>((bit<32>) 1024, ..."
+          }
         }
       ]
     },
@@ -683,7 +695,7 @@
             "drop" : null
           },
           "default_entry" : {
-            "action_id" : 0,
+            "action_id" : 1,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
@@ -736,6 +748,12 @@
     {
       "name" : "cksum",
       "id" : 0,
+      "source_info" : {
+        "filename" : "includes/checksums.p4",
+        "line" : 20,
+        "column" : 8,
+        "source_fragment" : "update_checksum( ..."
+      },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
       "calculation" : "calc",
