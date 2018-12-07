@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import argparse, grpc, os, sys
 from time import sleep
@@ -46,9 +46,38 @@ def main(p4info_file_path, bmv2_file_path):
         # Send digest entry
         SendDigestEntry(p4info_helper, sw=s1, digest_name="mac_learn_digest_t")
 
+        # Digest 
+        digest_msg = {}
+
         # Using stream channel to receive DigestList
         while True: 
-
+            digests = s1.DigestList()
+            if digests.WhichOneof('update')=='digest':
+                print("Received DigestList message")
+                """
+                    Digest format:
+                    * uint32 digest_id 
+                    * uint64 list_id 
+                    * repeated P4Data data 
+                    * int64 timestamp 
+                """
+                digest = digests.digest
+                print "===============================" 
+                print "Digest ID: ", digest.digest_id 
+                print "List ID: ", digest.digest_id
+                # print "[Raw]Digest msg: ", digest.data 
+                digest_message_list = digest.data   
+                for members in digest_message_list:
+                    #print members
+                    if members.WhichOneof('data')=='struct':
+                        # print members.struct
+                        for member in members.struct.members:
+                            if member.WhichOneof('data')=='bitstring':
+                                # print member (bitstring: "bytes ...") 
+                                # FIXME: another brilliant way to do this?
+                                print str(member).strip().split(":")[1]
+                print "TS: ", digest.timestamp  
+                print "==============================="
 
     except KeyboardInterrupt:
         # using ctrl + c to exit
