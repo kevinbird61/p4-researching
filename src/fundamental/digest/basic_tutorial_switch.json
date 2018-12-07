@@ -6,7 +6,7 @@
       "fields" : [
         ["tmp", 48, false],
         ["tmp_0", 9, false],
-        ["_padding_2", 7, false]
+        ["_padding_0", 7, false]
       ]
     },
     {
@@ -41,16 +41,14 @@
       "name" : "packet_out_header_t",
       "id" : 2,
       "fields" : [
-        ["egress_port", 9, false],
-        ["_padding_0", 7, false]
+        ["egress_port", 16, false]
       ]
     },
     {
       "name" : "packet_in_header_t",
       "id" : 3,
       "fields" : [
-        ["ingress_port", 9, false],
-        ["_padding_1", 7, false]
+        ["ingress_port", 16, false]
       ]
     },
     {

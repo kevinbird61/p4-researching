@@ -197,6 +197,18 @@ class P4InfoHelper(object):
             ])
         return packet_out
 
+    def buildDigestEntry(self, digest_name=None):
+        digest_entry = p4runtime_pb2.DigestEntry()
+        # using name 
+        digest_entry.digest_id = self.get_digests_id(digest_name)
+        # using id directly
+        #digest_entry.digest_id = int(digest_id)
+        # FIXME: set config
+        digest_entry.config.max_timeout_ns = 0
+        digest_entry.config.max_list_size = 1
+        digest_entry.config.ack_timeout_ns = 0
+        return digest_entry
+
     def buildTableEntry(self,
                         table_name,
                         match_fields=None,
