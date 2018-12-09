@@ -127,12 +127,6 @@
           ],
           "transitions" : [
             {
-              "type" : "hexstr",
-              "value" : "0x0800",
-              "mask" : null,
-              "next_state" : "parse_ipv4"
-            },
-            {
               "value" : "default",
               "mask" : null,
               "next_state" : null
@@ -144,29 +138,6 @@
               "value" : ["ethernet", "etherType"]
             }
           ]
-        },
-        {
-          "name" : "parse_ipv4",
-          "id" : 1,
-          "parser_ops" : [
-            {
-              "parameters" : [
-                {
-                  "type" : "regular",
-                  "value" : "ipv4"
-                }
-              ],
-              "op" : "extract"
-            }
-          ],
-          "transitions" : [
-            {
-              "value" : "default",
-              "mask" : null,
-              "next_state" : null
-            }
-          ],
-          "transition_key" : []
         }
       ]
     }
@@ -182,7 +153,7 @@
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
-      "order" : ["ethernet"]
+      "order" : ["ethernet", "ipv4"]
     }
   ],
   "meter_arrays" : [],

@@ -34,7 +34,9 @@ struct headers_t {
 // digest
 struct mac_learn_digest_t {
     bit<48> srcAddr;
-    bit<9>  ingress_port;
+    bit<48> dstAddr;
+    bit<16> etherType;
+    bit<16>  ingress_port;
 }
 
 // metadata inside switch pipeline

@@ -6,10 +6,15 @@ control arp (
     inout metadata_t metadata,
     inout standard_metadata_t standard_metadata
 ){
-    action send_to_cpu(){
-        standard_metadata.egress_spec = CPU_PORT;
-        hdr.packet_in.setValid();
-        hdr.packet_in.ingress_port = (bit<16>)standard_metadata.ingress_port;
+    action unknown_source(){
+        // Send digest to controller
+        digest<mac_learn_digest_t>((bit<32>) 1024,
+            { 
+                hdr.ethernet.srcAddr,
+                hdr.ethernet.dstAddr,
+                hdr.ethernet.etherType,
+                (bit<16>)standard_metadata.ingress_port
+            });
     }
 
     action flooding(){
@@ -26,22 +31,18 @@ control arp (
             hdr.ethernet.dstAddr: exact;
         }
         actions = {
-            send_to_cpu;
+            unknown_source;
             flooding;
             arp_reply;
         }
         size = 1024;
-        default_action = send_to_cpu();
+        default_action = unknown_source();
     }
 
     apply {
-        if(standard_metadata.ingress_port == CPU_PORT){
-            standard_metadata.egress_spec = (bit<9>)hdr.packet_out.egress_port;
-            standard_metadata.mcast_grp = hdr.packet_out.mcast_grp;
-            hdr.packet_out.setInvalid();
-        } else {
+        //if(hdr.ipv4.isValid()){
             arp_exact.apply();
-        }
+        //}
     }
 }
 

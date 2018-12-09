@@ -9,10 +9,41 @@ sys.path.append(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
         '../../../utils/'))
 
+SWITCH_TO_HOST_PORT = 1
+SWITCH_TO_SWITCH_PORT = 2
+
 # And then we import
 import p4runtime_lib.bmv2
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
 import p4runtime_lib.helper
+
+def writeARPReply(p4info_helper, sw, in_port, dst_eth_addr, port=None):
+    table_entry = p4info_helper.buildTableEntry(
+        table_name = "basic_tutorial_ingress.arp.arp_exact",
+        match_fields = {
+            "standard_metadata.ingress_port": in_port,
+            "hdr.ethernet.dstAddr": dst_eth_addr
+        },
+        action_name = "basic_tutorial_ingress.arp.arp_reply",
+        action_params = {
+            "port": port
+        })
+    sw.WriteTableEntry(table_entry)
+    print "Installed ARP Reply rule via P4Runtime."
+
+def writeARPFlood(p4info_helper, sw, in_port, dst_eth_addr, port=None):
+    table_entry = p4info_helper.buildTableEntry(
+        table_name = "basic_tutorial_ingress.arp.arp_exact",
+        match_fields = {
+            "standard_metadata.ingress_port": in_port,
+            "hdr.ethernet.dstAddr": dst_eth_addr
+        },
+        action_name = "basic_tutorial_ingress.arp.flooding",
+        action_params = {
+        }
+    )
+    sw.WriteTableEntry(table_entry)
+    print "Installed ARP Flooding rule via P4Runtime."
 
 def printGrpcError(e):
     print "gRPC Error: ", e.details(),
@@ -26,6 +57,34 @@ def SendDigestEntry(p4info_helper, sw, digest_name=None):
     digest_entry = p4info_helper.buildDigestEntry(digest_name=digest_name)
     sw.WriteDigestEntry(digest_entry)
     print "Sent DigestEntry via P4Runtime."
+
+def byte_pbyte(data):
+    # check if there are multiple bytes
+    if len(str(data)) > 1:
+        # make list all bytes given
+        msg = list(data)
+        # mark which item is being converted
+        s = 0
+        for u in msg:
+            # convert byte to ascii, then encode ascii to get byte number
+            u = str(u).encode("hex")
+            # make byte printable by canceling \x
+            u = "\\x"+u
+            # apply coverted byte to byte list
+            msg[s] = u
+            s = s + 1
+        msg = "".join(msg)
+    else:
+        msg = data
+        # convert byte to ascii, then encode ascii to get byte number
+        msg = str(msg).encode("hex")
+        # make byte printable by canceling \x
+        msg = "\\x"+msg
+    # return printable byte
+    return msg
+
+def prettify(mac_string):
+    return ':'.join('%02x' % ord(b) for b in mac_string)
 
 def main(p4info_file_path, bmv2_file_path):
     p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)
@@ -46,8 +105,22 @@ def main(p4info_file_path, bmv2_file_path):
         # Send digest entry
         SendDigestEntry(p4info_helper, sw=s1, digest_name="mac_learn_digest_t")
 
-        # Digest 
-        digest_msg = {}
+        # construct multicast group 
+        mc_group_entry = p4info_helper.buildMCEntry(
+            mc_group_id = 1,
+            replicas = {
+                1:1,
+                2:2,
+                3:3
+            }
+        )
+        s1.WritePRE(mc_group = mc_group_entry)
+        print "Installed mgrp on s1."
+
+        port_map = {}
+        arp_rules = {}
+        flag = 0
+        bcast = "ff:ff:ff:ff:ff:ff"
 
         # Using stream channel to receive DigestList
         while True: 
@@ -70,12 +143,35 @@ def main(p4info_file_path, bmv2_file_path):
                 for members in digest_message_list:
                     #print members
                     if members.WhichOneof('data')=='struct':
-                        # print members.struct
-                        for member in members.struct.members:
-                            if member.WhichOneof('data')=='bitstring':
-                                # print member (bitstring: "bytes ...") 
-                                # FIXME: another brilliant way to do this?
-                                print str(member).strip().split(":")[1]
+                        # print byte_pbyte(members.struct.members[0].bitstring)
+                        if members.struct.members[0].WhichOneof('data') == 'bitstring':
+                            eth_src_addr = prettify(members.struct.members[0].bitstring)
+                        if members.struct.members[1].WhichOneof('data') == 'bitstring':
+                            eth_dst_addr = prettify(members.struct.members[1].bitstring)
+                        if members.struct.members[2].WhichOneof('data') == 'bitstring':
+                            eth_type = int(members.struct.members[2].bitstring.encode('hex'),16)
+                        if members.struct.members[3].WhichOneof('data') == 'bitstring':
+                            port_id = members.struct.members[3].bitstring
+
+                if eth_type == 2048 or eth_type == 2054: 
+                    # learn arp 
+                    port_map.setdefault(eth_src_addr, port_id)
+                    arp_rules.setdefault(port_id, [])
+
+                    if eth_dst_addr == bcast:
+                        if bcast not in arp_rules:
+                            writeARPFlood(p4info_helper, sw=s1, in_port=port_id, dst_eth_addr=bcast)
+                            arp_rules[port_id].append(bcast)
+                    else:
+                        if eth_dst_addr not in arp_rules[port_id]:
+                            writeARPReply(p4info_helper, sw=s1, in_port=port_id, dst_eth_addr=eth_dst_addr, port=port_map[eth_dst_addr])
+                            arp_rules[port_id].append(eth_dst_addr)
+                        if eth_src_addr not in arp_rules[port_map[eth_dst_addr]]:
+                            writeARPReply(p4info_helper, sw=s1, in_port=port_map[eth_dst_addr], dst_eth_addr=eth_src_addr, port=port_map[eth_src_addr])
+                            arp_rules[port_map[eth_dst_addr]].append(eth_src_addr)
+
+                print "port_map:%s" % port_map
+                print "arp_rules:%s" % arp_rules
                 print "TS: ", digest.timestamp  
                 print "==============================="
 

@@ -5,8 +5,9 @@
       "id" : 0,
       "fields" : [
         ["tmp", 48, false],
-        ["tmp_0", 9, false],
-        ["_padding_0", 7, false]
+        ["tmp_0", 48, false],
+        ["tmp_1", 16, false],
+        ["tmp_2", 16, false]
       ]
     },
     {
@@ -434,10 +435,10 @@
       "id" : 1,
       "name" : "mac_learn_digest_t",
       "source_info" : {
-        "filename" : "includes/ipv4_forward.p4",
-        "line" : 15,
+        "filename" : "includes/arp.p4",
+        "line" : 12,
         "column" : 12,
-        "source_fragment" : "{ hdr.ethernet.srcAddr, ..."
+        "source_fragment" : "{ ..."
       },
       "elements" : [
         {
@@ -447,14 +448,28 @@
         {
           "type" : "field",
           "value" : ["scalars", "tmp_0"]
+        },
+        {
+          "type" : "field",
+          "value" : ["scalars", "tmp_1"]
+        },
+        {
+          "type" : "field",
+          "value" : ["scalars", "tmp_2"]
         }
       ]
     }
   ],
   "actions" : [
     {
-      "name" : "drop",
+      "name" : "NoAction",
       "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "drop",
+      "id" : 1,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -465,70 +480,6 @@
             "line" : 7,
             "column" : 4,
             "source_fragment" : "mark_to_drop()"
-          }
-        }
-      ]
-    },
-    {
-      "name" : "basic_tutorial_ingress.ipv4_forwarding.unknown_source",
-      "id" : 1,
-      "runtime_data" : [],
-      "primitives" : [
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["scalars", "tmp"]
-            },
-            {
-              "type" : "field",
-              "value" : ["ethernet", "srcAddr"]
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ipv4_forward.p4",
-            "line" : 15,
-            "column" : 14,
-            "source_fragment" : "hdr.ethernet.srcAddr"
-          }
-        },
-        {
-          "op" : "assign",
-          "parameters" : [
-            {
-              "type" : "field",
-              "value" : ["scalars", "tmp_0"]
-            },
-            {
-              "type" : "field",
-              "value" : ["standard_metadata", "ingress_port"]
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ipv4_forward.p4",
-            "line" : 16,
-            "column" : 14,
-            "source_fragment" : "standard_metadata.ingress_port"
-          }
-        },
-        {
-          "op" : "generate_digest",
-          "parameters" : [
-            {
-              "type" : "hexstr",
-              "value" : "0x00000400"
-            },
-            {
-              "type" : "hexstr",
-              "value" : "0x1"
-            }
-          ],
-          "source_info" : {
-            "filename" : "includes/ipv4_forward.p4",
-            "line" : 14,
-            "column" : 8,
-            "source_fragment" : "digest<mac_learn_digest_t>((bit<32>) 1024, ..."
           }
         }
       ]
@@ -561,7 +512,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
-            "line" : 21,
+            "line" : 13,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -580,7 +531,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
-            "line" : 22,
+            "line" : 14,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -599,7 +550,7 @@
           ],
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
-            "line" : 23,
+            "line" : 15,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -641,9 +592,181 @@
           ],
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
-            "line" : 24,
+            "line" : 16,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "basic_tutorial_ingress.arp.unknown_source",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 13,
+            "column" : 16,
+            "source_fragment" : "hdr.ethernet.srcAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 14,
+            "column" : 16,
+            "source_fragment" : "hdr.ethernet.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 15,
+            "column" : 16,
+            "source_fragment" : "hdr.ethernet.etherType"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "ingress_port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 16,
+            "column" : 16,
+            "source_fragment" : "(bit<16>)standard_metadata.ingress_port"
+          }
+        },
+        {
+          "op" : "generate_digest",
+          "parameters" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x00000400"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 11,
+            "column" : 8,
+            "source_fragment" : "digest<mac_learn_digest_t>((bit<32>) 1024, ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "basic_tutorial_ingress.arp.flooding",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "mcast_grp"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0001"
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 21,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.mcast_grp = 1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "basic_tutorial_ingress.arp.arp_reply",
+      "id" : 5,
+      "runtime_data" : [
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 25,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = port"
           }
         }
       ]
@@ -655,7 +778,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic_tutorial_switch.p4",
-        "line" : 18,
+        "line" : 19,
         "column" : 8,
         "source_fragment" : "basic_tutorial_ingress"
       },
@@ -666,7 +789,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
-            "line" : 27,
+            "line" : 19,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -684,16 +807,60 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [2, 1, 0],
-          "actions" : ["basic_tutorial_ingress.ipv4_forwarding.ipv4_forward", "basic_tutorial_ingress.ipv4_forwarding.unknown_source", "drop"],
-          "base_default_next" : null,
+          "action_ids" : [2, 0, 1],
+          "actions" : ["basic_tutorial_ingress.ipv4_forwarding.ipv4_forward", "NoAction", "drop"],
+          "base_default_next" : "basic_tutorial_ingress.arp.arp_exact",
           "next_tables" : {
-            "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward" : null,
-            "basic_tutorial_ingress.ipv4_forwarding.unknown_source" : null,
-            "drop" : null
+            "basic_tutorial_ingress.ipv4_forwarding.ipv4_forward" : "basic_tutorial_ingress.arp.arp_exact",
+            "NoAction" : "basic_tutorial_ingress.arp.arp_exact",
+            "drop" : "basic_tutorial_ingress.arp.arp_exact"
           },
           "default_entry" : {
-            "action_id" : 1,
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "basic_tutorial_ingress.arp.arp_exact",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "includes/arp.p4",
+            "line" : 28,
+            "column" : 10,
+            "source_fragment" : "arp_exact"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "standard_metadata.ingress_port",
+              "target" : ["standard_metadata", "ingress_port"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "hdr.ethernet.dstAddr",
+              "target" : ["ethernet", "dstAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [3, 4, 5],
+          "actions" : ["basic_tutorial_ingress.arp.unknown_source", "basic_tutorial_ingress.arp.flooding", "basic_tutorial_ingress.arp.arp_reply"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "basic_tutorial_ingress.arp.unknown_source" : null,
+            "basic_tutorial_ingress.arp.flooding" : null,
+            "basic_tutorial_ingress.arp.arp_reply" : null
+          },
+          "default_entry" : {
+            "action_id" : 3,
             "action_const" : false,
             "action_data" : [],
             "action_entry_const" : false
@@ -707,7 +874,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "includes/ipv4_forward.p4",
-            "line" : 41,
+            "line" : 33,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -722,8 +889,8 @@
               }
             }
           },
-          "false_next" : null,
-          "true_next" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm"
+          "true_next" : "basic_tutorial_ingress.ipv4_forwarding.ipv4_lpm",
+          "false_next" : "basic_tutorial_ingress.arp.arp_exact"
         }
       ]
     },
@@ -732,7 +899,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "basic_tutorial_switch.p4",
-        "line" : 34,
+        "line" : 38,
         "column" : 8,
         "source_fragment" : "basic_tutorial_egress"
       },

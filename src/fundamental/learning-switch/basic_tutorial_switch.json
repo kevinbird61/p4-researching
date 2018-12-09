@@ -37,17 +37,15 @@
       "name" : "packet_out_header_t",
       "id" : 2,
       "fields" : [
-        ["egress_port", 9, false],
-        ["mcast_grp", 16, false],
-        ["_padding_0", 7, false]
+        ["egress_port", 16, false],
+        ["mcast_grp", 16, false]
       ]
     },
     {
       "name" : "packet_in_header_t",
       "id" : 3,
       "fields" : [
-        ["ingress_port", 9, false],
-        ["_padding_1", 7, false]
+        ["ingress_port", 16, false]
       ]
     },
     {
@@ -552,15 +550,28 @@
               "value" : ["packet_in", "ingress_port"]
             },
             {
-              "type" : "field",
-              "value" : ["standard_metadata", "ingress_port"]
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "ingress_port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffff"
+                  }
+                }
+              }
             }
           ],
           "source_info" : {
             "filename" : "includes/arp.p4",
             "line" : 12,
             "column" : 8,
-            "source_fragment" : "hdr.packet_in.ingress_port = standard_metadata.ingress_port"
+            "source_fragment" : "hdr.packet_in.ingress_port = (bit<16>)standard_metadata.ingress_port"
           }
         }
       ]
@@ -635,15 +646,28 @@
               "value" : ["standard_metadata", "egress_spec"]
             },
             {
-              "type" : "field",
-              "value" : ["packet_out", "egress_port"]
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["packet_out", "egress_port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01ff"
+                  }
+                }
+              }
             }
           ],
           "source_info" : {
             "filename" : "includes/arp.p4",
             "line" : 39,
             "column" : 12,
-            "source_fragment" : "standard_metadata.egress_spec = hdr.packet_out.egress_port"
+            "source_fragment" : "standard_metadata.egress_spec = (bit<9>)hdr.packet_out.egress_port"
           }
         },
         {

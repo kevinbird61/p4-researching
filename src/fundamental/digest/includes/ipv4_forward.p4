@@ -9,14 +9,6 @@ control ipv4_forwarding(
     inout metadata_t metadata,
     inout standard_metadata_t standard_metadata
 ){
-    action unknown_source(){
-        // Send digest to controller
-        digest<mac_learn_digest_t>((bit<32>) 1024,
-            { hdr.ethernet.srcAddr,
-              standard_metadata.ingress_port
-            });
-    }
-
     action ipv4_forward(bit<48> dstAddr, bit<9> port){
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
@@ -30,11 +22,11 @@ control ipv4_forwarding(
         }
         actions = {
             ipv4_forward;
-            unknown_source;
+            NoAction;
             drop;
         }
         size = 1024;
-        default_action = unknown_source();
+        default_action = NoAction();
     }
 
     apply {
