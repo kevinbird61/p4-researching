@@ -45,6 +45,10 @@ Learning how to build an ONOS application which support P4. See more detail unde
 * If you don't want to use mininet, you can use `ip netns` instead.
 * Under [`net/`](net/), have a demo script for building several network namespace.
 
+## Learning Materials 
+* Provide some learning resources about Networking, which located in [course/](course/).
+* Welcome to contribute!
+
 ---
 
 # Author
