@@ -1,6 +1,7 @@
 # Packet Manipulation
 
-This repository is lab for NCTU course "Introduction to Computer Networks 2018".
+This repository is lab for the course "Introduction to Computer Networks 2018" in NCTU CS.
+* Please refer to [lab1_tasks.pdf](https://github.com/kevinbird61/p4-researching/blob/master/course/nctucn2018/lab1_init/lab1_tasks.pdf) to finish this lab.
 
 ---
 ## Abstract
@@ -21,7 +22,7 @@ This lab aims to learn how we use Scapy and Python to program a simple network p
 ---
 ## Tasks
 
-* In lab course (Oct. 11 @EC-315, 316)
+* In lab course
     1. Environment Setup
     2. Define protocol via Scapy
     3. Send packets
@@ -35,12 +36,13 @@ This lab aims to learn how we use Scapy and Python to program a simple network p
     4. Report
 
 ---
-## Authors
+## Contributor
 
 * [David Lu](https://github.com/yungshenglu)
 
 > This repository is inspired by [Kevin Cyu](https://github.com/kevinbird61). He gave me lots of advices and supports during preparation.
 
+---
 ## License
 
 GNU GENERAL PUBLIC LICENSE Version 3
