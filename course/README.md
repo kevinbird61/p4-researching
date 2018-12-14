@@ -8,5 +8,7 @@
 
 ## Available Learning Materials
 
-* [National Chiao Tung University - Computer Network 2018](nctucn2018/)
+* [National Chiao Tung University - Computer Networks 2018](nctucn2018/)
     * Contributors - [David Lu](https://github.com/yungshenglu)
+    * About
+        This course introduces the design principles of computer networks. The topics include access control in both wired and wireless networks, routing and IP, transport services (TCP/UDP), network applications (HTTP/DNS), local-area and wide-area networks and mobility management.
