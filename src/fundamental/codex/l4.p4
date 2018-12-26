@@ -1,33 +1,35 @@
 /**
-    Layer 4 protocol
-*/
+ * Define protocols in OSI layer 4
+ * CONTRIBUTOR: Kevin Cyu (https://github.com/kevinbird61)
+ */
 
-// standard tcp
+
+/* Transmission Control Protocol (TCP) */
 header tcp_t {
-    bit<16> srcPort;
-    bit<16> dstPort;
-    bit<32> seqNo;
-    bit<32> ackNo;
-    bit<4>  dataOffset;
-    bit<4>  res;
-    bit<8>  flags;
-    bit<16> window;
-    bit<16> checksum;
-    bit<16> urgentPtr;
+    bit<16> srcPort;                // Source Port Number
+    bit<16> dstPort;                // Destination Port Number
+    bit<32> seq;                    // Sequence Number (SEQ)
+    bit<32> ack;                    // Acknowledgment Number (ACK)
+    bit<4>  dataOffset;             // Data Offset
+    bit<4>  rsvd;                   // Reserved
+    bit<8>  flags;                  // Flags
+    bit<16> window;                 // Window Size
+    bit<16> checksum;               // Checksum
+    bit<16> urgentPtr;              // Urgent Pointer
 }
 
-// standard udp
+/* User Datagram Protocol (UDP) */
 header udp_t {
-    bit<16> srcPort;
-    bit<16> dstPort;
-    bit<16> length_;
-    bit<16> checksum;
+    bit<16> srcPort;                // Source Port Number
+    bit<16> dstPort;                // Destination Port Number
+    bit<16> len;                    // Length
+    bit<16> checksum;               // Checksum
 }
 
-// VXLAN support 
+/* Virtual Extensible LAN (VXLAN) */
 header vxlan_t {
-    bit<8>  vxflags;
-    bit<24> rsvd1;      // reserved
-    bit<24> vnid;       // identifier
-    bit<8>  rsvd2;      // reserved
+    bit<8>  vxflags;                // VXLAN Flags
+    bit<24> rsvd1;                  // Reserved
+    bit<24> vni;                    // VXLAN NI (VNI)
+    bit<8>  rsvd2;                  // Reserved
 }
