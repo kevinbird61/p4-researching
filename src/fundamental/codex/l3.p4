@@ -55,7 +55,8 @@ header icmp_ts_t {
 header ipv4_t {
     bit<4>  version;            // Version   
     bit<4>  ihl;                // Internet Header Length (IHL)
-    bit<8>  dscp;               // Differentiated Services Code Point (DSCP)
+    bit<6>  dscp;               // Differentiated Services Code Point (DSCP)
+    bit<2>  ecn;                // ECN
     bit<16> totalLen;           // Total Length
     bit<16> identification;     // Identification
     bit<3>  flags;              // Flags
