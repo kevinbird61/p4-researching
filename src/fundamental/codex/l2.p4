@@ -1,22 +1,23 @@
 /**
-    Layer 2 protocol
-*/
+ * Define protocols in OSI layer 2
+ * CONTRIBUTOR: Kevin Cyu (https://github.com/kevinbird61)
+ */
 
-// standard ethernet 
+
+/* Ethernet */
 header ethernet_t {
-    bit<48> dstAddr;
-    bit<48> srcAddr;
-    bit<16> etherType;
+    bit<48> dstAddr;        // Destination MAC Address
+    bit<48> srcAddr;        // Source MAC Address
+    bit<16> etherType;      // EtherType
 }
 
-// 802.1 Q (ethernet with VLAN)
+/* IEEE 802.1Q - VLAN-tagged frame */
 header vlan_t {
-    bit<48> dstAddr;
-    bit<48> srcAddr;
-    bit<16> tpid;       // tag protocol identifier
-    bit<3>  pcp;        // priority code point 
-    bit<1>  dei;        // drop eligible indicator
-    bit<12> vid;        // VLAN identifier
-    // pcp + dei + vid = tci , Tag control information
-    bit<16> etherType;
+    bit<48> dstAddr;        // Destination MAC Address
+    bit<48> srcAddr;        // Source MAC Address
+    bit<16> tpid;           // Tag Protocol Identifier (TPID)
+    bit<3>  pcp;            // Priority Code Point (PCP)
+    bit<1>  dei;            // Drop Eligible Indicator (DEI)
+    bit<12> vid;            // VLAN Identifier (VID)
+    bit<16> etherType;      // EtherType
 }
