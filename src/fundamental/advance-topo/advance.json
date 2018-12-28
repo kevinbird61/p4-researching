@@ -48,7 +48,8 @@
       "fields" : [
         ["version", 4, false],
         ["ihl", 4, false],
-        ["diffserv", 8, false],
+        ["dscp", 6, false],
+        ["ecn", 2, false],
         ["totalLen", 16, false],
         ["identification", 16, false],
         ["flags", 3, false],
@@ -66,7 +67,7 @@
       "fields" : [
         ["srcPort", 16, false],
         ["dstPort", 16, false],
-        ["length_", 16, false],
+        ["len", 16, false],
         ["checksum", 16, false]
       ]
     },
@@ -76,10 +77,10 @@
       "fields" : [
         ["srcPort", 16, false],
         ["dstPort", 16, false],
-        ["seqNo", 32, false],
-        ["ackNo", 32, false],
+        ["seq", 32, false],
+        ["ack", 32, false],
         ["dataOffset", 4, false],
-        ["res", 4, false],
+        ["rsvd", 4, false],
         ["flags", 8, false],
         ["window", 16, false],
         ["checksum", 16, false],
@@ -281,7 +282,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "advance.p4",
-        "line" : 183,
+        "line" : 184,
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
@@ -350,7 +351,11 @@
         },
         {
           "type" : "field",
-          "value" : ["ipv4", "diffserv"]
+          "value" : ["ipv4", "dscp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ecn"]
         },
         {
           "type" : "field",

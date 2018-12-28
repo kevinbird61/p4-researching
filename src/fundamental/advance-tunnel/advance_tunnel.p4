@@ -185,7 +185,8 @@ control Tunnel_computeCk(
             {
                 hdr.ipv4.version,
                 hdr.ipv4.ihl,
-                hdr.ipv4.diffserv,
+                hdr.ipv4.dscp,
+                hdr.ipv4.ecn,
                 hdr.ipv4.totalLen,
                 hdr.ipv4.identification,
                 hdr.ipv4.flags,

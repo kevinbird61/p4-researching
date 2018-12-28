@@ -48,7 +48,8 @@
       "fields" : [
         ["version", 4, false],
         ["ihl", 4, false],
-        ["diffserv", 8, false],
+        ["dscp", 6, false],
+        ["ecn", 2, false],
         ["totalLen", 16, false],
         ["identification", 16, false],
         ["flags", 3, false],
@@ -127,6 +128,12 @@
           ],
           "transitions" : [
             {
+              "type" : "hexstr",
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
               "value" : "default",
               "mask" : null,
               "next_state" : null
@@ -138,6 +145,29 @@
               "value" : ["ethernet", "etherType"]
             }
           ]
+        },
+        {
+          "name" : "parse_ipv4",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
         }
       ]
     }
@@ -149,7 +179,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "l3_forward.p4",
-        "line" : 146,
+        "line" : 147,
         "column" : 8,
         "source_fragment" : "Basic_deparser"
       },
@@ -181,7 +211,11 @@
         },
         {
           "type" : "field",
-          "value" : ["ipv4", "diffserv"]
+          "value" : ["ipv4", "dscp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ecn"]
         },
         {
           "type" : "field",

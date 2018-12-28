@@ -1,9 +1,4 @@
 {
-  "program" : "bcast.p4",
-  "__meta__" : {
-    "version" : [2, 7],
-    "compiler" : "https://github.com/p4lang/p4c"
-  },
   "header_types" : [
     {
       "name" : "scalars_0",
@@ -11,42 +6,8 @@
       "fields" : []
     },
     {
-      "name" : "ethernet_t",
-      "id" : 1,
-      "fields" : [
-        ["dstAddr", 48, false],
-        ["srcAddr", 48, false],
-        ["etherType", 16, false]
-      ]
-    },
-    {
-      "name" : "ipv4_t",
-      "id" : 2,
-      "fields" : [
-        ["version", 4, false],
-        ["ihl", 4, false],
-        ["diffserv", 8, false],
-        ["totalLen", 16, false],
-        ["identification", 16, false],
-        ["flags", 3, false],
-        ["fragOffset", 13, false],
-        ["ttl", 8, false],
-        ["protocol", 8, false],
-        ["hdrChecksum", 16, false],
-        ["srcAddr", 32, false],
-        ["dstAddr", 32, false]
-      ]
-    },
-    {
-      "name" : "ingress_metadata_t",
-      "id" : 3,
-      "fields" : [
-        ["nhop_ipv4", 32, false]
-      ]
-    },
-    {
       "name" : "standard_metadata",
-      "id" : 4,
+      "id" : 1,
       "fields" : [
         ["ingress_port", 9, false],
         ["egress_spec", 9, false],
@@ -68,7 +29,43 @@
         ["egress_rid", 16, false],
         ["checksum_error", 1, false],
         ["recirculate_flag", 32, false],
+        ["parser_error", 32, false],
         ["_padding", 5, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["dscp", 6, false],
+        ["ecn", 2, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "ingress_metadata_t",
+      "id" : 4,
+      "fields" : [
+        ["nhop_ipv4", 32, false]
       ]
     }
   ],
@@ -228,7 +225,11 @@
         },
         {
           "type" : "field",
-          "value" : ["ipv4", "diffserv"]
+          "value" : ["ipv4", "dscp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ecn"]
         },
         {
           "type" : "field",
@@ -781,6 +782,12 @@
     {
       "name" : "cksum",
       "id" : 0,
+      "source_info" : {
+        "filename" : "bcast.p4",
+        "line" : 157,
+        "column" : 8,
+        "source_fragment" : "update_checksum( ..."
+      },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
       "calculation" : "calc",
@@ -844,5 +851,10 @@
       "intrinsic_metadata.recirculate_flag",
       ["standard_metadata", "recirculate_flag"]
     ]
-  ]
+  ],
+  "program" : "bcast.p4",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
 }
