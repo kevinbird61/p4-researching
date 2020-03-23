@@ -18,9 +18,9 @@ sudo python2 p4_controller.py
 cd ../../../utils/syn_exercise.py
 ```
 ## TOPO
-https://raw.githubusercontent.com/ting2313/p4-researching/master/src/complex/syn-mitigating/pic/topo.png
+![](https://raw.githubusercontent.com/ting2313/p4-researching/master/src/complex/syn-mitigating/pic/topo.png)
 ## 流程圖
-https://raw.githubusercontent.com/ting2313/p4-researching/master/src/complex/syn-mitigating/pic/flow.png
+![](https://raw.githubusercontent.com/ting2313/p4-researching/master/src/complex/syn-mitigating/pic/flow.png)
 
 ## 相關Project
 ### 實做於OF的版本（由ArielWu0203撰寫）
