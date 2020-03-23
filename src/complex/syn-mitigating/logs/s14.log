@@ -1,0 +1,631 @@
+Calling target program-options parser
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act': act_7 - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'Basic_ingress.syn_drop': NoAction - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_0': act - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_1': act_0 - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_2': act_1 - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'Basic_ingress.synack_entry': Basic_ingress.new_synack - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_3': act_3 - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_checking': Basic_ingress.checking - 
+[13:03:58.056] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_4': act_2 - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_5': act_4 - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_checking_0': Basic_ingress.checking - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'Basic_ingress.ack_entry': NoAction - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_6': act_6 - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_merge': Basic_ingress.merge - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'tbl_act_7': act_5 - 
+[13:03:58.057] [bmv2] [D] [thread 25183] Set default default entry for table 'Basic_ingress.ipv4_lpm': NoAction - 
+Adding interface s14-eth1 as port 1
+[13:03:58.061] [bmv2] [D] [thread 25183] Adding interface s14-eth1 as port 1
+Adding interface s14-eth2 as port 2
+[13:03:58.098] [bmv2] [D] [thread 25183] Adding interface s14-eth2 as port 2
+I0323 13:03:58.130373820   25183 server_builder.cc:247]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2147483647, CQ timeout (msec): 1000
+Server listening on 0.0.0.0:50064
+[13:03:58.145] [bmv2] [I] [thread 25183] Starting Thrift server on port 9103
+[13:03:58.154] [bmv2] [I] [thread 25183] Thrift server was started
+[13:03:58.654] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Processing packet received on port 2
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Parser 'parser': start
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Extracting header 'ethernet'
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Parser state 'start': key is 86dd
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] Bytes parsed: 14
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Parser 'parser': end
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Pipeline 'ingress': start
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] Applying table 'tbl_act'
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Looking up key:
+
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Table 'tbl_act': miss
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Action entry is act_7 - 
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] Action act_7
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] Primitive (no source info)
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:03:58.655] [bmv2] [T] [thread 25207] [0.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Pipeline 'ingress': end
+[13:03:58.655] [bmv2] [D] [thread 25207] [0.0] [cxt 0] Egress port is 0
+[13:03:58.655] [bmv2] [D] [thread 25208] [0.0] [cxt 0] Pipeline 'egress': start
+[13:03:58.655] [bmv2] [D] [thread 25208] [0.0] [cxt 0] Pipeline 'egress': end
+[13:03:58.655] [bmv2] [D] [thread 25208] [0.0] [cxt 0] Deparser 'deparser': start
+[13:03:58.655] [bmv2] [T] [thread 25208] [0.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:03:58.655] [bmv2] [D] [thread 25208] [0.0] [cxt 0] Deparsing header 'ethernet'
+[13:03:58.655] [bmv2] [D] [thread 25208] [0.0] [cxt 0] Deparser 'deparser': end
+[13:03:58.656] [bmv2] [D] [thread 25212] [0.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Processing packet received on port 2
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Parser 'parser': start
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Extracting header 'ethernet'
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Parser state 'start': key is 86dd
+[13:03:58.657] [bmv2] [T] [thread 25207] [1.0] [cxt 0] Bytes parsed: 14
+[13:03:58.657] [bmv2] [T] [thread 25207] [1.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Parser 'parser': end
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Pipeline 'ingress': start
+[13:03:58.657] [bmv2] [T] [thread 25207] [1.0] [cxt 0] Applying table 'tbl_act'
+[13:03:58.657] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Looking up key:
+
+[13:03:58.658] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Table 'tbl_act': miss
+[13:03:58.658] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Action entry is act_7 - 
+[13:03:58.658] [bmv2] [T] [thread 25207] [1.0] [cxt 0] Action act_7
+[13:03:58.658] [bmv2] [T] [thread 25207] [1.0] [cxt 0] Primitive (no source info)
+[13:03:58.658] [bmv2] [T] [thread 25207] [1.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:03:58.658] [bmv2] [T] [thread 25207] [1.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:03:58.658] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Pipeline 'ingress': end
+[13:03:58.658] [bmv2] [D] [thread 25207] [1.0] [cxt 0] Egress port is 0
+[13:03:58.658] [bmv2] [D] [thread 25208] [1.0] [cxt 0] Pipeline 'egress': start
+[13:03:58.658] [bmv2] [D] [thread 25208] [1.0] [cxt 0] Pipeline 'egress': end
+[13:03:58.658] [bmv2] [D] [thread 25208] [1.0] [cxt 0] Deparser 'deparser': start
+[13:03:58.658] [bmv2] [T] [thread 25208] [1.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:03:58.658] [bmv2] [D] [thread 25208] [1.0] [cxt 0] Deparsing header 'ethernet'
+[13:03:58.658] [bmv2] [D] [thread 25208] [1.0] [cxt 0] Deparser 'deparser': end
+[13:03:58.658] [bmv2] [D] [thread 25212] [1.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Processing packet received on port 2
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Parser 'parser': start
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Extracting header 'ethernet'
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] Bytes parsed: 14
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Parser 'parser': end
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Pipeline 'ingress': start
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] Applying table 'tbl_act'
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Looking up key:
+
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Table 'tbl_act': miss
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Action entry is act_7 - 
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] Action act_7
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] Primitive (no source info)
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:02.337] [bmv2] [T] [thread 25207] [2.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Pipeline 'ingress': end
+[13:04:02.337] [bmv2] [D] [thread 25207] [2.0] [cxt 0] Egress port is 0
+[13:04:02.338] [bmv2] [D] [thread 25208] [2.0] [cxt 0] Pipeline 'egress': start
+[13:04:02.338] [bmv2] [D] [thread 25208] [2.0] [cxt 0] Pipeline 'egress': end
+[13:04:02.338] [bmv2] [D] [thread 25208] [2.0] [cxt 0] Deparser 'deparser': start
+[13:04:02.338] [bmv2] [T] [thread 25208] [2.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:02.338] [bmv2] [D] [thread 25208] [2.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:02.338] [bmv2] [D] [thread 25208] [2.0] [cxt 0] Deparser 'deparser': end
+[13:04:02.338] [bmv2] [D] [thread 25212] [2.0] [cxt 0] Transmitting packet of size 203 out of port 0
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Processing packet received on port 1
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Parser 'parser': start
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Extracting header 'ethernet'
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:07.538] [bmv2] [T] [thread 25207] [3.0] [cxt 0] Bytes parsed: 14
+[13:04:07.538] [bmv2] [T] [thread 25207] [3.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Parser 'parser': end
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Pipeline 'ingress': start
+[13:04:07.538] [bmv2] [T] [thread 25207] [3.0] [cxt 0] Applying table 'tbl_act'
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Looking up key:
+
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Table 'tbl_act': miss
+[13:04:07.538] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Action entry is act_7 - 
+[13:04:07.539] [bmv2] [T] [thread 25207] [3.0] [cxt 0] Action act_7
+[13:04:07.539] [bmv2] [T] [thread 25207] [3.0] [cxt 0] Primitive (no source info)
+[13:04:07.539] [bmv2] [T] [thread 25207] [3.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:07.539] [bmv2] [T] [thread 25207] [3.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:07.539] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Pipeline 'ingress': end
+[13:04:07.539] [bmv2] [D] [thread 25207] [3.0] [cxt 0] Egress port is 0
+[13:04:07.539] [bmv2] [D] [thread 25208] [3.0] [cxt 0] Pipeline 'egress': start
+[13:04:07.539] [bmv2] [D] [thread 25208] [3.0] [cxt 0] Pipeline 'egress': end
+[13:04:07.539] [bmv2] [D] [thread 25208] [3.0] [cxt 0] Deparser 'deparser': start
+[13:04:07.539] [bmv2] [T] [thread 25208] [3.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:07.539] [bmv2] [D] [thread 25208] [3.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:07.539] [bmv2] [D] [thread 25208] [3.0] [cxt 0] Deparser 'deparser': end
+[13:04:07.539] [bmv2] [D] [thread 25212] [3.0] [cxt 0] Transmitting packet of size 110 out of port 0
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Processing packet received on port 1
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Parser 'parser': start
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Extracting header 'ethernet'
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] Bytes parsed: 14
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Parser 'parser': end
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Pipeline 'ingress': start
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] Applying table 'tbl_act'
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Looking up key:
+
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Table 'tbl_act': miss
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Action entry is act_7 - 
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] Action act_7
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] Primitive (no source info)
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:07.962] [bmv2] [T] [thread 25207] [4.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Pipeline 'ingress': end
+[13:04:07.962] [bmv2] [D] [thread 25207] [4.0] [cxt 0] Egress port is 0
+[13:04:07.963] [bmv2] [D] [thread 25208] [4.0] [cxt 0] Pipeline 'egress': start
+[13:04:07.963] [bmv2] [D] [thread 25208] [4.0] [cxt 0] Pipeline 'egress': end
+[13:04:07.963] [bmv2] [D] [thread 25208] [4.0] [cxt 0] Deparser 'deparser': start
+[13:04:07.963] [bmv2] [T] [thread 25208] [4.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:07.963] [bmv2] [D] [thread 25208] [4.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:07.963] [bmv2] [D] [thread 25208] [4.0] [cxt 0] Deparser 'deparser': end
+[13:04:07.963] [bmv2] [D] [thread 25212] [4.0] [cxt 0] Transmitting packet of size 110 out of port 0
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Processing packet received on port 2
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Parser 'parser': start
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Extracting header 'ethernet'
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] Bytes parsed: 14
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Parser 'parser': end
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Pipeline 'ingress': start
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] Applying table 'tbl_act'
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Looking up key:
+
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Table 'tbl_act': miss
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Action entry is act_7 - 
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] Action act_7
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] Primitive (no source info)
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:12.756] [bmv2] [T] [thread 25207] [5.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Pipeline 'ingress': end
+[13:04:12.756] [bmv2] [D] [thread 25207] [5.0] [cxt 0] Egress port is 0
+[13:04:12.757] [bmv2] [D] [thread 25208] [5.0] [cxt 0] Pipeline 'egress': start
+[13:04:12.757] [bmv2] [D] [thread 25208] [5.0] [cxt 0] Pipeline 'egress': end
+[13:04:12.757] [bmv2] [D] [thread 25208] [5.0] [cxt 0] Deparser 'deparser': start
+[13:04:12.757] [bmv2] [T] [thread 25208] [5.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:12.757] [bmv2] [D] [thread 25208] [5.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:12.757] [bmv2] [D] [thread 25208] [5.0] [cxt 0] Deparser 'deparser': end
+[13:04:12.757] [bmv2] [D] [thread 25212] [5.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Processing packet received on port 2
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Parser 'parser': start
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Extracting header 'ethernet'
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] Bytes parsed: 14
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Parser 'parser': end
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Pipeline 'ingress': start
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] Applying table 'tbl_act'
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Looking up key:
+
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Table 'tbl_act': miss
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Action entry is act_7 - 
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] Action act_7
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] Primitive (no source info)
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:14.010] [bmv2] [T] [thread 25207] [6.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Pipeline 'ingress': end
+[13:04:14.010] [bmv2] [D] [thread 25207] [6.0] [cxt 0] Egress port is 0
+[13:04:14.011] [bmv2] [D] [thread 25208] [6.0] [cxt 0] Pipeline 'egress': start
+[13:04:14.011] [bmv2] [D] [thread 25208] [6.0] [cxt 0] Pipeline 'egress': end
+[13:04:14.011] [bmv2] [D] [thread 25208] [6.0] [cxt 0] Deparser 'deparser': start
+[13:04:14.011] [bmv2] [T] [thread 25208] [6.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:14.011] [bmv2] [D] [thread 25208] [6.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:14.011] [bmv2] [D] [thread 25208] [6.0] [cxt 0] Deparser 'deparser': end
+[13:04:14.011] [bmv2] [D] [thread 25212] [6.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Processing packet received on port 2
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Parser 'parser': start
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Extracting header 'ethernet'
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] Bytes parsed: 14
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Parser 'parser': end
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Pipeline 'ingress': start
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] Applying table 'tbl_act'
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Looking up key:
+
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Table 'tbl_act': miss
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Action entry is act_7 - 
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] Action act_7
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] Primitive (no source info)
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:18.339] [bmv2] [T] [thread 25207] [7.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Pipeline 'ingress': end
+[13:04:18.339] [bmv2] [D] [thread 25207] [7.0] [cxt 0] Egress port is 0
+[13:04:18.339] [bmv2] [D] [thread 25208] [7.0] [cxt 0] Pipeline 'egress': start
+[13:04:18.339] [bmv2] [D] [thread 25208] [7.0] [cxt 0] Pipeline 'egress': end
+[13:04:18.339] [bmv2] [D] [thread 25208] [7.0] [cxt 0] Deparser 'deparser': start
+[13:04:18.339] [bmv2] [T] [thread 25208] [7.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:18.339] [bmv2] [D] [thread 25208] [7.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:18.339] [bmv2] [D] [thread 25208] [7.0] [cxt 0] Deparser 'deparser': end
+[13:04:18.339] [bmv2] [D] [thread 25212] [7.0] [cxt 0] Transmitting packet of size 203 out of port 0
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Processing packet received on port 2
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Parser 'parser': start
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Extracting header 'ethernet'
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] Bytes parsed: 14
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Parser 'parser': end
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Pipeline 'ingress': start
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] Applying table 'tbl_act'
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Looking up key:
+
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Table 'tbl_act': miss
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Action entry is act_7 - 
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] Action act_7
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] Primitive (no source info)
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:40.123] [bmv2] [T] [thread 25207] [8.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:40.123] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Pipeline 'ingress': end
+[13:04:40.124] [bmv2] [D] [thread 25207] [8.0] [cxt 0] Egress port is 0
+[13:04:40.124] [bmv2] [D] [thread 25208] [8.0] [cxt 0] Pipeline 'egress': start
+[13:04:40.124] [bmv2] [D] [thread 25208] [8.0] [cxt 0] Pipeline 'egress': end
+[13:04:40.124] [bmv2] [D] [thread 25208] [8.0] [cxt 0] Deparser 'deparser': start
+[13:04:40.124] [bmv2] [T] [thread 25208] [8.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:40.124] [bmv2] [D] [thread 25208] [8.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:40.124] [bmv2] [D] [thread 25208] [8.0] [cxt 0] Deparser 'deparser': end
+[13:04:40.124] [bmv2] [D] [thread 25212] [8.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Processing packet received on port 2
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Parser 'parser': start
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Extracting header 'ethernet'
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] Bytes parsed: 14
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Parser 'parser': end
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Pipeline 'ingress': start
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] Applying table 'tbl_act'
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Looking up key:
+
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Table 'tbl_act': miss
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Action entry is act_7 - 
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] Action act_7
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] Primitive (no source info)
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:44.219] [bmv2] [T] [thread 25207] [9.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Pipeline 'ingress': end
+[13:04:44.219] [bmv2] [D] [thread 25207] [9.0] [cxt 0] Egress port is 0
+[13:04:44.219] [bmv2] [D] [thread 25208] [9.0] [cxt 0] Pipeline 'egress': start
+[13:04:44.219] [bmv2] [D] [thread 25208] [9.0] [cxt 0] Pipeline 'egress': end
+[13:04:44.220] [bmv2] [D] [thread 25208] [9.0] [cxt 0] Deparser 'deparser': start
+[13:04:44.220] [bmv2] [T] [thread 25208] [9.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:44.220] [bmv2] [D] [thread 25208] [9.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:44.220] [bmv2] [D] [thread 25208] [9.0] [cxt 0] Deparser 'deparser': end
+[13:04:44.220] [bmv2] [D] [thread 25212] [9.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:04:50.350] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Processing packet received on port 2
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Parser 'parser': start
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Extracting header 'ethernet'
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Parser state 'start': key is 86dd
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] Bytes parsed: 14
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Parser 'parser': end
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Pipeline 'ingress': start
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] Applying table 'tbl_act'
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Looking up key:
+
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Table 'tbl_act': miss
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Action entry is act_7 - 
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] Action act_7
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] Primitive (no source info)
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:04:50.351] [bmv2] [T] [thread 25207] [10.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Pipeline 'ingress': end
+[13:04:50.351] [bmv2] [D] [thread 25207] [10.0] [cxt 0] Egress port is 0
+[13:04:50.351] [bmv2] [D] [thread 25208] [10.0] [cxt 0] Pipeline 'egress': start
+[13:04:50.351] [bmv2] [D] [thread 25208] [10.0] [cxt 0] Pipeline 'egress': end
+[13:04:50.351] [bmv2] [D] [thread 25208] [10.0] [cxt 0] Deparser 'deparser': start
+[13:04:50.351] [bmv2] [T] [thread 25208] [10.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:04:50.351] [bmv2] [D] [thread 25208] [10.0] [cxt 0] Deparsing header 'ethernet'
+[13:04:50.351] [bmv2] [D] [thread 25208] [10.0] [cxt 0] Deparser 'deparser': end
+[13:04:50.351] [bmv2] [D] [thread 25212] [10.0] [cxt 0] Transmitting packet of size 203 out of port 0
+New connection
+P4Runtime SetForwardingPipelineConfig
+[13:05:01.021] [bmv2] [W] [thread 25596] [P4Runtime] p4::tmp::P4DeviceConfig is deprecated
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act': act_7 - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'Basic_ingress.syn_drop': NoAction - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_0': act - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_1': act_0 - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_2': act_1 - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'Basic_ingress.synack_entry': Basic_ingress.new_synack - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_3': act_3 - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_checking': Basic_ingress.checking - 
+[13:05:01.066] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_4': act_2 - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_5': act_4 - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_checking_0': Basic_ingress.checking - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'Basic_ingress.ack_entry': NoAction - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_6': act_6 - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_merge': Basic_ingress.merge - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'tbl_act_7': act_5 - 
+[13:05:01.067] [bmv2] [D] [thread 25596] Set default default entry for table 'Basic_ingress.ipv4_lpm': NoAction - 
+P4Runtime Write
+device_id: 13
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33605438
+      match {
+        field_id: 1
+        lpm {
+          value: "\013\001\002\001"
+          prefix_len: 32
+        }
+      }
+      action {
+        action {
+          action_id: 16797316
+          params {
+            param_id: 1
+            value: "\000\000\000\000\016\007"
+          }
+          params {
+            param_id: 2
+            value: "\000\001"
+          }
+        }
+      }
+    }
+  }
+}
+[13:05:03.151] [bmv2] [D] [thread 25596] Entry 0 added to table 'Basic_ingress.ipv4_lpm'
+[13:05:03.151] [bmv2] [D] [thread 25596] Dumping entry 0
+Match key:
+* hdr.ipv4.dstAddr    : LPM       0b010201/32
+Action entry: Basic_ingress.host_forward - e07,1,
+
+P4Runtime Write
+device_id: 13
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    table_entry {
+      table_id: 33605438
+      match {
+        field_id: 1
+        lpm {
+          value: "\n\000\000\000"
+          prefix_len: 8
+        }
+      }
+      action {
+        action {
+          action_id: 16838388
+          params {
+            param_id: 1
+            value: "\000\002"
+          }
+        }
+      }
+    }
+  }
+}
+[13:05:04.081] [bmv2] [D] [thread 25774] Entry 1 added to table 'Basic_ingress.ipv4_lpm'
+[13:05:04.081] [bmv2] [D] [thread 25774] Dumping entry 1
+Match key:
+* hdr.ipv4.dstAddr    : LPM       0a000000/8
+Action entry: Basic_ingress.l3_forward - 2,
+
+[13:05:37.471] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Processing packet received on port 2
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Parser 'parser': start
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Extracting header 'ethernet'
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Parser state 'start': key is 86dd
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] Bytes parsed: 14
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Parser 'parser': end
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Pipeline 'ingress': start
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] Applying table 'tbl_act'
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Looking up key:
+
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Table 'tbl_act': miss
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Action entry is act_7 - 
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] Action act_7
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] Primitive (no source info)
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:05:37.472] [bmv2] [T] [thread 25207] [11.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Pipeline 'ingress': end
+[13:05:37.472] [bmv2] [D] [thread 25207] [11.0] [cxt 0] Egress port is 0
+[13:05:37.472] [bmv2] [D] [thread 25208] [11.0] [cxt 0] Pipeline 'egress': start
+[13:05:37.472] [bmv2] [D] [thread 25208] [11.0] [cxt 0] Pipeline 'egress': end
+[13:05:37.472] [bmv2] [D] [thread 25208] [11.0] [cxt 0] Deparser 'deparser': start
+[13:05:37.472] [bmv2] [T] [thread 25208] [11.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:05:37.472] [bmv2] [D] [thread 25208] [11.0] [cxt 0] Deparsing header 'ethernet'
+[13:05:37.472] [bmv2] [D] [thread 25208] [11.0] [cxt 0] Deparser 'deparser': end
+[13:05:37.472] [bmv2] [D] [thread 25212] [11.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Processing packet received on port 2
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Parser 'parser': start
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Extracting header 'ethernet'
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Parser state 'start': key is 86dd
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] Bytes parsed: 14
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Parser 'parser': end
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Pipeline 'ingress': start
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] Applying table 'tbl_act'
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Looking up key:
+
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Table 'tbl_act': miss
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Action entry is act_7 - 
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] Action act_7
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] Primitive (no source info)
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:05:43.612] [bmv2] [T] [thread 25207] [12.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Pipeline 'ingress': end
+[13:05:43.612] [bmv2] [D] [thread 25207] [12.0] [cxt 0] Egress port is 0
+[13:05:43.612] [bmv2] [D] [thread 25208] [12.0] [cxt 0] Pipeline 'egress': start
+[13:05:43.612] [bmv2] [D] [thread 25208] [12.0] [cxt 0] Pipeline 'egress': end
+[13:05:43.612] [bmv2] [D] [thread 25208] [12.0] [cxt 0] Deparser 'deparser': start
+[13:05:43.612] [bmv2] [T] [thread 25208] [12.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:05:43.612] [bmv2] [D] [thread 25208] [12.0] [cxt 0] Deparsing header 'ethernet'
+[13:05:43.612] [bmv2] [D] [thread 25208] [12.0] [cxt 0] Deparser 'deparser': end
+[13:05:43.612] [bmv2] [D] [thread 25212] [12.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Processing packet received on port 2
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Parser 'parser': start
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Extracting header 'ethernet'
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Parser state 'start': key is 86dd
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] Bytes parsed: 14
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Parser 'parser': end
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Pipeline 'ingress': start
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] Applying table 'tbl_act'
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Looking up key:
+
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Table 'tbl_act': miss
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Action entry is act_7 - 
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] Action act_7
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] Primitive (no source info)
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:05:54.354] [bmv2] [T] [thread 25207] [13.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Pipeline 'ingress': end
+[13:05:54.354] [bmv2] [D] [thread 25207] [13.0] [cxt 0] Egress port is 0
+[13:05:54.355] [bmv2] [D] [thread 25208] [13.0] [cxt 0] Pipeline 'egress': start
+[13:05:54.355] [bmv2] [D] [thread 25208] [13.0] [cxt 0] Pipeline 'egress': end
+[13:05:54.355] [bmv2] [D] [thread 25208] [13.0] [cxt 0] Deparser 'deparser': start
+[13:05:54.355] [bmv2] [T] [thread 25208] [13.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:05:54.355] [bmv2] [D] [thread 25208] [13.0] [cxt 0] Deparsing header 'ethernet'
+[13:05:54.355] [bmv2] [D] [thread 25208] [13.0] [cxt 0] Deparser 'deparser': end
+[13:05:54.355] [bmv2] [D] [thread 25212] [13.0] [cxt 0] Transmitting packet of size 203 out of port 0
+[13:07:34.202] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Processing packet received on port 2
+[13:07:34.202] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Parser 'parser': start
+[13:07:34.202] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:07:34.202] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Extracting header 'ethernet'
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Parser state 'start': key is 86dd
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] Bytes parsed: 14
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Parser 'parser': end
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Pipeline 'ingress': start
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] Applying table 'tbl_act'
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Looking up key:
+
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Table 'tbl_act': miss
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Action entry is act_7 - 
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] Action act_7
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] Primitive (no source info)
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:07:34.203] [bmv2] [T] [thread 25207] [14.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Pipeline 'ingress': end
+[13:07:34.203] [bmv2] [D] [thread 25207] [14.0] [cxt 0] Egress port is 0
+[13:07:34.203] [bmv2] [D] [thread 25208] [14.0] [cxt 0] Pipeline 'egress': start
+[13:07:34.203] [bmv2] [D] [thread 25208] [14.0] [cxt 0] Pipeline 'egress': end
+[13:07:34.203] [bmv2] [D] [thread 25208] [14.0] [cxt 0] Deparser 'deparser': start
+[13:07:34.203] [bmv2] [T] [thread 25208] [14.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:07:34.203] [bmv2] [D] [thread 25208] [14.0] [cxt 0] Deparsing header 'ethernet'
+[13:07:34.204] [bmv2] [D] [thread 25208] [14.0] [cxt 0] Deparser 'deparser': end
+[13:07:34.204] [bmv2] [D] [thread 25212] [14.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:07:38.300] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Processing packet received on port 2
+[13:07:38.300] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Parser 'parser': start
+[13:07:38.300] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:07:38.300] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Extracting header 'ethernet'
+[13:07:38.300] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Parser state 'start': key is 86dd
+[13:07:38.300] [bmv2] [T] [thread 25207] [15.0] [cxt 0] Bytes parsed: 14
+[13:07:38.300] [bmv2] [T] [thread 25207] [15.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:07:38.300] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Parser 'parser': end
+[13:07:38.301] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Pipeline 'ingress': start
+[13:07:38.301] [bmv2] [T] [thread 25207] [15.0] [cxt 0] Applying table 'tbl_act'
+[13:07:38.301] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Looking up key:
+
+[13:07:38.301] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Table 'tbl_act': miss
+[13:07:38.301] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Action entry is act_7 - 
+[13:07:38.301] [bmv2] [T] [thread 25207] [15.0] [cxt 0] Action act_7
+[13:07:38.301] [bmv2] [T] [thread 25207] [15.0] [cxt 0] Primitive (no source info)
+[13:07:38.301] [bmv2] [T] [thread 25207] [15.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:07:38.301] [bmv2] [T] [thread 25207] [15.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:07:38.301] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Pipeline 'ingress': end
+[13:07:38.301] [bmv2] [D] [thread 25207] [15.0] [cxt 0] Egress port is 0
+[13:07:38.301] [bmv2] [D] [thread 25208] [15.0] [cxt 0] Pipeline 'egress': start
+[13:07:38.301] [bmv2] [D] [thread 25208] [15.0] [cxt 0] Pipeline 'egress': end
+[13:07:38.301] [bmv2] [D] [thread 25208] [15.0] [cxt 0] Deparser 'deparser': start
+[13:07:38.301] [bmv2] [T] [thread 25208] [15.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:07:38.301] [bmv2] [D] [thread 25208] [15.0] [cxt 0] Deparsing header 'ethernet'
+[13:07:38.301] [bmv2] [D] [thread 25208] [15.0] [cxt 0] Deparser 'deparser': end
+[13:07:38.301] [bmv2] [D] [thread 25212] [15.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:08:02.353] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Processing packet received on port 2
+[13:08:02.353] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Parser 'parser': start
+[13:08:02.353] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:08:02.353] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Extracting header 'ethernet'
+[13:08:02.353] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Parser state 'start': key is 86dd
+[13:08:02.353] [bmv2] [T] [thread 25207] [16.0] [cxt 0] Bytes parsed: 14
+[13:08:02.353] [bmv2] [T] [thread 25207] [16.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Parser 'parser': end
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Pipeline 'ingress': start
+[13:08:02.354] [bmv2] [T] [thread 25207] [16.0] [cxt 0] Applying table 'tbl_act'
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Looking up key:
+
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Table 'tbl_act': miss
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Action entry is act_7 - 
+[13:08:02.354] [bmv2] [T] [thread 25207] [16.0] [cxt 0] Action act_7
+[13:08:02.354] [bmv2] [T] [thread 25207] [16.0] [cxt 0] Primitive (no source info)
+[13:08:02.354] [bmv2] [T] [thread 25207] [16.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:08:02.354] [bmv2] [T] [thread 25207] [16.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Pipeline 'ingress': end
+[13:08:02.354] [bmv2] [D] [thread 25207] [16.0] [cxt 0] Egress port is 0
+[13:08:02.355] [bmv2] [D] [thread 25208] [16.0] [cxt 0] Pipeline 'egress': start
+[13:08:02.355] [bmv2] [D] [thread 25208] [16.0] [cxt 0] Pipeline 'egress': end
+[13:08:02.355] [bmv2] [D] [thread 25208] [16.0] [cxt 0] Deparser 'deparser': start
+[13:08:02.355] [bmv2] [T] [thread 25208] [16.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:08:02.355] [bmv2] [D] [thread 25208] [16.0] [cxt 0] Deparsing header 'ethernet'
+[13:08:02.355] [bmv2] [D] [thread 25208] [16.0] [cxt 0] Deparser 'deparser': end
+[13:08:02.355] [bmv2] [D] [thread 25212] [16.0] [cxt 0] Transmitting packet of size 203 out of port 0
+[13:11:33.818] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Processing packet received on port 2
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Parser 'parser': start
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Extracting header 'ethernet'
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Parser state 'start': key is 86dd
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] Bytes parsed: 14
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Parser 'parser': end
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Pipeline 'ingress': start
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] Applying table 'tbl_act'
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Looking up key:
+
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Table 'tbl_act': miss
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Action entry is act_7 - 
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] Action act_7
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] Primitive (no source info)
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:11:33.819] [bmv2] [T] [thread 25207] [17.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Pipeline 'ingress': end
+[13:11:33.819] [bmv2] [D] [thread 25207] [17.0] [cxt 0] Egress port is 0
+[13:11:33.819] [bmv2] [D] [thread 25208] [17.0] [cxt 0] Pipeline 'egress': start
+[13:11:33.819] [bmv2] [D] [thread 25208] [17.0] [cxt 0] Pipeline 'egress': end
+[13:11:33.819] [bmv2] [D] [thread 25208] [17.0] [cxt 0] Deparser 'deparser': start
+[13:11:33.819] [bmv2] [T] [thread 25208] [17.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:11:33.819] [bmv2] [D] [thread 25208] [17.0] [cxt 0] Deparsing header 'ethernet'
+[13:11:33.819] [bmv2] [D] [thread 25208] [17.0] [cxt 0] Deparser 'deparser': end
+[13:11:33.826] [bmv2] [D] [thread 25212] [17.0] [cxt 0] Transmitting packet of size 70 out of port 0
+[13:11:33.826] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Processing packet received on port 2
+[13:11:33.826] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Parser 'parser': start
+[13:11:33.826] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Parser 'parser' entering state 'start'
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Extracting header 'ethernet'
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Parser state 'start': key is 86dd
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] Bytes parsed: 14
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] Skipping checksum 'cksum' verification because target field invalid
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Parser 'parser': end
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Pipeline 'ingress': start
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] Applying table 'tbl_act'
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Looking up key:
+
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Table 'tbl_act': miss
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Action entry is act_7 - 
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] Action act_7
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] Primitive (no source info)
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] simple.p4(109) Primitive bit<32> apply_index=0;
+[13:11:33.827] [bmv2] [T] [thread 25207] [18.0] [cxt 0] simple.p4(237) Condition "hdr.ipv4.isValid()" (node_3) is false
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Pipeline 'ingress': end
+[13:11:33.827] [bmv2] [D] [thread 25207] [18.0] [cxt 0] Egress port is 0
+[13:11:33.827] [bmv2] [D] [thread 25208] [18.0] [cxt 0] Pipeline 'egress': start
+[13:11:33.827] [bmv2] [D] [thread 25208] [18.0] [cxt 0] Pipeline 'egress': end
+[13:11:33.827] [bmv2] [D] [thread 25208] [18.0] [cxt 0] Deparser 'deparser': start
+[13:11:33.827] [bmv2] [T] [thread 25208] [18.0] [cxt 0] Skipping checksum 'cksum' update because condition not met
+[13:11:33.827] [bmv2] [D] [thread 25208] [18.0] [cxt 0] Deparsing header 'ethernet'
+[13:11:33.827] [bmv2] [D] [thread 25208] [18.0] [cxt 0] Deparser 'deparser': end
+[13:11:33.827] [bmv2] [D] [thread 25212] [18.0] [cxt 0] Transmitting packet of size 70 out of port 0
