@@ -1,0 +1,27 @@
+{
+    "target": "bmv2",
+    "p4info": "simple.p4info",
+    "bmv2_json": "simple.json",
+    "table_entries": [
+        {
+        "table": "Basic_ingress.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.5.0", 24]
+        },
+        "action_name": "Basic_ingress.l3_forward",
+        "action_params": {
+            "port": 2
+        }
+        },
+        {
+        "table": "Basic_ingress.ipv4_lpm",
+        "match": {
+            "hdr.ipv4.dstAddr": ["10.0.6.0", 24]
+        },
+        "action_name": "Basic_ingress.l3_forward",
+        "action_params": {
+            "port": 2
+        }
+        }
+    ]
+}
